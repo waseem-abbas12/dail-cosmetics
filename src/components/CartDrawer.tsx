@@ -106,10 +106,10 @@ export const CartDrawer: React.FC = () => {
           </div>
 
           {/* 2. Free Shipping Meter */}
-          <div className="bg-amber-50/70 border-b border-amber-200/60 px-5 py-3">
+          <div className="bg-red-50/70 border-b border-red-200/60 px-5 py-3">
             <div className="flex items-center justify-between text-xs mb-1.5">
               <span className="font-semibold text-stone-800 flex items-center gap-1.5">
-                <Truck className="w-3.5 h-3.5 text-[#7b3e1d]" />
+                <Truck className="w-3.5 h-3.5 text-[#d0473e]" />
                 {amountNeededForFreeShipping === 0 ? (
                   <span className="text-emerald-700 font-bold">🎉 You qualify for FREE Nationwide Delivery!</span>
                 ) : (
@@ -118,11 +118,11 @@ export const CartDrawer: React.FC = () => {
                   </span>
                 )}
               </span>
-              <span className="text-[11px] font-bold text-[#7b3e1d]">{freeShippingProgress}%</span>
+              <span className="text-[11px] font-bold text-[#d0473e]">{freeShippingProgress}%</span>
             </div>
-            <div className="w-full h-1.5 bg-amber-200/60 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-red-100 rounded-full overflow-hidden">
               <div
-                className="h-full bg-[#7b3e1d] transition-all duration-500 rounded-full"
+                className="h-full bg-[#d0473e] transition-all duration-500 rounded-full"
                 style={{ width: `${freeShippingProgress}%` }}
               />
             </div>
@@ -304,9 +304,9 @@ export const CartDrawer: React.FC = () => {
               {/* Primary Action: Cash on Delivery Checkout */}
               <button
                 onClick={handleProceedCheckout}
-                className="w-full py-3.5 px-6 rounded-2xl bg-[#7b3e1d] hover:bg-[#622f14] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
+                className="w-full btn-gp-primary py-3.5 px-6 rounded-xs text-xs font-heading font-extrabold tracking-[0.16em] flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
               >
-                <span>Proceed to Cash on Delivery Checkout</span>
+                <span>PROCEED TO CASH ON DELIVERY CHECKOUT</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 

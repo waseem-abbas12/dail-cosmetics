@@ -13,31 +13,33 @@ import type {
 import { PRODUCTS, REVIEWS } from '../data/products';
 
 export const INITIAL_CATEGORIES: CategoryItem[] = [
-  { id: 'cat-all', name: 'All Formulations', slug: 'all', icon: '🌿', description: 'Complete organic hair and skincare range' },
-  { id: 'cat-oil', name: '100% Herbal Hair Oil', slug: 'hair-oil', icon: '🧴', description: 'Cold-pressed botanical roots & hair fall control' },
-  { id: 'cat-cream', name: 'Steroid-Free Creams', slug: 'cream', icon: '✨', description: 'Restorative radiance and hydration without steroids' },
-  { id: 'cat-bundles', name: 'Regimen Bundles', slug: 'bundles', icon: '🎁', description: 'Value ritual duos with complimentary nationwide shipping' },
+  { id: 'cat-all', name: 'All Products', slug: 'all', icon: '🛍️', description: 'Complete organic hair and skincare range' },
+  { id: 'cat-creams', name: 'Face Creams', slug: 'cream', icon: '🧴', description: 'Steroid-free 5-day brightening & daily glow creams' },
+  { id: 'cat-hair', name: 'Hair Care', slug: 'hair-care', icon: '🌿', description: '100% herbal hair oil, repair shampoo & scalp hydrosols' },
+  { id: 'cat-serums', name: 'Serums & Oils', slug: 'serum', icon: '✨', description: 'Pure saffron bio-actives and brightening elixirs' },
+  { id: 'cat-cleansers', name: 'Cleansers & Wash', slug: 'cleanser', icon: '🧼', description: 'Vitamin C & neem deep pore purifying face washes' },
+  { id: 'cat-bundles', name: 'Bundles & Deals', slug: 'bundles', icon: '🎁', description: 'Exclusive value kits with free nationwide delivery' },
 ];
 
 export const INITIAL_CONCERNS: string[] = [
   'all',
   'Hair Fall',
   'Follicle Regrowth',
-  'Hair Thinning',
   'Radiant Glow',
   'Without Steroid',
   'Dark Knuckles & Heels',
   'Deep Moisture',
-  'Uneven Skin Tone'
+  'Uneven Skin Tone',
+  'Deep Cleansing'
 ];
 
 export const INITIAL_SETTINGS: StoreSettings = {
   whatsappNumber: '03346361218',
   adminPassword: 'dail@2026',
-  announcementText: '🇵🇰 Official Dail Cosmetics: 100% Herbal Hair Oil & Certified Without-Steroid Beauty Creams • Free Delivery Nationwide above Rs. 2,000',
+  announcementText: 'FREE SHIPPING ON ALL ORDERS PKR 2000 AND ABOVE | CASH ON DELIVERY AVAILABLE NATIONWIDE | WHATSAPP: 03346361218',
   freeShippingThreshold: 2000,
   flatShippingFee: 199,
-  brandTagline: 'Pure Herbal Radiance • Zero Harmful Steroids',
+  brandTagline: 'Pakistan’s Premier Organic Beauty & Personal Care',
   businessAddress: 'Dail Cosmetics Pakistan • DHA Phase 5, Lahore, Pakistan',
 };
 

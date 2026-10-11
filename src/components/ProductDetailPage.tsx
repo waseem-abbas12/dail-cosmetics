@@ -249,9 +249,9 @@ export const ProductDetailPage: React.FC = () => {
             </div>
 
             {/* Pricing Section */}
-            <div className="p-4 rounded-2xl bg-white border border-stone-200/90 flex items-baseline justify-between shadow-xs">
+            <div className="p-4 rounded-xs bg-white border border-[#e8e8e1] flex items-baseline justify-between shadow-xs">
               <div className="flex items-baseline gap-3">
-                <span className="text-3xl font-bold text-[#7b3e1d]">
+                <span className="font-heading text-3xl font-extrabold text-[#d0473e]">
                   Rs. {currentPrice.toLocaleString()}
                 </span>
                 {currentOriginalPrice && (
@@ -261,7 +261,7 @@ export const ProductDetailPage: React.FC = () => {
                 )}
               </div>
               {currentOriginalPrice && (
-                <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                <span className="text-xs font-bold text-white bg-[#d0473e] px-2.5 py-1 rounded-xs uppercase tracking-wider">
                   Save Rs. {(currentOriginalPrice - currentPrice).toLocaleString()}
                 </span>
               )}
@@ -360,25 +360,25 @@ export const ProductDetailPage: React.FC = () => {
 
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 py-3.5 px-6 rounded-xl bg-stone-900 hover:bg-black text-white font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
+                  className="flex-1 btn-gp-primary py-3.5 px-6 rounded-xs text-xs sm:text-sm font-heading font-extrabold tracking-[0.16em] flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
                 >
-                  <ShoppingBag className="w-4 h-4 text-amber-300" />
-                  <span>Add to Bag • Rs. {(currentPrice * quantity).toLocaleString()}</span>
+                  <ShoppingBag className="w-4 h-4" />
+                  <span>ADD TO CART • RS. {(currentPrice * quantity).toLocaleString()}</span>
                 </button>
               </div>
 
               <button
                 onClick={handleBuyNow}
-                className="w-full py-3.5 px-6 rounded-xl bg-[#7b3e1d] hover:bg-[#622f14] text-white font-bold text-sm shadow-md transition-all cursor-pointer"
+                className="w-full py-3.5 px-6 rounded-xs bg-stone-900 hover:bg-black text-white font-heading font-extrabold text-xs uppercase tracking-[0.16em] shadow-md transition-all cursor-pointer"
               >
-                Buy Now (Cash on Delivery)
+                BUY NOW (CASH ON DELIVERY)
               </button>
 
               <a
                 href={getWhatsAppUrl(`As-salamu alaykum Dail Cosmetics!\n\nI want to order:\n• ${product.name} (${selectedSize === 'jumbo' ? 'Jumbo Pack' : product.volume})\nQty: ${quantity} • Total: Rs. ${(currentPrice * quantity).toLocaleString()}\nCity: ${calcCity}\n\nPlease confirm delivery!`)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-xs cursor-pointer"
+                className="w-full py-3 px-4 rounded-xs bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-xs cursor-pointer uppercase tracking-wider"
               >
                 <Phone className="w-3.5 h-3.5" />
                 <span>Instant Order via WhatsApp ({storeSettings.whatsappNumber})</span>

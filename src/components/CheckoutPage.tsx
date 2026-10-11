@@ -414,9 +414,9 @@ export const CheckoutPage: React.FC = () => {
             {/* Place Order CTA */}
             <button
               type="submit"
-              className="w-full py-4 px-8 rounded-2xl bg-[#7b3e1d] hover:bg-[#622f14] text-white font-bold text-base shadow-md transition-all cursor-pointer"
+              className="w-full btn-gp-primary py-4 px-8 rounded-xs text-sm sm:text-base font-heading font-extrabold tracking-[0.16em] shadow-md transition-all cursor-pointer"
             >
-              Confirm Order • Rs. {total.toLocaleString()} ({paymentMethod === 'cod' ? 'Cash on Delivery' : 'Prepaid'})
+              CONFIRM ORDER • RS. {total.toLocaleString()} ({paymentMethod === 'cod' ? 'CASH ON DELIVERY' : 'PREPAID'})
             </button>
 
           </form>

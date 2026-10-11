@@ -25,16 +25,16 @@ export const SteroidComparisonSection: React.FC = () => {
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
       
       {/* Header */}
-      <div className="text-center max-w-3xl mx-auto space-y-3 mb-10 sm:mb-14">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-rose-50 border border-rose-200 text-rose-800 text-xs font-bold uppercase tracking-wider">
-          <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />
-          <span>The Pakistani Cosmetics Reality</span>
+      <div className="text-center max-w-3xl mx-auto space-y-2 mb-8 sm:mb-12">
+        <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-50 text-[#d0473e] text-[11px] font-heading font-extrabold uppercase tracking-widest rounded-xs">
+          <ShieldAlert className="w-3.5 h-3.5" />
+          <span>AUTHENTIC CLINICAL TRUTH</span>
         </div>
-        <h2 className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-900 leading-tight">
-          Why "Without Steroids" is <br className="hidden sm:block" />
-          <span className="text-[#7b3e1d] italic">A Non-Negotiable Medical Promise</span>
+        <h2 className="font-heading text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-stone-900 leading-tight">
+          Why "Without Steroids" <br className="hidden sm:block" />
+          <span className="text-[#d0473e]">Is Our Absolute Guarantee</span>
         </h2>
-        <p className="text-stone-600 text-xs sm:text-sm font-normal leading-relaxed">
+        <p className="text-stone-500 text-xs sm:text-sm font-normal leading-relaxed">
           Over 90% of local formula creams sold in Pakistan secretly destroy skin with dangerous steroids. Here is why Dail Cosmetics refuses shortcuts and formulates only export-quality organic healing.
         </p>
       </div>
@@ -43,13 +43,13 @@ export const SteroidComparisonSection: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
         
         {/* Left Card: Ordinary Commercial Creams (Negative) */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-white border border-rose-200 shadow-sm space-y-5">
+        <div className="p-6 sm:p-8 rounded-xs bg-white border border-rose-200 shadow-2xs space-y-5">
           <div className="flex items-center gap-3 pb-4 border-b border-rose-100">
-            <div className="w-12 h-12 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-600 shrink-0 border border-rose-200">
+            <div className="w-12 h-12 rounded-xs bg-rose-50 flex items-center justify-center text-rose-600 shrink-0 border border-rose-200">
               <ShieldAlert className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="font-serif-luxury text-lg sm:text-xl font-bold text-stone-900">
+              <h3 className="font-heading text-base sm:text-lg font-bold uppercase text-stone-900">
                 Ordinary Commercial Formula Creams
               </h3>
               <span className="text-xs text-rose-600 font-semibold uppercase tracking-wider">
@@ -73,18 +73,18 @@ export const SteroidComparisonSection: React.FC = () => {
         </div>
 
         {/* Right Card: Official Dail Cosmetics (Positive Clean Luxury) */}
-        <div className="p-6 sm:p-8 rounded-3xl bg-white border border-emerald-300 shadow-sm space-y-5 relative">
+        <div className="p-6 sm:p-8 rounded-xs bg-white border border-emerald-300 shadow-2xs space-y-5 relative">
           
-          <div className="absolute top-4 right-4 bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+          <div className="absolute top-4 right-4 bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-xs uppercase tracking-wider">
             Official Dail Standard
           </div>
 
           <div className="flex items-center gap-3 pb-4 border-b border-emerald-100">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-700 shrink-0 border border-emerald-200">
+            <div className="w-12 h-12 rounded-xs bg-emerald-50 flex items-center justify-center text-emerald-700 shrink-0 border border-emerald-200">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="font-serif-luxury text-lg sm:text-xl font-bold text-stone-900">
+              <h3 className="font-heading text-base sm:text-lg font-bold uppercase text-stone-900">
                 Dail Cosmetics Organic Formulations
               </h3>
               <span className="text-xs text-emerald-700 font-semibold uppercase tracking-wider">

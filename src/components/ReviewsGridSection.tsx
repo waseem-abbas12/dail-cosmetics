@@ -38,24 +38,24 @@ export const ReviewsGridSection: React.FC = () => {
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
       
       {/* Header */}
-      <div className="flex flex-wrap items-end justify-between gap-6 mb-10">
+      <div className="flex flex-wrap items-end justify-between gap-6 mb-8 sm:mb-10">
         <div>
-          <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#c59b27]">
-            Real Results Across Pakistan
+          <span className="text-[10px] sm:text-xs font-heading font-extrabold uppercase tracking-[0.25em] text-[#d0473e]">
+            REAL RESULTS ACROSS PAKISTAN
           </span>
-          <h2 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-stone-900 mt-1">
-            Loved By Over <span className="text-[#7b3e1d] italic">14,000+ Customers</span>
+          <h2 className="font-heading text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-stone-900 mt-1">
+            Verified Customer Reviews
           </h2>
-          <p className="text-stone-600 text-xs sm:text-sm font-normal mt-1">
+          <p className="text-stone-500 text-xs sm:text-sm font-normal mt-1">
             Real Pakistani men & women who stopped using harmful steroid creams and switched to Dail.
           </p>
         </div>
 
         {/* Global Rating Score Box & Write Review Button */}
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-stone-200/90 shadow-xs">
+          <div className="flex items-center gap-3 p-3.5 rounded-xs bg-white border border-[#e8e8e1] shadow-2xs">
             <div className="text-center">
-              <span className="text-2xl sm:text-3xl font-extrabold text-[#7b3e1d]">4.95</span>
+              <span className="font-heading text-2xl sm:text-3xl font-extrabold text-[#d0473e]">4.95</span>
               <div className="flex justify-center text-amber-400 mt-0.5">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-3.5 h-3.5 fill-current" />
@@ -63,17 +63,17 @@ export const ReviewsGridSection: React.FC = () => {
               </div>
             </div>
             <div className="pl-3 border-l border-stone-200 text-left text-xs">
-              <strong className="text-stone-900 block font-bold">100% Export Quality</strong>
-              <span className="text-emerald-700 font-semibold">Verified COD Purchases</span>
+              <strong className="text-stone-900 block font-heading font-bold uppercase">100% Export Quality</strong>
+              <span className="text-emerald-700 font-semibold text-[11px]">Verified COD Purchases</span>
             </div>
           </div>
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="px-5 py-3 rounded-2xl bg-[#7b3e1d] hover:bg-[#622f14] text-white text-xs font-bold shadow-xs flex items-center gap-2 cursor-pointer transition-all"
+            className="btn-gp-primary px-5 py-3 rounded-xs text-xs font-heading font-extrabold tracking-wider shadow-xs flex items-center gap-2 cursor-pointer transition-all"
           >
             <MessageSquarePlus className="w-4 h-4" />
-            <span>Write a Review</span>
+            <span>WRITE A REVIEW</span>
           </button>
         </div>
       </div>

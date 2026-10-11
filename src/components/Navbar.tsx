@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useStore } from '../store/useStore';
-import { ShoppingBag, Search, Heart, Truck, Menu, X, Phone, ShieldCheck, Sparkles } from 'lucide-react';
+import { ShoppingBag, Search, Heart, Menu, X, Phone, ChevronDown, Sparkles } from 'lucide-react';
 import type { PageView, ProductCategory } from '../types';
 
 export const Navbar: React.FC = () => {
@@ -11,8 +11,6 @@ export const Navbar: React.FC = () => {
     getCartSubtotal,
     setIsCartOpen, 
     wishlist,
-    searchQuery, 
-    setSearchQuery,
     setSelectedCategory,
     setIsSearchOpen,
     storeSettings,
@@ -20,6 +18,9 @@ export const Navbar: React.FC = () => {
   } = useStore();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [skincareDropdownOpen, setSkincareDropdownOpen] = useState(false);
+  const [haircareDropdownOpen, setHaircareDropdownOpen] = useState(false);
+
   const cartCount = getTotalItemsCount();
   const subtotal = getCartSubtotal();
   const wishlistCount = wishlist.length;
@@ -30,38 +31,39 @@ export const Navbar: React.FC = () => {
     }
     setCurrentPage(page);
     setMobileMenuOpen(false);
+    setSkincareDropdownOpen(false);
+    setHaircareDropdownOpen(false);
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full shadow-xs">
-      {/* 1. Top Announcement Bar (Prestige Shopify Style) */}
-      <div className="bg-[#7b3e1d] text-white text-[11px] sm:text-xs py-2 px-3 sm:px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-300 animate-ping" />
-            <span className="font-medium tracking-wide">
+    <header className="sticky top-0 z-50 w-full bg-white shadow-xs">
+      
+      {/* 1. Golden Pearl Signature Announcement Bar */}
+      <div className="bg-[#d0473e] text-white text-[11px] sm:text-xs py-2 px-3 sm:px-6">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+          
+          {/* Scrolling / Clean Announcement Message */}
+          <div className="flex items-center gap-2 font-medium tracking-wider uppercase text-center sm:text-left mx-auto sm:mx-0 truncate">
+            <span className="w-1.5 h-1.5 rounded-full bg-white shrink-0 animate-pulse" />
+            <span className="truncate">
               {storeSettings.announcementText}
             </span>
           </div>
 
-          <div className="hidden md:flex items-center gap-5 text-[11px] text-amber-100">
-            <span className="flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
-              Strictly 0% Steroids
-            </span>
-            <span>•</span>
+          {/* Quick Help & Track Links */}
+          <div className="hidden md:flex items-center gap-4 text-[11px] text-white/90 shrink-0 uppercase tracking-widest font-semibold">
             <a 
               href={getWhatsAppUrl()} 
               target="_blank" 
               rel="noopener noreferrer"
-              className="hover:text-white flex items-center gap-1 font-bold underline decoration-amber-300/50"
+              className="hover:text-amber-200 flex items-center gap-1 transition-colors"
             >
-              <Phone className="w-3 h-3 text-emerald-400" /> WhatsApp: {storeSettings.whatsappNumber}
+              <Phone className="w-3 h-3 text-emerald-300" /> WhatsApp: {storeSettings.whatsappNumber}
             </a>
-            <span>•</span>
+            <span className="opacity-40">|</span>
             <button 
               onClick={() => navigateTo('track-order')}
-              className="hover:text-white underline cursor-pointer"
+              className="hover:text-amber-200 cursor-pointer transition-colors"
             >
               Track Order
             </button>
@@ -69,218 +71,400 @@ export const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Main Luxury Header */}
-      <nav className="bg-white/95 backdrop-blur-md border-b border-stone-200/90 px-4 sm:px-6 lg:px-8 py-3.5 transition-all">
+      {/* 2. Main Golden Pearl Style White Header */}
+      <nav className="bg-white border-b border-[#e8e8e1] px-4 sm:px-6 lg:px-8 py-3.5 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Toggle Button */}
           <div className="flex items-center gap-2 lg:hidden">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-stone-700 hover:text-stone-900 rounded-lg hover:bg-stone-100 transition-colors"
+              className="p-1.5 text-stone-800 hover:text-[#d0473e] transition-colors"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
 
-          {/* Brand Logo & Signature Crest */}
+          {/* Golden Pearl / Dail Brand Logo */}
           <div 
             onClick={() => navigateTo('home')}
             className="cursor-pointer flex items-center gap-3 group"
           >
-            <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden bg-white p-0.5 border border-[#c59b27]/40 shadow-xs group-hover:scale-105 transition-transform shrink-0">
+            <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden bg-white p-0.5 border border-[#c59b27] shadow-xs group-hover:scale-105 transition-transform shrink-0">
               <img 
                 src="/images/dail_logo.png" 
-                alt="Dail Cosmetics Official Logo" 
+                alt="Dail Cosmetics Pakistan Logo" 
                 className="w-full h-full object-contain"
               />
             </div>
-            <div>
-              <span className="font-serif-luxury text-xl sm:text-2xl font-bold tracking-tight text-[#1a1a1a] flex items-center gap-1.5">
-                DAIL <span className="text-[#c59b27] font-normal italic">COSMETICS</span>
+            <div className="flex flex-col">
+              <span className="font-heading text-lg sm:text-2xl font-extrabold tracking-[0.1em] text-stone-900 group-hover:text-[#d0473e] transition-colors uppercase leading-none">
+                DAIL <span className="text-[#c59b27]">COSMETICS</span>
               </span>
-              <span className="block text-[9px] uppercase tracking-[0.25em] text-[#7b3e1d] font-semibold">
-                Pure Herbal • Without Steroid
+              <span className="text-[9px] sm:text-[10px] tracking-[0.25em] text-stone-500 font-bold uppercase mt-1">
+                ORGANICS PAKISTAN
               </span>
             </div>
           </div>
 
-          {/* Desktop Luxury Navigation Links */}
-          <div className="hidden lg:flex items-center gap-8 text-[13px] font-medium text-stone-700">
-            <button
+          {/* Golden Pearl Desktop Main Navigation Menu */}
+          <div className="hidden lg:flex items-center gap-6 xl:gap-8 font-heading text-[13px] font-bold uppercase tracking-[0.12em] text-stone-800">
+            
+            <button 
               onClick={() => navigateTo('home')}
-              className={`transition-colors hover:text-[#7b3e1d] relative py-1 ${
-                currentPage === 'home' ? 'text-[#7b3e1d] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#7b3e1d]' : ''
+              className={`hover:text-[#d0473e] transition-colors cursor-pointer py-1 relative ${
+                currentPage === 'home' ? 'text-[#d0473e]' : ''
               }`}
             >
               Home
+              {currentPage === 'home' && (
+                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-[#d0473e]" />
+              )}
             </button>
-            <button
-              onClick={() => navigateTo('shop')}
-              className={`transition-colors hover:text-[#7b3e1d] relative py-1 ${
-                currentPage === 'shop' ? 'text-[#7b3e1d] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#7b3e1d]' : ''
-              }`}
+
+            <button 
+              onClick={() => navigateTo('shop', 'all')}
+              className="hover:text-[#d0473e] transition-colors cursor-pointer py-1 flex items-center gap-1 text-[#d0473e]"
             >
-              Shop All
+              <Sparkles className="w-3.5 h-3.5" />
+              Best Sellers
             </button>
-            <button
-              onClick={() => navigateTo('shop', 'hair-oil')}
-              className="transition-colors hover:text-[#7b3e1d] py-1"
+
+            {/* Skincare Dropdown */}
+            <div 
+              className="relative group py-1"
+              onMouseEnter={() => setSkincareDropdownOpen(true)}
+              onMouseLeave={() => setSkincareDropdownOpen(false)}
             >
-              Herbal Hair Oil
-            </button>
-            <button
-              onClick={() => navigateTo('shop', 'cream')}
-              className="transition-colors hover:text-[#7b3e1d] py-1 flex items-center gap-1"
+              <button 
+                onClick={() => navigateTo('shop', 'cream')}
+                className="hover:text-[#d0473e] transition-colors cursor-pointer flex items-center gap-1"
+              >
+                Skincare
+                <ChevronDown className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#d0473e] transition-transform group-hover:rotate-180" />
+              </button>
+
+              {skincareDropdownOpen && (
+                <div className="absolute top-full left-0 w-64 bg-white border border-[#e8e8e1] shadow-xl py-3 px-2 rounded-xs z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                  <div className="text-[10px] tracking-widest text-[#d0473e] font-bold px-3 py-1 mb-1 border-b border-stone-100">
+                    SKINCARE COLLECTIONS
+                  </div>
+                  <button
+                    onClick={() => navigateTo('shop', 'cream')}
+                    className="w-full text-left px-3 py-2 text-xs font-semibold text-stone-700 hover:text-[#d0473e] hover:bg-stone-50 rounded-xs flex items-center justify-between"
+                  >
+                    <span>Dail Beauty Cream (5-Day Plan)</span>
+                    <span className="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">0% Steroid</span>
+                  </button>
+                  <button
+                    onClick={() => navigateTo('shop', 'cream')}
+                    className="w-full text-left px-3 py-2 text-xs font-semibold text-stone-700 hover:text-[#d0473e] hover:bg-stone-50 rounded-xs flex items-center justify-between"
+                  >
+                    <span>Hand & Foot Whitening Cream</span>
+                    <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">3-Action</span>
+                  </button>
+                  <button
+                    onClick={() => navigateTo('shop', 'serum')}
+                    className="w-full text-left px-3 py-2 text-xs font-semibold text-stone-700 hover:text-[#d0473e] hover:bg-stone-50 rounded-xs"
+                  >
+                    24K Saffron Glow Serum
+                  </button>
+                  <button
+                    onClick={() => navigateTo('shop', 'cleanser')}
+                    className="w-full text-left px-3 py-2 text-xs font-semibold text-stone-700 hover:text-[#d0473e] hover:bg-stone-50 rounded-xs"
+                  >
+                    Vitamin C & Neem Face Wash
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Haircare Dropdown */}
+            <div 
+              className="relative group py-1"
+              onMouseEnter={() => setHaircareDropdownOpen(true)}
+              onMouseLeave={() => setHaircareDropdownOpen(false)}
             >
-              <span>Beauty Creams</span>
-              <span className="text-[10px] bg-amber-100 text-[#7b3e1d] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
-                0% Steroid
+              <button 
+                onClick={() => navigateTo('shop', 'hair-care')}
+                className="hover:text-[#d0473e] transition-colors cursor-pointer flex items-center gap-1"
+              >
+                Hair Care
+                <ChevronDown className="w-3.5 h-3.5 text-stone-400 group-hover:text-[#d0473e] transition-transform group-hover:rotate-180" />
+              </button>
+
+              {haircareDropdownOpen && (
+                <div className="absolute top-full left-0 w-64 bg-white border border-[#e8e8e1] shadow-xl py-3 px-2 rounded-xs z-50 animate-in fade-in slide-in-from-top-1 duration-150">
+                  <div className="text-[10px] tracking-widest text-[#d0473e] font-bold px-3 py-1 mb-1 border-b border-stone-100">
+                    HAIRCARE COLLECTIONS
+                  </div>
+                  <button
+                    onClick={() => navigateTo('shop', 'hair-care')}
+                    className="w-full text-left px-3 py-2 text-xs font-semibold text-stone-700 hover:text-[#d0473e] hover:bg-stone-50 rounded-xs flex items-center justify-between"
+                  >
+                    <span>100% Herbal Hair Oil (120ml)</span>
+                    <span className="text-[10px] text-[#d0473e] bg-red-50 px-1.5 py-0.5 rounded font-bold">Top Seller</span>
+                  </button>
+                  <button
+                    onClick={() => navigateTo('shop', 'hair-care')}
+                    className="w-full text-left px-3 py-2 text-xs font-semibold text-stone-700 hover:text-[#d0473e] hover:bg-stone-50 rounded-xs"
+                  >
+                    Keratin & Biotin Repair Shampoo
+                  </button>
+                  <button
+                    onClick={() => navigateTo('shop', 'hair-care')}
+                    className="w-full text-left px-3 py-2 text-xs font-semibold text-stone-700 hover:text-[#d0473e] hover:bg-stone-50 rounded-xs"
+                  >
+                    Rosemary Scalp Hydro-Mist
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <button 
+              onClick={() => navigateTo('shop', 'bundles')}
+              className="hover:text-[#d0473e] transition-colors cursor-pointer py-1 relative text-[#c59b27] flex items-center gap-1"
+            >
+              Bundles & Offers
+              <span className="text-[9px] bg-[#d0473e] text-white px-1.5 py-0.2 rounded-xs font-bold uppercase ml-0.5">
+                Save 30%
               </span>
             </button>
-            <button
-              onClick={() => navigateTo('shop', 'bundles')}
-              className="transition-colors hover:text-[#7b3e1d] py-1"
-            >
-              Regimen Bundles
-            </button>
-            <button
-              onClick={() => navigateTo('about')}
-              className={`transition-colors hover:text-[#7b3e1d] relative py-1 ${
-                currentPage === 'about' ? 'text-[#7b3e1d] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#7b3e1d]' : ''
-              }`}
-            >
-              Our Story
-            </button>
-            <button
+
+            <button 
               onClick={() => navigateTo('track-order')}
-              className={`transition-colors hover:text-[#7b3e1d] relative py-1 ${
-                currentPage === 'track-order' ? 'text-[#7b3e1d] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#7b3e1d]' : ''
+              className={`hover:text-[#d0473e] transition-colors cursor-pointer py-1 ${
+                currentPage === 'track-order' ? 'text-[#d0473e]' : ''
               }`}
             >
               Track Order
             </button>
-          </div>
 
-          {/* Right Action Icons (Search, Wishlist, Cart Drawer Pill) */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            
-            {/* Search Trigger */}
-            <button
-              onClick={() => setIsSearchOpen(true)}
-              className="p-2 sm:p-2.5 text-stone-700 hover:text-stone-900 hover:bg-stone-100 rounded-full transition-colors"
-              title="Search products..."
+            <button 
+              onClick={() => navigateTo('contact')}
+              className={`hover:text-[#d0473e] transition-colors cursor-pointer py-1 ${
+                currentPage === 'contact' ? 'text-[#d0473e]' : ''
+              }`}
             >
-              <Search className="w-4 h-4 sm:w-5 sm:h-5" />
+              Contact
             </button>
 
-            {/* Wishlist Button */}
-            <button
-              onClick={() => navigateTo('wishlist')}
-              className="relative p-2 sm:p-2.5 text-stone-700 hover:text-rose-600 hover:bg-rose-50 rounded-full transition-colors"
-              title="My Wishlist"
+          </div>
+
+          {/* Right Header Action Icons */}
+          <div className="flex items-center gap-3 sm:gap-4">
+            
+            {/* Search Icon */}
+            <button 
+              onClick={() => setIsSearchOpen(true)}
+              className="p-2 text-stone-700 hover:text-[#d0473e] hover:bg-stone-100 rounded-full transition-colors cursor-pointer"
+              aria-label="Search Catalog"
+              title="Search Products"
             >
-              <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
+              <Search className="w-5 h-5" />
+            </button>
+
+            {/* Wishlist Heart Icon */}
+            <button 
+              onClick={() => navigateTo('wishlist')}
+              className="relative p-2 text-stone-700 hover:text-[#d0473e] hover:bg-stone-100 rounded-full transition-colors cursor-pointer"
+              aria-label="Wishlist"
+              title="Wishlist"
+            >
+              <Heart className="w-5 h-5" />
               {wishlistCount > 0 && (
-                <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
+                <span className="absolute top-1 right-1 w-4 h-4 bg-[#d0473e] text-white text-[10px] font-bold rounded-full flex items-center justify-center">
                   {wishlistCount}
                 </span>
               )}
             </button>
 
-            {/* High-Converting Cart Drawer Trigger Pill */}
-            <button
+            {/* Cart Drawer Trigger Button (Golden Pearl Style) */}
+            <button 
               onClick={() => setIsCartOpen(true)}
-              className="flex items-center gap-2 sm:gap-2.5 bg-[#1a1a1a] hover:bg-[#7b3e1d] text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-full shadow-xs transition-all duration-200 group cursor-pointer"
+              className="flex items-center gap-2.5 px-3 py-2 bg-stone-900 hover:bg-[#d0473e] text-white rounded-xs transition-colors cursor-pointer shadow-xs group"
+              aria-label="Open Cart Drawer"
             >
               <div className="relative">
-                <ShoppingBag className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-amber-300 group-hover:scale-110 transition-transform" />
+                <ShoppingBag className="w-4 h-4 text-white" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1.5 -right-2 bg-[#c59b27] text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2.5 w-4 h-4 bg-[#d0473e] border border-white text-white text-[9px] font-bold rounded-full flex items-center justify-center">
                     {cartCount}
                   </span>
                 )}
               </div>
-              
-              <div className="hidden sm:flex flex-col text-left leading-none">
-                <span className="text-[10px] text-stone-300 uppercase font-medium">Cart</span>
-                <span className="text-xs font-bold text-white mt-0.5">
-                  Rs. {subtotal.toLocaleString()}
-                </span>
-              </div>
+              <span className="hidden sm:inline-block font-heading text-xs font-bold uppercase tracking-wider">
+                Rs. {subtotal.toLocaleString()}
+              </span>
             </button>
 
           </div>
+
         </div>
       </nav>
 
-      {/* Mobile Slide-Down Menu */}
+      {/* 3. Mobile Slide-Over Drawer Navigation */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white border-b border-stone-200 px-6 py-6 shadow-xl animate-in slide-in-from-top-4 duration-200">
-          <div className="space-y-4 text-base font-medium text-stone-800">
-            <button
-              onClick={() => navigateTo('home')}
-              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
-            >
-              Home
-            </button>
-            <button
-              onClick={() => navigateTo('shop')}
-              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
-            >
-              Shop All Products
-            </button>
-            <button
-              onClick={() => navigateTo('shop', 'hair-oil')}
-              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
-            >
-              100% Organic Hair Oil (120ml)
-            </button>
-            <button
-              onClick={() => navigateTo('shop', 'cream')}
-              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
-            >
-              Steroid-Free Beauty Creams
-            </button>
-            <button
-              onClick={() => navigateTo('shop', 'bundles')}
-              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
-            >
-              Value Regimen Bundles
-            </button>
-            <button
-              onClick={() => navigateTo('wishlist')}
-              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
-            >
-              Wishlist ({wishlistCount})
-            </button>
-            <button
-              onClick={() => navigateTo('track-order')}
-              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
-            >
-              Track Your Order (TCS / Trax)
-            </button>
-            <button
-              onClick={() => navigateTo('about')}
-              className="block w-full text-left py-2 hover:text-[#7b3e1d]"
-            >
-              About Dail Cosmetics
-            </button>
-          </div>
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+            onClick={() => setMobileMenuOpen(false)}
+          />
 
-          <div className="mt-6 pt-6 border-t border-stone-200 flex flex-col gap-3">
-            <a
-              href={getWhatsAppUrl('Hello Dail Cosmetics! I want to place an order.')}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full py-3 bg-[#25D366] text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-xs cursor-pointer"
-            >
-              <Phone className="w-4 h-4" /> Order on WhatsApp ({storeSettings.whatsappNumber})
-            </a>
+          {/* Drawer Panel */}
+          <div className="relative w-4/5 max-w-sm bg-white h-full shadow-2xl flex flex-col z-10 overflow-y-auto">
+            
+            {/* Drawer Top Header */}
+            <div className="p-4 border-b border-stone-200 flex items-center justify-between bg-stone-50">
+              <div className="flex items-center gap-2.5">
+                <img src="/images/dail_logo.png" alt="Dail Logo" className="w-8 h-8 object-contain" />
+                <span className="font-heading font-extrabold text-stone-900 tracking-wider uppercase text-sm">
+                  DAIL COSMETICS
+                </span>
+              </div>
+              <button 
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-1.5 text-stone-600 hover:text-stone-900"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Links List */}
+            <div className="p-4 space-y-1 font-heading text-sm font-bold uppercase tracking-wider text-stone-800">
+              
+              <button
+                onClick={() => navigateTo('home')}
+                className="w-full text-left py-3 px-3 hover:bg-stone-50 hover:text-[#d0473e] rounded-xs border-b border-stone-100"
+              >
+                Home
+              </button>
+
+              <button
+                onClick={() => navigateTo('shop', 'all')}
+                className="w-full text-left py-3 px-3 hover:bg-stone-50 text-[#d0473e] rounded-xs border-b border-stone-100 flex items-center justify-between"
+              >
+                <span>Best Sellers</span>
+                <span className="text-[10px] bg-red-100 text-[#d0473e] px-2 py-0.5 rounded font-bold">HOT</span>
+              </button>
+
+              {/* Skincare Accordion */}
+              <div className="border-b border-stone-100">
+                <button
+                  onClick={() => setSkincareDropdownOpen(!skincareDropdownOpen)}
+                  className="w-full text-left py-3 px-3 hover:bg-stone-50 hover:text-[#d0473e] rounded-xs flex items-center justify-between"
+                >
+                  <span>Skincare</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${skincareDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {skincareDropdownOpen && (
+                  <div className="pl-4 pb-2 space-y-1 text-xs font-semibold text-stone-600">
+                    <button
+                      onClick={() => navigateTo('shop', 'cream')}
+                      className="w-full text-left py-2 px-3 hover:text-[#d0473e]"
+                    >
+                      Dail Beauty Cream (5-Day Plan)
+                    </button>
+                    <button
+                      onClick={() => navigateTo('shop', 'cream')}
+                      className="w-full text-left py-2 px-3 hover:text-[#d0473e]"
+                    >
+                      Hand & Foot Whitening Cream
+                    </button>
+                    <button
+                      onClick={() => navigateTo('shop', 'serum')}
+                      className="w-full text-left py-2 px-3 hover:text-[#d0473e]"
+                    >
+                      24K Saffron Glow Serum
+                    </button>
+                    <button
+                      onClick={() => navigateTo('shop', 'cleanser')}
+                      className="w-full text-left py-2 px-3 hover:text-[#d0473e]"
+                    >
+                      Vitamin C & Neem Face Wash
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Haircare Accordion */}
+              <div className="border-b border-stone-100">
+                <button
+                  onClick={() => setHaircareDropdownOpen(!haircareDropdownOpen)}
+                  className="w-full text-left py-3 px-3 hover:bg-stone-50 hover:text-[#d0473e] rounded-xs flex items-center justify-between"
+                >
+                  <span>Hair Care</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${haircareDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {haircareDropdownOpen && (
+                  <div className="pl-4 pb-2 space-y-1 text-xs font-semibold text-stone-600">
+                    <button
+                      onClick={() => navigateTo('shop', 'hair-care')}
+                      className="w-full text-left py-2 px-3 hover:text-[#d0473e]"
+                    >
+                      100% Herbal Hair Oil (120ml)
+                    </button>
+                    <button
+                      onClick={() => navigateTo('shop', 'hair-care')}
+                      className="w-full text-left py-2 px-3 hover:text-[#d0473e]"
+                    >
+                      Keratin & Biotin Repair Shampoo
+                    </button>
+                    <button
+                      onClick={() => navigateTo('shop', 'hair-care')}
+                      className="w-full text-left py-2 px-3 hover:text-[#d0473e]"
+                    >
+                      Rosemary Scalp Hydro-Mist
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <button
+                onClick={() => navigateTo('shop', 'bundles')}
+                className="w-full text-left py-3 px-3 hover:bg-stone-50 text-[#c59b27] rounded-xs border-b border-stone-100 flex items-center justify-between"
+              >
+                <span>Bundles & Deals</span>
+                <span className="text-[10px] bg-amber-100 text-[#c59b27] px-2 py-0.5 rounded font-bold">SAVE 30%</span>
+              </button>
+
+              <button
+                onClick={() => navigateTo('track-order')}
+                className="w-full text-left py-3 px-3 hover:bg-stone-50 hover:text-[#d0473e] rounded-xs border-b border-stone-100"
+              >
+                Track Your Order
+              </button>
+
+              <button
+                onClick={() => navigateTo('contact')}
+                className="w-full text-left py-3 px-3 hover:bg-stone-50 hover:text-[#d0473e] rounded-xs"
+              >
+                Contact Us
+              </button>
+
+            </div>
+
+            {/* Mobile Drawer Bottom Info */}
+            <div className="mt-auto p-4 bg-stone-50 border-t border-stone-200 space-y-3">
+              <a 
+                href={getWhatsAppUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xs flex items-center justify-center gap-2 uppercase tracking-wider"
+              >
+                <Phone className="w-3.5 h-3.5" /> Order on WhatsApp
+              </a>
+              <p className="text-[11px] text-stone-500 text-center font-normal">
+                Official Helpline: {storeSettings.whatsappNumber}
+              </p>
+            </div>
+
           </div>
         </div>
       )}
+
     </header>
   );
 };

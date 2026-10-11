@@ -1,267 +1,189 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore } from '../store/useStore';
+import { ChevronLeft, ChevronRight, ArrowRight, ShieldCheck, Sparkles, Truck, Star } from 'lucide-react';
 import { PRODUCTS } from '../data/products';
-import { ArrowRight, ShieldCheck, Star, Sparkles, CheckCircle2, ShoppingBag, MessageCircle, Eye } from 'lucide-react';
 
 export const HeroSection: React.FC = () => {
-  const { setCurrentPage, setSelectedCategory, addToCart, setSelectedProduct } = useStore();
-  const [selectedHeroTab, setSelectedHeroTab] = useState<number>(0);
+  const { setCurrentPage, setSelectedCategory, setSelectedProduct } = useStore();
+  const [currentSlide, setCurrentSlide] = useState(0);
 
-  const heroItems = [
+  const slides = [
     {
-      title: '120ml Herbal Hair Oil',
-      short: 'Hair Oil',
-      image: '/images/dail_hair_oil.jpg',
-      product: PRODUCTS[0],
-      tag: '100% Cold-Pressed Botanicals',
-      tagline: 'Stops Acute Hair Fall at the Root',
-      price: PRODUCTS[0].price,
-      chip1: '🌿 Rosemary & Kalonji',
-      chip2: '⚡ 14-Day Follicle Regrowth',
-    },
-    {
-      title: '50g Dail Beauty Cream',
-      short: 'Beauty Cream',
+      id: 0,
+      badge: 'EXPORT QUALITY 5-DAY BEAUTY PLAN',
+      title: 'ORGANIC RADIANCE WITHOUT STEROIDS',
+      subtitle: 'Make your skin bright, soft, fresh, healthy & glowing without thinning or harmful mercury.',
+      highlight: 'Strictly 0% Clobetasol or Bleach',
+      buttonText: 'SHOP BEST SELLERS',
+      secondaryButtonText: 'EXPLORE BEAUTY CREAM',
+      targetCategory: 'cream',
+      productIndex: 1, // Dail Beauty Cream
       image: '/images/dail_beauty_cream.jpg',
-      product: PRODUCTS[1],
-      tag: 'Strictly Without Steroid',
-      tagline: '5-Day Cellular Glow Without Skin Thinning',
-      price: PRODUCTS[1].price,
-      chip1: '🛡️ 0% Betamethasone/Mercury',
-      chip2: '✨ Kashmiri Saffron Actives',
+      bgGradient: 'from-amber-900/85 via-stone-900/75 to-black/80',
+      accentColor: '#d0473e'
     },
     {
-      title: 'Complete Regimen & Box',
-      short: 'Official Duo & Box',
-      image: '/images/dail_packaging.jpg',
-      product: PRODUCTS[0],
-      tag: 'Official Export Packaging',
-      tagline: 'Tamper-Proof Embossed Gold Seal',
-      price: 2490,
-      chip1: '🇵🇰 Export Batch Quality',
-      chip2: '🎁 Free Delivery Nationwide',
+      id: 1,
+      badge: '100% PURE BOTANICAL INFUSION (120ML)',
+      title: 'STOP ACUTE HAIR FALL AT THE ROOT',
+      subtitle: 'Powered with cold-pressed rosemary bio-actives, mountain amla & kalonji for rapid regrowth in 14 days.',
+      highlight: 'Proven Export Quality Batch',
+      buttonText: 'SHOP HAIR CARE',
+      secondaryButtonText: 'VIEW HERBAL HAIR OIL',
+      targetCategory: 'hair-care',
+      productIndex: 0, // Dail Hair Oil
+      image: '/images/dail_hair_oil.jpg',
+      bgGradient: 'from-emerald-950/85 via-stone-900/75 to-black/80',
+      accentColor: '#c59b27'
     },
+    {
+      id: 2,
+      badge: 'CRAZY VALUE OFFERS • SAVE RS. 1,001',
+      title: 'COMPLETE 3-IN-1 REGIMEN BOX',
+      subtitle: 'Full size Hair Oil + 5-Day Beauty Cream + Hand & Foot Whitening Cream with FREE nationwide delivery.',
+      highlight: 'Free Delivery on Rs. 2,000+ Nationwide',
+      buttonText: 'CLAIM BUNDLE DEAL',
+      secondaryButtonText: 'VIEW ALL OFFERS',
+      targetCategory: 'bundles',
+      productIndex: 3, // Complete Trio Set
+      image: '/images/dail_packaging.jpg',
+      bgGradient: 'from-red-950/85 via-stone-900/75 to-black/80',
+      accentColor: '#d0473e'
+    }
   ];
 
-  const currentHero = heroItems[selectedHeroTab];
+  // Auto-advance slides every 6 seconds
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [slides.length]);
 
-  const handleOpenCatalog = () => {
-    setSelectedCategory('all');
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const slide = slides[currentSlide];
+
+  const handlePrimaryAction = () => {
+    setSelectedCategory(slide.targetCategory);
     setCurrentPage('shop');
   };
 
-  const scrollToStudio = () => {
-    const el = document.getElementById('product-studio-spotlight');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleQuickAdd = () => {
-    if (selectedHeroTab === 2) {
-      addToCart(PRODUCTS[0], 1);
-      addToCart(PRODUCTS[1], 1);
-    } else {
-      addToCart(currentHero.product, 1);
-    }
-  };
-
-  const handleInspectProduct = () => {
-    setSelectedProduct(currentHero.product);
+  const handleSecondaryAction = () => {
+    const prod = PRODUCTS[slide.productIndex] || PRODUCTS[0];
+    setSelectedProduct(prod);
     setCurrentPage('product-detail');
   };
 
   return (
-    <section className="relative px-3 sm:px-6 lg:px-8 py-3 sm:py-8 max-w-7xl mx-auto">
+    <section className="relative w-full overflow-hidden bg-stone-950">
       
-      {/* Editorial Luxury Container (Clean Warm Ivory & White) */}
-      <div className="relative rounded-2xl sm:rounded-[36px] bg-white border border-stone-200/90 p-4 sm:p-8 lg:p-12 shadow-sm overflow-hidden">
+      {/* Slide Container */}
+      <div className="relative min-h-[480px] sm:min-h-[560px] lg:min-h-[640px] flex items-center">
         
-        {/* Soft Ambient Warm Glow */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#f7f1e6] rounded-full blur-3xl pointer-events-none -z-10" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-50/70 rounded-full blur-2xl pointer-events-none -z-10" />
+        {/* Background Image with Layered Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={slide.image} 
+            alt={slide.title} 
+            className="w-full h-full object-cover object-center scale-105 transition-transform duration-1000 ease-out"
+          />
+          {/* Gradient Overlay for high-end readability */}
+          <div className={`absolute inset-0 bg-gradient-to-r ${slide.bgGradient}`} />
+          <div className="absolute inset-0 bg-black/35" />
+        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
-          
-          {/* Left Column: Editorial Brand Headline & Proof */}
-          <div className="lg:col-span-7 space-y-5 z-10">
+        {/* Content Area */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 py-16 sm:py-24 w-full">
+          <div className="max-w-2xl text-white space-y-4 sm:space-y-6">
             
-            {/* Prestige Badges */}
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/70 text-[#7b3e1d] text-[11px] sm:text-xs font-bold tracking-wider uppercase">
-                <Sparkles className="w-3.5 h-3.5 text-[#c59b27]" />
-                100% PURE HERBAL FORMULATIONS
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/70 text-emerald-800 text-[11px] sm:text-xs font-bold tracking-wider uppercase">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                STRICTLY ZERO STEROIDS
-              </span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-stone-100 text-stone-700 text-[11px] sm:text-xs font-semibold">
-                🇵🇰 Export Quality
-              </span>
+            {/* Top Pill Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/15 backdrop-blur-md border border-white/25 rounded-xs text-[11px] sm:text-xs font-heading font-extrabold tracking-[0.2em] uppercase text-white shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-[#c59b27]" />
+              <span>{slide.badge}</span>
             </div>
 
-            {/* Main Editorial Headline */}
-            <div className="space-y-1.5">
-              <h1 className="font-serif-luxury text-3xl sm:text-5xl lg:text-6xl font-bold leading-[1.14] text-[#1a1a1a] tracking-tight">
-                Pure Herbal Radiance. <br />
-                <span className="text-[#7b3e1d] italic font-serif">Zero Harmful Steroids.</span>
-              </h1>
-              
-              {/* Urdu Emotional Brand Subtitle */}
-              <p className="text-[#c59b27] font-serif text-sm sm:text-lg italic font-medium">
-                « خالص جڑی بوٹیوں کا نچوڑ — بنا کسی سائیڈ ایفیکٹ اور اسٹیرائیڈ کے »
-              </p>
-            </div>
+            {/* Main Headline */}
+            <h1 className="font-heading text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold uppercase tracking-tight text-white leading-[1.08]">
+              {slide.title}
+            </h1>
 
-            {/* Description Copy */}
-            <p className="text-stone-600 text-xs sm:text-sm lg:text-base leading-relaxed max-w-xl font-normal">
-              Pakistan's most trusted certified organic beauty brand. Formulated with authentic 
-              cold-pressed botanical oils and natural actives. Our iconic <strong>Dail 100% Organic Herbal Hair Oil (120ml)</strong> stops hair fall at the root, while our <strong>Dail Beauty Cream (5-Day Plan)</strong> restores glowing, fresh skin without mercury, bleaching, or skin thinning.
+            {/* Subtitle */}
+            <p className="text-stone-200 text-xs sm:text-base lg:text-lg font-normal leading-relaxed max-w-xl">
+              {slide.subtitle}
             </p>
 
-            {/* CTAs */}
-            <div className="flex flex-wrap items-center gap-2.5 pt-1">
+            {/* Highlight Trust Micro-Point */}
+            <div className="flex items-center gap-3 text-xs sm:text-sm font-semibold text-amber-200 tracking-wide">
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                {slide.highlight}
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1.5">
+                <Truck className="w-4 h-4 text-amber-300" />
+                Cash on Delivery Available
+              </span>
+            </div>
+
+            {/* CTA Buttons (Golden Pearl Angled Buttons with Shine Effect) */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
               <button
-                onClick={handleOpenCatalog}
-                className="px-6 py-3 sm:px-7 sm:py-3.5 rounded-full bg-[#7b3e1d] hover:bg-[#622f14] text-white text-xs sm:text-sm font-bold flex items-center gap-2 shadow-sm transition-all group cursor-pointer"
+                onClick={handlePrimaryAction}
+                className="btn-gp-primary px-6 sm:px-8 py-3.5 sm:py-4 text-xs sm:text-sm font-extrabold tracking-[0.18em] shadow-lg flex items-center gap-2 group cursor-pointer"
               >
-                <span>Shop Best Sellers</span>
+                <span>{slide.buttonText}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
 
               <button
-                onClick={scrollToStudio}
-                className="px-5 py-3 sm:px-6 sm:py-3.5 rounded-full bg-white hover:bg-stone-50 border border-stone-300 text-stone-800 text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all cursor-pointer"
+                onClick={handleSecondaryAction}
+                className="px-5 sm:px-7 py-3 sm:py-3.5 bg-white/10 hover:bg-white/20 text-white border border-white/40 font-heading text-xs sm:text-sm font-bold uppercase tracking-[0.14em] rounded-xs backdrop-blur-xs transition-colors cursor-pointer"
               >
-                <Sparkles className="w-4 h-4 text-[#c59b27]" />
-                <span>Explore Product Studio</span>
+                {slide.secondaryButtonText}
               </button>
             </div>
 
-            {/* Live Social Proof Strip */}
-            <div className="pt-4 border-t border-stone-100 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-stone-600">
-              <div className="flex items-center gap-2">
-                <div className="flex text-amber-500">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 fill-current" />
-                  ))}
-                </div>
-                <div>
-                  <span className="font-bold text-stone-900">4.9 / 5.0</span>
-                  <span className="text-stone-500 block text-[10px] sm:text-[11px]">(1,400+ Verified Reviews)</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                <span className="text-[11px] sm:text-xs">Cash on Delivery across Pakistan</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#7b3e1d] shrink-0" />
-                <span className="text-[11px] sm:text-xs">Tamper-Proof Gold Foil Seal</span>
-              </div>
-            </div>
-
           </div>
+        </div>
 
-          {/* Right Column: Unique Interactive Hero Product Showcase */}
-          <div className="lg:col-span-5 relative">
-            
-            {/* Interactive Switcher Bar */}
-            <div className="flex items-center justify-between gap-1 p-1 bg-stone-100/90 rounded-2xl border border-stone-200/80 mb-3 text-xs">
-              {heroItems.map((item, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setSelectedHeroTab(idx)}
-                  className={`flex-1 py-1.5 px-2 rounded-xl text-[11px] font-bold transition-all text-center cursor-pointer ${
-                    selectedHeroTab === idx
-                      ? 'bg-white text-[#7b3e1d] shadow-xs'
-                      : 'text-stone-600 hover:text-stone-900'
-                  }`}
-                >
-                  {item.short}
-                </button>
-              ))}
-            </div>
+        {/* Carousel Navigation Arrows */}
+        <button
+          onClick={prevSlide}
+          className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 bg-black/40 hover:bg-[#d0473e] text-white rounded-full flex items-center justify-center backdrop-blur-xs transition-colors cursor-pointer border border-white/20"
+          aria-label="Previous Slide"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
 
-            {/* Full-Impact Visual Stage */}
-            <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-b from-[#fefbf6] via-[#f7f1e6] to-[#ece1cf] border border-stone-200/90 shadow-md aspect-4/5 sm:aspect-square lg:aspect-4/5 flex flex-col justify-between p-4 sm:p-6 group">
-              
-              {/* Soft Ambient Radiance Behind Product */}
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.9)_0%,rgba(247,241,230,0.5)_60%,transparent_100%)] pointer-events-none" />
+        <button
+          onClick={nextSlide}
+          className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-12 sm:h-12 bg-black/40 hover:bg-[#d0473e] text-white rounded-full flex items-center justify-center backdrop-blur-xs transition-colors cursor-pointer border border-white/20"
+          aria-label="Next Slide"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
 
-              {/* Top Floating Badge & Pill */}
-              <div className="relative z-10 flex items-center justify-between gap-2 pointer-events-none">
-                <span className="px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[10px] sm:text-xs font-bold text-[#7b3e1d] border border-stone-200 shadow-2xs">
-                  {currentHero.tag}
-                </span>
-
-                <button
-                  onClick={handleInspectProduct}
-                  className="pointer-events-auto p-2 rounded-full bg-white/90 hover:bg-white text-stone-700 hover:text-[#7b3e1d] shadow-2xs transition-colors cursor-pointer"
-                  title="Inspect Details"
-                >
-                  <Eye className="w-3.5 h-3.5" />
-                </button>
-              </div>
-
-              {/* Central Hero Product Visual */}
-              <div 
-                onClick={handleInspectProduct}
-                className="relative z-10 flex-1 flex flex-col items-center justify-center cursor-pointer my-2"
-              >
-                <img
-                  src={currentHero.image}
-                  alt={currentHero.title}
-                  className="max-h-[75%] max-w-[88%] object-contain drop-shadow-[0_22px_28px_rgba(123,62,29,0.22)] group-hover:scale-105 transition-transform duration-500"
-                />
-                {/* Grounding Podium Shadow */}
-                <div className="w-3/4 h-3 rounded-[50%] bg-[#7b3e1d]/14 blur-[6px] -mt-2 pointer-events-none" />
-              </div>
-
-              {/* Floating Botanical Feature Chips */}
-              <div className="relative z-10 flex flex-wrap gap-1.5 mb-2 pointer-events-none">
-                <span className="px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur-xs text-[10px] font-semibold text-stone-800 border border-stone-200 shadow-2xs">
-                  {currentHero.chip1}
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-white/90 backdrop-blur-xs text-[10px] font-semibold text-stone-800 border border-stone-200 shadow-2xs">
-                  {currentHero.chip2}
-                </span>
-              </div>
-
-              {/* Bottom Quick-Action Control Bar */}
-              <div className="relative z-10 p-2.5 rounded-xl bg-white/95 backdrop-blur-md border border-stone-200/90 shadow-xs flex items-center justify-between gap-2">
-                <div>
-                  <span className="text-[10px] text-stone-500 font-medium block">
-                    {currentHero.title}
-                  </span>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-sm sm:text-base font-bold text-[#7b3e1d]">
-                      Rs. {currentHero.price.toLocaleString()}
-                    </span>
-                    <span className="text-[10px] text-emerald-700 font-bold">
-                      COD Available
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={handleQuickAdd}
-                    className="px-3 py-1.5 sm:px-4 sm:py-2 bg-[#7b3e1d] hover:bg-[#622f14] text-white rounded-lg font-bold text-xs flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
-                  >
-                    <ShoppingBag className="w-3.5 h-3.5 text-amber-300" />
-                    <span>Add to Bag</span>
-                  </button>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
+        {/* Carousel Dots */}
+        <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 sm:gap-2.5">
+          {slides.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentSlide(idx)}
+              className={`h-2 sm:h-2.5 rounded-full transition-all cursor-pointer ${
+                currentSlide === idx 
+                  ? 'w-7 sm:w-8 bg-[#d0473e]' 
+                  : 'w-2 sm:w-2.5 bg-white/50 hover:bg-white'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
         </div>
 
       </div>

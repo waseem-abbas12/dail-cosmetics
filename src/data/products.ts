@@ -171,7 +171,7 @@ export const PRODUCTS: Product[] = [
     name: 'Dail Pure Rosemary & Mint Scalp Hydro-Mist',
     urduName: 'ڈیل روزمیری ہائیڈرو مسٹ',
     tagline: '100% steam-distilled fresh rosemary water for daily zero-grease root energizing.',
-    category: 'mist',
+    category: 'hair-care',
     concern: ['Follicle Regrowth', 'Daily Maintenance', 'Hair Thinning'],
     price: 1650,
     originalPrice: 1950,
@@ -199,6 +199,108 @@ export const PRODUCTS: Product[] = [
     fullIngredients: '100% Pure Steam Distilled Rosmarinus Officinalis (Rosemary) Hydrosol, Peppermint Leaf Water, Biotin.',
     inStock: true,
     modelType: 'spray'
+  },
+  {
+    id: 'dail-vitamin-c-face-wash',
+    name: 'Dail Vitamin C & Neem Radiance Face Wash',
+    urduName: 'ڈیل وٹامن سی اینڈ نیم ریڈیئنس فیس واش',
+    tagline: 'Deep pore purification, instant brightening & oil control without stripping moisture.',
+    category: 'cleanser',
+    concern: ['Radiant Glow', 'Deep Cleansing', 'Oil Control'],
+    price: 890,
+    originalPrice: 1150,
+    rating: 4.92,
+    reviewCount: 380,
+    badge: 'Best Seller',
+    volume: '100 ml Tube',
+    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=800&q=80',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=800&q=80'
+    ],
+    description: 'Soap-free foaming cleanser infused with organic orange peel Vitamin C and purifying mountain neem. Gently dissolves pollution, excess sebum, and makeup while leaving the complexion visibly glowing and hydrated.',
+    benefits: [
+      'Gentle sulfate-free lather that purifies without skin tightness',
+      'Vitamin C brightens dull, tired skin and reduces sun tan',
+      'Neem bio-actives prevent acne, blemishes, and unclog enlarged pores'
+    ],
+    keyIngredients: [
+      { name: 'Pure Vitamin C (Ethyl Ascorbic Acid)', description: 'Potent stable antioxidant that evens skin tone and boosts radiance.' },
+      { name: 'Wild Neem Leaf Extract', description: 'Natural antibacterial agent that cleanses impurities.' }
+    ],
+    howToUse: [
+      'Squeeze coin-sized amount onto wet palms, massage over face for 60 seconds, then rinse.'
+    ],
+    fullIngredients: 'Purified Water, Decyl Glucoside, Glycerin, 3-O-Ethyl Ascorbic Acid, Neem Leaf Extract, Aloe Vera Leaf Juice, Allantoin.',
+    inStock: true,
+    modelType: 'bottle'
+  },
+  {
+    id: 'dail-keratin-repair-shampoo',
+    name: 'Dail Keratin & Biotin Herbal Repair Shampoo',
+    urduName: 'ڈیل کیراٹین اینڈ بایوٹین ہربل شیمپو',
+    tagline: 'Sulfate-Free intensive restorative shampoo for damaged, frizzy, and falling hair.',
+    category: 'hair-care',
+    concern: ['Hair Fall', 'Follicle Regrowth', 'Damage Repair'],
+    price: 1390,
+    originalPrice: 1750,
+    rating: 4.89,
+    reviewCount: 310,
+    badge: 'Top Rated',
+    volume: '250 ml Pump Bottle',
+    image: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=800&q=80',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=800&q=80'
+    ],
+    description: 'Formulated to complement Dail Premium Herbal Hair Oil. Free from harsh sulfates, parabens, and synthetic silicones. Infused with plant keratin and biotin to strengthen cuticle fibers and leave hair silky, thick, and voluminous.',
+    benefits: [
+      '100% Sulfate-Free & Paraben-Free formula safe for daily use',
+      'Reinforces keratin structure to stop breakage and split ends',
+      'Perfect companion wash after using Dail Herbal Hair Oil'
+    ],
+    keyIngredients: [
+      { name: 'Hydrolyzed Plant Keratin', description: 'Rebuilds microscopic cracks along the hair cortex.' },
+      { name: 'Biotin (Vitamin B7)', description: 'Thickens individual hair strand diameter.' }
+    ],
+    howToUse: [
+      'Apply to wet hair after oiling, lather thoroughly into scalp, and rinse with cold or lukewarm water.'
+    ],
+    fullIngredients: 'Deionized Aqua, Sodium Cocoyl Isethionate, Cocamidopropyl Betaine, Hydrolyzed Wheat Keratin, Biotin, D-Panthenol, Argania Spinosa Kernel Oil.',
+    inStock: true,
+    modelType: 'bottle'
+  },
+  {
+    id: 'dail-saffron-glow-serum',
+    name: 'Dail 24K Saffron & Arbutin Radiance Glow Serum',
+    urduName: 'ڈیل زعفران اینڈ اربوٹین گلو سیرم',
+    tagline: 'Concentrated antioxidant nectar for radiant glass skin and dark spot fading without steroids.',
+    category: 'serum',
+    concern: ['Radiant Glow', 'Uneven Skin Tone', 'Without Steroid'],
+    price: 1890,
+    originalPrice: 2400,
+    rating: 4.96,
+    reviewCount: 450,
+    badge: 'Best Seller',
+    volume: '30 ml Dropper Bottle',
+    image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=800&q=80',
+    galleryImages: [
+      'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=800&q=80'
+    ],
+    description: 'Ultra-concentrated botanical elixir formulated with organic Kashmiri saffron threads and Alpha Arbutin. Quickly penetrates to brighten dark patches, soothe hyperpigmentation, and impart a glass-like luminous glow.',
+    benefits: [
+      'Penetrates deep into epidermis to fade stubborn sun spots and acne marks',
+      'Strictly WITHOUT STEROIDS — safe for daily morning and night use',
+      'Featherlight water-gel texture that absorbs in seconds without stickiness'
+    ],
+    keyIngredients: [
+      { name: 'Kashmiri Saffron Stigma Extract', description: 'Ancient royal spice packed with crocin for incandescent radiance.' },
+      { name: 'Pure Alpha Arbutin 2%', description: 'Clinically proven safe natural melanin inhibitor.' }
+    ],
+    howToUse: [
+      'Dispense 3-4 drops onto clean face before moisturizer. Tap gently until absorbed.'
+    ],
+    fullIngredients: 'Purified Water, Crocus Sativus (Saffron) Stigma Extract, Alpha Arbutin, Hyaluronic Acid, Niacinamide, Ferulic Acid.',
+    inStock: true,
+    modelType: 'bottle'
   }
 ];
 

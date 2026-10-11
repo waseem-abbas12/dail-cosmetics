@@ -49,15 +49,15 @@ export const FaqSection: React.FC = () => {
     <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
       
       {/* Header */}
-      <div className="text-center space-y-3 mb-10">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-[#7b3e1d] text-xs font-bold uppercase tracking-wider">
-          <HelpCircle className="w-3.5 h-3.5 text-[#c59b27]" />
-          <span>Customer Clarifications</span>
+      <div className="text-center space-y-2 mb-8 sm:mb-12">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 text-[#d0473e] text-[11px] font-heading font-extrabold uppercase tracking-widest rounded-xs">
+          <HelpCircle className="w-3.5 h-3.5" />
+          <span>CUSTOMER HELP & SUPPORT</span>
         </div>
-        <h2 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-stone-900">
-          Frequently Asked <span className="text-[#7b3e1d] italic">Questions</span>
+        <h2 className="font-heading text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-stone-900">
+          Frequently Asked Questions
         </h2>
-        <p className="text-stone-600 text-xs sm:text-sm font-normal">
+        <p className="text-stone-500 text-xs sm:text-sm font-normal">
           Aapke aam sawalaat ke sachay aur wazeh jawabaat.
         </p>
       </div>
