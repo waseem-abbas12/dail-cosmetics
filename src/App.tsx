@@ -19,7 +19,8 @@ import { ProductCard } from './components/ProductCard';
 import { MarqueeTicker } from './components/MarqueeTicker';
 import { RegimenDuoSection } from './components/RegimenDuoSection';
 import { SteroidComparisonSection } from './components/SteroidComparisonSection';
-import { Studio3DSpotlight } from './components/Studio3DSpotlight';
+import { ProductStudioSpotlight } from './components/ProductStudioSpotlight';
+import { ReviewsMarquee } from './components/ReviewsMarquee';
 import { IngredientAlchemySection } from './components/IngredientAlchemySection';
 import { VideoTestimonialsSection } from './components/VideoTestimonialsSection';
 import { ReviewsGridSection } from './components/ReviewsGridSection';
@@ -140,8 +141,8 @@ const HomeView: React.FC = () => {
         </div>
       </section>
 
-      {/* 5. 360° Interactive Three.js Studio Spotlight on Daylight Podium */}
-      <Studio3DSpotlight />
+      {/* 5. Ultra-Luxury Interactive Product Studio Spotlight with Multi-Angle Lens & Macro Zoom */}
+      <ProductStudioSpotlight />
 
       {/* 6. Medical Truth: "Why Without Steroids?" Trust Comparison */}
       <SteroidComparisonSection />
@@ -152,10 +153,13 @@ const HomeView: React.FC = () => {
       {/* 8. Video UGC Customer Unboxings & Testimonials */}
       <VideoTestimonialsSection />
 
-      {/* 9. Verified Customer Reviews from Pakistani Cities */}
+      {/* 9. Verified Customer Reviews Infinite Marquee */}
+      <ReviewsMarquee />
+
+      {/* 10. Verified Customer Reviews Grid & Interactive Submission */}
       <ReviewsGridSection />
 
-      {/* 10. Customer FAQ Accordion */}
+      {/* 11. Customer FAQ Accordion */}
       <FaqSection />
 
       {/* 11. Nationwide Logistics & COD Guarantee Banner */}

@@ -10,8 +10,8 @@ export const HeroSection: React.FC = () => {
     setCurrentPage('shop');
   };
 
-  const scrollTo3D = () => {
-    const el = document.getElementById('studio-3d-section');
+  const scrollToStudio = () => {
+    const el = document.getElementById('product-studio-spotlight');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
@@ -77,11 +77,11 @@ export const HeroSection: React.FC = () => {
               </button>
 
               <button
-                onClick={scrollTo3D}
-                className="px-6 py-3.5 rounded-full bg-white hover:bg-stone-50 border border-stone-300 text-stone-800 text-sm font-semibold flex items-center gap-2 transition-all"
+                onClick={scrollToStudio}
+                className="px-6 py-3.5 rounded-full bg-white hover:bg-stone-50 border border-stone-300 text-stone-800 text-sm font-semibold flex items-center gap-2 transition-all cursor-pointer"
               >
-                <Box className="w-4 h-4 text-[#c59b27]" />
-                <span>Interactive 3D Studio</span>
+                <Sparkles className="w-4 h-4 text-[#c59b27]" />
+                <span>Explore Product Studio</span>
               </button>
             </div>
 
