@@ -25,6 +25,7 @@ export const CheckoutPage: React.FC = () => {
     removeVoucher,
     createOrder,
     setCurrentPage,
+    storeSettings
   } = useStore();
 
   const [formData, setFormData] = useState({
@@ -321,7 +322,7 @@ export const CheckoutPage: React.FC = () => {
                       />
                       <div>
                         <strong className="text-stone-900 block font-bold text-sm">JazzCash Mobile Account</strong>
-                        <span className="text-stone-500">Send Rs. {total.toLocaleString()} to JazzCash: <strong>0300-1234567</strong></span>
+                        <span className="text-stone-500">Send Rs. {total.toLocaleString()} to JazzCash: <strong>{storeSettings.whatsappNumber}</strong></span>
                       </div>
                     </div>
                     <span className="text-xs font-bold text-stone-700">JazzCash</span>
@@ -355,7 +356,7 @@ export const CheckoutPage: React.FC = () => {
                       />
                       <div>
                         <strong className="text-stone-900 block font-bold text-sm">EasyPaisa Mobile Account</strong>
-                        <span className="text-stone-500">Send Rs. {total.toLocaleString()} to EasyPaisa: <strong>0300-1234567</strong></span>
+                        <span className="text-stone-500">Send Rs. {total.toLocaleString()} to EasyPaisa: <strong>{storeSettings.whatsappNumber}</strong></span>
                       </div>
                     </div>
                     <span className="text-xs font-bold text-stone-700">EasyPaisa</span>

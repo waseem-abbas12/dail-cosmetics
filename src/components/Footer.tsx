@@ -4,7 +4,7 @@ import { ShieldCheck, Truck, Phone, Mail, MapPin, Sparkles, Heart } from 'lucide
 import type { PageView, ProductCategory } from '../types';
 
 export const Footer: React.FC = () => {
-  const { setCurrentPage, setSelectedCategory } = useStore();
+  const { setCurrentPage, setSelectedCategory, storeSettings, getWhatsAppUrl } = useStore();
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
@@ -161,10 +161,15 @@ export const Footer: React.FC = () => {
         <div className="space-y-3">
           <h4 className="font-bold text-white text-sm uppercase tracking-wider">Helpline & Dispatch</h4>
           <div className="space-y-2.5 text-stone-400">
-            <div className="flex items-center gap-2">
+            <a 
+              href={getWhatsAppUrl()}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-2 hover:text-white transition-colors"
+            >
               <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
-              <span>WhatsApp: 0300-1234567</span>
-            </div>
+              <span>WhatsApp: {storeSettings.whatsappNumber}</span>
+            </a>
             <div className="flex items-center gap-2">
               <Mail className="w-4 h-4 text-amber-400 shrink-0" />
               <span>support@dailcosmetics.pk</span>

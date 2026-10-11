@@ -7,6 +7,9 @@ import { Filter, RotateCcw, Search, Sparkles, SlidersHorizontal, Check } from 'l
 
 export const CatalogPage: React.FC = () => {
   const {
+    products,
+    categories,
+    concerns,
     selectedCategory,
     setSelectedCategory,
     selectedConcern,
@@ -20,24 +23,8 @@ export const CatalogPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<'featured' | 'price-low' | 'price-high' | 'rating'>('featured');
   const [showFiltersMobile, setShowFiltersMobile] = useState(false);
 
-  const categories: { label: string; value: ProductCategory; icon: string }[] = [
-    { label: 'All Formulations', value: 'all', icon: '🌿' },
-    { label: '100% Herbal Hair Oil', value: 'hair-oil', icon: '🧴' },
-    { label: 'Steroid-Free Creams', value: 'cream', icon: '✨' },
-    { label: 'Regimen Bundles', value: 'bundles', icon: '🎁' },
-  ];
-
-  const concerns = [
-    'all',
-    'Hair Fall',
-    'Follicle Regrowth',
-    'Radiant Glow',
-    'Without Steroid',
-    'Dark Knuckles & Heels',
-  ];
-
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter((product) => {
+    return products.filter((product) => {
       // Category match
       if (selectedCategory !== 'all' && product.category !== selectedCategory) {
         return false;
@@ -121,7 +108,7 @@ export const CatalogPage: React.FC = () => {
 
             <div className="flex items-center gap-2 self-end sm:self-auto">
               <span className="text-xs text-stone-500 font-medium">
-                Showing <strong>{filteredProducts.length}</strong> of {PRODUCTS.length} formulations
+                Showing <strong>{filteredProducts.length}</strong> of {products.length} formulations
               </span>
             </div>
           </div>
@@ -130,16 +117,16 @@ export const CatalogPage: React.FC = () => {
           <div className="flex flex-wrap items-center justify-center gap-2 pt-2 border-t border-stone-100">
             {categories.map((cat) => (
               <button
-                key={cat.value}
-                onClick={() => setSelectedCategory(cat.value)}
+                key={cat.slug}
+                onClick={() => setSelectedCategory(cat.slug)}
                 className={`px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 border cursor-pointer ${
-                  selectedCategory === cat.value
+                  selectedCategory === cat.slug
                     ? 'bg-[#7b3e1d] text-white border-[#7b3e1d] shadow-xs'
                     : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100 hover:text-stone-900'
                 }`}
               >
                 <span>{cat.icon}</span>
-                <span>{cat.label}</span>
+                <span>{cat.name}</span>
               </button>
             ))}
           </div>

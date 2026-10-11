@@ -27,7 +27,7 @@ interface StudioFeature {
 }
 
 export const ProductStudioSpotlight: React.FC = () => {
-  const { addToCart, setCurrentPage, setSelectedProduct } = useStore();
+  const { addToCart, setCurrentPage, setSelectedProduct, getWhatsAppUrl } = useStore();
   const [selectedProductIdx, setSelectedProductIdx] = useState<number>(0);
   const [activeAngleIdx, setActiveAngleIdx] = useState<number>(0);
   const [activeFeature, setActiveFeature] = useState<StudioFeature | null>(null);
@@ -430,10 +430,10 @@ export const ProductStudioSpotlight: React.FC = () => {
                 </button>
 
                 <a
-                  href={`https://wa.me/923001234567?text=${whatsappMessage}`}
+                  href={getWhatsAppUrl(`As-salamu alaykum Dail Cosmetics!\n\nI want to order:\n• ${currentProduct.name} (${selectedVariant === 'jumbo' ? 'Value Pack' : currentProduct.volume})\nTotal: Rs. ${price.toLocaleString()} (Cash on Delivery)\n\nPlease confirm my order!`)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+                  className="py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs cursor-pointer"
                 >
                   <Phone className="w-3.5 h-3.5" />
                   <span>Order on WhatsApp</span>

@@ -1,4 +1,21 @@
-export type ProductCategory = 'all' | 'hair-oil' | 'cream' | 'mist' | 'bundles';
+export type ProductCategory = string;
+
+export interface CategoryItem {
+  id: string;
+  name: string;
+  slug: string;
+  icon?: string;
+  description?: string;
+}
+
+export interface StoreSettings {
+  whatsappNumber: string; // e.g. "03346361218"
+  announcementText: string;
+  freeShippingThreshold: number;
+  flatShippingFee: number;
+  brandTagline: string;
+  businessAddress: string;
+}
 
 export interface ProductReview {
   id: string;
@@ -22,7 +39,7 @@ export interface Product {
   originalPrice?: number;
   rating: number;
   reviewCount: number;
-  badge?: 'Best Seller' | 'New' | '100% Organic' | 'Top Rated' | 'Without Steroid';
+  badge?: 'Best Seller' | 'New' | '100% Organic' | 'Top Rated' | 'Without Steroid' | string;
   volume: string;
   image: string;
   galleryImages: string[];
@@ -68,9 +85,10 @@ export interface OrderDetails {
   shippingFee: number;
   discount: number;
   total: number;
-  status: 'confirmed' | 'processing' | 'dispatched' | 'delivered';
+  status: 'confirmed' | 'processing' | 'dispatched' | 'delivered' | 'cancelled';
   courierName?: string;
   trackingNumber?: string;
+  transactionId?: string;
 }
 
 export interface VideoTestimonial {
@@ -90,7 +108,7 @@ export type PageView =
   | 'product-detail' 
   | 'checkout' 
   | 'track-order' 
-  | 'wishlist'
+  | 'wishlist' 
   | 'about' 
-  | 'contact'
+  | 'contact' 
   | 'admin';

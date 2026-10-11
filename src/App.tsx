@@ -90,9 +90,9 @@ export default App;
  * Home View: Clean, High-End D2C Storefront (Rhode / Aesop / Blossom Organics Grade)
  */
 const HomeView: React.FC = () => {
-  const { setCurrentPage, setSelectedCategory } = useStore();
+  const { products, setCurrentPage, setSelectedCategory } = useStore();
 
-  const flagshipProducts = PRODUCTS.slice(0, 4);
+  const flagshipProducts = products.slice(0, 4);
 
   return (
     <div className="space-y-12 sm:space-y-20">

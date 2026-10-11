@@ -1,6 +1,110 @@
 import { create } from 'zustand';
-import type { Product, CartItem, OrderDetails, PageView, ProductCategory, ProductReview } from '../types';
+import { persist } from 'zustand/middleware';
+import type { 
+  Product, 
+  CartItem, 
+  OrderDetails, 
+  PageView, 
+  ProductCategory, 
+  ProductReview, 
+  CategoryItem, 
+  StoreSettings 
+} from '../types';
 import { PRODUCTS, REVIEWS } from '../data/products';
+
+export const INITIAL_CATEGORIES: CategoryItem[] = [
+  { id: 'cat-all', name: 'All Formulations', slug: 'all', icon: '🌿', description: 'Complete organic hair and skincare range' },
+  { id: 'cat-oil', name: '100% Herbal Hair Oil', slug: 'hair-oil', icon: '🧴', description: 'Cold-pressed botanical roots & hair fall control' },
+  { id: 'cat-cream', name: 'Steroid-Free Creams', slug: 'cream', icon: '✨', description: 'Restorative radiance and hydration without steroids' },
+  { id: 'cat-bundles', name: 'Regimen Bundles', slug: 'bundles', icon: '🎁', description: 'Value ritual duos with complimentary nationwide shipping' },
+];
+
+export const INITIAL_CONCERNS: string[] = [
+  'all',
+  'Hair Fall',
+  'Follicle Regrowth',
+  'Hair Thinning',
+  'Radiant Glow',
+  'Without Steroid',
+  'Dark Knuckles & Heels',
+  'Deep Moisture',
+  'Uneven Skin Tone'
+];
+
+export const INITIAL_SETTINGS: StoreSettings = {
+  whatsappNumber: '03346361218',
+  announcementText: '🇵🇰 Official Dail Cosmetics: 100% Herbal Hair Oil & Certified Without-Steroid Beauty Creams • Free Delivery Nationwide above Rs. 2,000',
+  freeShippingThreshold: 2000,
+  flatShippingFee: 199,
+  brandTagline: 'Pure Herbal Radiance • Zero Harmful Steroids',
+  businessAddress: 'Dail Cosmetics Pakistan • DHA Phase 5, Lahore, Pakistan',
+};
+
+// Initial realistic demo orders
+const INITIAL_ORDERS: OrderDetails[] = [
+  {
+    orderId: 'DAIL-PK-9824',
+    date: '2026-10-11',
+    customerName: 'Ayesha Tariq',
+    email: 'ayesha.tariq@gmail.com',
+    phone: '03346361218',
+    address: 'House 42, Sector Y, DHA Phase 5',
+    city: 'Lahore',
+    province: 'Punjab',
+    paymentMethod: 'cod',
+    items: [
+      {
+        productId: 'dail-premium-herbal-hair-oil',
+        name: 'Dail Premium Herbal Hair Oil (100% Organic)',
+        price: 1850,
+        quantity: 1,
+        image: '/images/dail_hair_oil.jpg'
+      },
+      {
+        productId: 'dail-beauty-cream',
+        name: 'Dail Beauty Cream (Without Steroid)',
+        price: 1450,
+        quantity: 1,
+        image: '/images/dail_beauty_cream.jpg'
+      }
+    ],
+    subtotal: 3300,
+    shippingFee: 0,
+    discount: 0,
+    total: 3300,
+    status: 'dispatched',
+    courierName: 'Trax Logistics Pakistan',
+    trackingNumber: 'TRX-9824102-PK'
+  },
+  {
+    orderId: 'DAIL-PK-7821',
+    date: '2026-10-10',
+    customerName: 'Muhammad Hamza',
+    email: 'm.hamza@gmail.com',
+    phone: '03214567890',
+    address: 'Apartment 4B, Clifton Block 2',
+    city: 'Karachi',
+    province: 'Sindh',
+    paymentMethod: 'jazzcash',
+    transactionId: 'JC-884192048',
+    items: [
+      {
+        productId: 'dail-premium-herbal-hair-oil',
+        name: 'Dail Premium Herbal Hair Oil (100% Organic)',
+        price: 1850,
+        quantity: 2,
+        image: '/images/dail_hair_oil.jpg'
+      }
+    ],
+    subtotal: 3700,
+    shippingFee: 0,
+    discount: 370,
+    total: 3330,
+    status: 'delivered',
+    courierName: 'TCS Pakistan',
+    trackingNumber: 'TCS-7821903-PK'
+  }
+];
 
 interface StoreState {
   // Navigation & Page State
@@ -39,9 +143,29 @@ interface StoreState {
   applyVoucher: (code: string) => { success: boolean; message: string };
   removeVoucher: () => void;
 
-  // Calculations
-  freeShippingThreshold: number;
-  flatShippingFee: number;
+  // Store Configuration & Settings (Shopify Grade)
+  storeSettings: StoreSettings;
+  updateStoreSettings: (updates: Partial<StoreSettings>) => void;
+  getWhatsAppCleanNumber: () => string;
+  getWhatsAppUrl: (customMessage?: string) => string;
+
+  // Catalog Products Management
+  products: Product[];
+  addProduct: (productData: Omit<Product, 'id'>) => Product;
+  updateProduct: (id: string, updates: Partial<Product>) => void;
+  deleteProduct: (id: string) => void;
+  toggleProductStock: (id: string) => void;
+  resetProductsToDefault: () => void;
+
+  // Categories & Concerns Management
+  categories: CategoryItem[];
+  addCategory: (cat: Omit<CategoryItem, 'id'>) => void;
+  deleteCategory: (slug: string) => void;
+  concerns: string[];
+  addConcern: (concern: string) => void;
+  deleteConcern: (concern: string) => void;
+
+  // Cart Calculations
   getCartSubtotal: () => number;
   getCartDiscount: () => number;
   getShippingFee: () => number;
@@ -58,259 +182,356 @@ interface StoreState {
   maxPriceFilter: number;
   setMaxPriceFilter: (price: number) => void;
 
-  // Reviews
+  // Customer Reviews Management
   reviews: ProductReview[];
   addReview: (review: Omit<ProductReview, 'id' | 'date' | 'helpfulCount'>) => void;
+  deleteReview: (reviewId: string) => void;
 
-  // Orders & Admin
+  // Orders Management & Fulfillment
   currentOrder: OrderDetails | null;
   orders: OrderDetails[];
   createOrder: (orderData: Omit<OrderDetails, 'orderId' | 'date' | 'status'>) => OrderDetails;
-  updateOrderStatus: (orderId: string, status: OrderDetails['status']) => void;
+  updateOrderStatus: (orderId: string, status: OrderDetails['status'], courierName?: string, trackingNumber?: string) => void;
+  deleteOrder: (orderId: string) => void;
   trackOrderById: (orderIdOrPhone: string) => OrderDetails | null;
 }
 
-// Initial orders for realistic demo
-const INITIAL_ORDERS: OrderDetails[] = [
-  {
-    orderId: 'DAIL-PK-9824',
-    date: '2026-10-10',
-    customerName: 'Ayesha Siddiqui',
-    email: 'ayesha.siddiqui@gmail.com',
-    phone: '03214567890',
-    address: 'Flat 402, Al-Ghafoor Tower, Gulshan-e-Iqbal',
-    city: 'Karachi',
-    province: 'Sindh',
-    paymentMethod: 'cod',
-    items: [
-      {
-        productId: 'dail-complete-trio-box',
-        name: 'Dail Complete 3-in-1 Regimen Box (Full Trio)',
-        price: 3890,
-        quantity: 1,
-        image: PRODUCTS[3]?.image || '/images/dail_packaging.jpg'
-      }
-    ],
-    subtotal: 3890,
-    shippingFee: 0,
-    discount: 0,
-    total: 3890,
-    status: 'dispatched',
-    courierName: 'Trax Logistics Pakistan',
-    trackingNumber: 'TRX-9824102-PK'
-  },
-  {
-    orderId: 'DAIL-PK-7821',
-    date: '2026-10-09',
-    customerName: 'Zainab Malik',
-    email: 'zainab.malik@gmail.com',
-    phone: '03001234567',
-    address: 'House 42-B, Sector F-8/2',
-    city: 'Islamabad',
-    province: 'Federal Capital',
-    paymentMethod: 'cod',
-    items: [
-      {
-        productId: 'dail-herbal-hair-oil-120ml',
-        name: 'Dail 100% Organic Herbal Hair Oil (120ml)',
-        price: 1450,
-        quantity: 2,
-        image: PRODUCTS[0].image
-      }
-    ],
-    subtotal: 2900,
-    shippingFee: 0,
-    discount: 0,
-    total: 2900,
-    status: 'delivered',
-    courierName: 'TCS Pakistan',
-    trackingNumber: 'TCS-7821903-PK'
-  }
-];
+export const useStore = create<StoreState>()(
+  persist(
+    (set, get) => ({
+      // Navigation
+      currentPage: 'home',
+      setCurrentPage: (page) => {
+        set({ currentPage: page });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      },
+      selectedProduct: PRODUCTS[0],
+      setSelectedProduct: (product) => set({ selectedProduct: product }),
 
-export const useStore = create<StoreState>((set, get) => ({
-  currentPage: 'home',
-  setCurrentPage: (page) => {
-    set({ currentPage: page });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  },
-  selectedProduct: PRODUCTS[0],
-  setSelectedProduct: (product) => set({ selectedProduct: product }),
+      quickViewProduct: null,
+      setQuickViewProduct: (product) => set({ quickViewProduct: product }),
 
-  quickViewProduct: null,
-  setQuickViewProduct: (product) => set({ quickViewProduct: product }),
+      isSearchOpen: false,
+      setIsSearchOpen: (open) => set({ isSearchOpen: open }),
 
-  isSearchOpen: false,
-  setIsSearchOpen: (open) => set({ isSearchOpen: open }),
+      // Wishlist
+      wishlist: [PRODUCTS[0].id, PRODUCTS[1].id],
+      toggleWishlist: (productId) => {
+        const { wishlist } = get();
+        if (wishlist.includes(productId)) {
+          set({ wishlist: wishlist.filter((id) => id !== productId) });
+        } else {
+          set({ wishlist: [...wishlist, productId] });
+        }
+      },
+      isInWishlist: (productId) => get().wishlist.includes(productId),
+      clearWishlist: () => set({ wishlist: [] }),
+      addAllWishlistToCart: () => {
+        const { wishlist, addToCart, products } = get();
+        wishlist.forEach((id) => {
+          const prod = products.find((p) => p.id === id);
+          if (prod) addToCart(prod, 1);
+        });
+      },
 
-  wishlist: [PRODUCTS[0].id, PRODUCTS[1].id],
-  toggleWishlist: (productId) => {
-    const { wishlist } = get();
-    if (wishlist.includes(productId)) {
-      set({ wishlist: wishlist.filter((id) => id !== productId) });
-    } else {
-      set({ wishlist: [...wishlist, productId] });
-    }
-  },
-  isInWishlist: (productId) => get().wishlist.includes(productId),
-  clearWishlist: () => set({ wishlist: [] }),
-  addAllWishlistToCart: () => {
-    const { wishlist, addToCart } = get();
-    wishlist.forEach((id) => {
-      const prod = PRODUCTS.find((p) => p.id === id);
-      if (prod) addToCart(prod, 1);
-    });
-  },
+      // Cart
+      cart: [
+        {
+          product: PRODUCTS[0],
+          quantity: 1,
+        }
+      ],
+      isCartOpen: false,
+      setIsCartOpen: (open) => set({ isCartOpen: open }),
 
-  cart: [
-    {
-      product: PRODUCTS[0],
-      quantity: 1,
-    }
-  ],
-  isCartOpen: false,
-  setIsCartOpen: (open) => set({ isCartOpen: open }),
+      addToCart: (product, quantity = 1) => {
+        const { cart } = get();
+        const existingIndex = cart.findIndex((item) => item.product.id === product.id);
 
-  addToCart: (product, quantity = 1) => {
-    const { cart } = get();
-    const existingIndex = cart.findIndex((item) => item.product.id === product.id);
+        if (existingIndex > -1) {
+          const updated = [...cart];
+          updated[existingIndex].quantity += quantity;
+          set({ cart: updated, isCartOpen: true });
+        } else {
+          set({ cart: [...cart, { product, quantity }], isCartOpen: true });
+        }
+      },
 
-    if (existingIndex > -1) {
-      const updated = [...cart];
-      updated[existingIndex].quantity += quantity;
-      set({ cart: updated, isCartOpen: true });
-    } else {
-      set({ cart: [...cart, { product, quantity }], isCartOpen: true });
-    }
-  },
+      removeFromCart: (productId) => {
+        set({ cart: get().cart.filter((item) => item.product.id !== productId) });
+      },
 
-  removeFromCart: (productId) => {
-    set({ cart: get().cart.filter((item) => item.product.id !== productId) });
-  },
+      updateQuantity: (productId, quantity) => {
+        if (quantity <= 0) {
+          get().removeFromCart(productId);
+          return;
+        }
+        const updated = get().cart.map((item) =>
+          item.product.id === productId ? { ...item, quantity } : item
+        );
+        set({ cart: updated });
+      },
 
-  updateQuantity: (productId, quantity) => {
-    if (quantity <= 0) {
-      get().removeFromCart(productId);
-      return;
-    }
-    const updated = get().cart.map((item) =>
-      item.product.id === productId ? { ...item, quantity } : item
-    );
-    set({ cart: updated });
-  },
+      clearCart: () => set({ cart: [], appliedVoucher: null, discountPercentage: 0 }),
 
-  clearCart: () => set({ cart: [], appliedVoucher: null, discountPercentage: 0 }),
-
-  // Vouchers
-  appliedVoucher: null,
-  discountPercentage: 0,
-  applyVoucher: (code) => {
-    const cleanCode = code.trim().toUpperCase();
-    if (cleanCode === 'ORGANIC10') {
-      set({ appliedVoucher: 'ORGANIC10', discountPercentage: 10 });
-      return { success: true, message: 'Voucher applied! 10% discount added.' };
-    }
-    if (cleanCode === 'DAIL20' || cleanCode === 'DALI20') {
-      set({ appliedVoucher: 'DAIL20', discountPercentage: 20 });
-      return { success: true, message: 'Special Welcome Code! 20% discount applied.' };
-    }
-    return { success: false, message: 'Invalid voucher code. Try "ORGANIC10" or "DAIL20"' };
-  },
-  removeVoucher: () => set({ appliedVoucher: null, discountPercentage: 0 }),
-
-  freeShippingThreshold: 2500, // PKR 2,500 for free delivery in Pakistan
-  flatShippingFee: 200,        // PKR 200 nationwide
-
-  getCartSubtotal: () => {
-    return get().cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  },
-
-  getCartDiscount: () => {
-    const subtotal = get().getCartSubtotal();
-    return Math.round((subtotal * get().discountPercentage) / 100);
-  },
-
-  getShippingFee: () => {
-    const subtotal = get().getCartSubtotal();
-    if (subtotal === 0) return 0;
-    return subtotal >= get().freeShippingThreshold ? 0 : get().flatShippingFee;
-  },
-
-  getCartTotal: () => {
-    const subtotal = get().getCartSubtotal();
-    const discount = get().getCartDiscount();
-    const shipping = get().getShippingFee();
-    return Math.max(0, subtotal - discount + shipping);
-  },
-
-  getTotalItemsCount: () => {
-    return get().cart.reduce((count, item) => count + item.quantity, 0);
-  },
-
-  // Search & Filter
-  searchQuery: '',
-  setSearchQuery: (query) => set({ searchQuery: query }),
-  selectedCategory: 'all',
-  setSelectedCategory: (cat) => set({ selectedCategory: cat }),
-  selectedConcern: 'all',
-  setSelectedConcern: (concern) => set({ selectedConcern: concern }),
-  maxPriceFilter: 5000,
-  setMaxPriceFilter: (price) => set({ maxPriceFilter: price }),
-
-  // Reviews
-  reviews: REVIEWS,
-  addReview: (review) => {
-    const newRev: ProductReview = {
-      ...review,
-      id: `rev-${Date.now()}`,
-      date: 'Just now',
-      helpfulCount: 1,
-    };
-    set((state) => ({ reviews: [newRev, ...state.reviews] }));
-  },
-
-  // Orders & Admin
-  currentOrder: null,
-  orders: INITIAL_ORDERS,
-
-  createOrder: (orderData) => {
-    const randNum = Math.floor(1000 + Math.random() * 9000);
-    const newOrderId = `DAIL-PK-${randNum}`;
-    const newOrder: OrderDetails = {
-      ...orderData,
-      orderId: newOrderId,
-      date: new Date().toISOString().split('T')[0],
-      status: 'confirmed',
-      courierName: 'Trax Express / TCS Pakistan',
-      trackingNumber: `TRX-${Math.floor(1000000 + Math.random() * 9000000)}-PK`
-    };
-
-    set((state) => ({
-      orders: [newOrder, ...state.orders],
-      currentOrder: newOrder,
-      cart: [],
+      // Voucher
       appliedVoucher: null,
-      discountPercentage: 0
-    }));
+      discountPercentage: 0,
+      applyVoucher: (code) => {
+        const cleanCode = code.trim().toUpperCase();
+        if (cleanCode === 'ORGANIC10') {
+          set({ appliedVoucher: 'ORGANIC10', discountPercentage: 10 });
+          return { success: true, message: 'Voucher applied! 10% discount added.' };
+        }
+        if (cleanCode === 'DAIL20' || cleanCode === 'DALI20') {
+          set({ appliedVoucher: 'DAIL20', discountPercentage: 20 });
+          return { success: true, message: 'Special Welcome Code! 20% discount applied.' };
+        }
+        if (cleanCode === 'EID15') {
+          set({ appliedVoucher: 'EID15', discountPercentage: 15 });
+          return { success: true, message: 'Special Eid Mubarak 15% discount applied!' };
+        }
+        return { success: false, message: 'Invalid voucher code. Try "ORGANIC10", "DAIL20" or "EID15"' };
+      },
+      removeVoucher: () => set({ appliedVoucher: null, discountPercentage: 0 }),
 
-    return newOrder;
-  },
+      // Store Settings
+      storeSettings: INITIAL_SETTINGS,
+      updateStoreSettings: (updates) => {
+        set((state) => ({
+          storeSettings: { ...state.storeSettings, ...updates }
+        }));
+      },
+      getWhatsAppCleanNumber: () => {
+        const raw = get().storeSettings.whatsappNumber || '03346361218';
+        const digits = raw.replace(/\D/g, '');
+        if (digits.startsWith('92')) return digits;
+        if (digits.startsWith('0')) return '92' + digits.substring(1);
+        return '92' + digits;
+      },
+      getWhatsAppUrl: (customMessage) => {
+        const cleanNumber = get().getWhatsAppCleanNumber();
+        const defaultMsg = 'Hello Dail Cosmetics! I want to inquire about your 100% Organic Hair Oil & Steroid-Free Skincare.';
+        const msg = encodeURIComponent(customMessage || defaultMsg);
+        return `https://wa.me/${cleanNumber}?text=${msg}`;
+      },
 
-  updateOrderStatus: (orderId, status) => {
-    set((state) => ({
-      orders: state.orders.map((o) => (o.orderId === orderId ? { ...o, status } : o)),
-      currentOrder: state.currentOrder?.orderId === orderId ? { ...state.currentOrder, status } : state.currentOrder
-    }));
-  },
+      // Products Management
+      products: PRODUCTS,
+      addProduct: (productData) => {
+        const newProduct: Product = {
+          ...productData,
+          id: `dail-custom-${Date.now()}`,
+          rating: productData.rating || 5.0,
+          reviewCount: productData.reviewCount || 1,
+          galleryImages: productData.galleryImages?.length ? productData.galleryImages : [productData.image, '/images/dail_packaging.jpg'],
+          benefits: productData.benefits?.length ? productData.benefits : ['100% Pure Organic Cold-Pressed Active', 'Export Quality Seal Guarantee'],
+          keyIngredients: productData.keyIngredients?.length ? productData.keyIngredients : [{ name: 'Pure Botanical Actives', description: 'Certified Organic Extracts' }],
+          howToUse: productData.howToUse?.length ? productData.howToUse : ['Apply gently and massage for optimal absorption.'],
+          fullIngredients: productData.fullIngredients || '100% Botanical Extracts and Cold-Pressed Herbal Oils.',
+          inStock: productData.inStock !== false,
+          modelType: productData.modelType || 'bottle',
+        };
 
-  trackOrderById: (orderIdOrPhone) => {
-    const search = orderIdOrPhone.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
-    if (!search) return null;
-    const found = get().orders.find((o) => {
-      const cleanOrderId = o.orderId.toUpperCase().replace(/[^A-Z0-9]/g, '');
-      const cleanPhone = o.phone.replace(/[^0-9]/g, '');
-      return cleanOrderId.includes(search) || cleanPhone.includes(search);
-    });
-    return found || null;
-  }
-}));
+        set((state) => ({
+          products: [newProduct, ...state.products]
+        }));
+        return newProduct;
+      },
+
+      updateProduct: (id, updates) => {
+        set((state) => ({
+          products: state.products.map((p) => (p.id === id ? { ...p, ...updates } : p)),
+          selectedProduct: state.selectedProduct?.id === id ? { ...state.selectedProduct, ...updates } : state.selectedProduct
+        }));
+      },
+
+      deleteProduct: (id) => {
+        set((state) => ({
+          products: state.products.filter((p) => p.id !== id),
+          cart: state.cart.filter((item) => item.product.id !== id),
+          wishlist: state.wishlist.filter((wId) => wId !== id)
+        }));
+      },
+
+      toggleProductStock: (id) => {
+        set((state) => ({
+          products: state.products.map((p) => (p.id === id ? { ...p, inStock: !p.inStock } : p))
+        }));
+      },
+
+      resetProductsToDefault: () => {
+        set({
+          products: PRODUCTS,
+          categories: INITIAL_CATEGORIES,
+          concerns: INITIAL_CONCERNS,
+          storeSettings: INITIAL_SETTINGS
+        });
+      },
+
+      // Categories & Concerns
+      categories: INITIAL_CATEGORIES,
+      addCategory: (cat) => {
+        const newCat: CategoryItem = {
+          ...cat,
+          id: `cat-${Date.now()}`
+        };
+        set((state) => ({ categories: [...state.categories, newCat] }));
+      },
+      deleteCategory: (slug) => {
+        if (slug === 'all') return;
+        set((state) => ({
+          categories: state.categories.filter((c) => c.slug !== slug),
+          selectedCategory: state.selectedCategory === slug ? 'all' : state.selectedCategory
+        }));
+      },
+
+      concerns: INITIAL_CONCERNS,
+      addConcern: (concern) => {
+        if (!concern.trim() || get().concerns.includes(concern.trim())) return;
+        set((state) => ({ concerns: [...state.concerns, concern.trim()] }));
+      },
+      deleteConcern: (concern) => {
+        if (concern === 'all') return;
+        set((state) => ({
+          concerns: state.concerns.filter((c) => c !== concern),
+          selectedConcern: state.selectedConcern === concern ? 'all' : state.selectedConcern
+        }));
+      },
+
+      // Cart Calculations
+      getCartSubtotal: () => {
+        return get().cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+      },
+
+      getCartDiscount: () => {
+        const subtotal = get().getCartSubtotal();
+        return Math.round((subtotal * get().discountPercentage) / 100);
+      },
+
+      getShippingFee: () => {
+        const subtotal = get().getCartSubtotal();
+        if (subtotal === 0) return 0;
+        return subtotal >= get().storeSettings.freeShippingThreshold ? 0 : get().storeSettings.flatShippingFee;
+      },
+
+      getCartTotal: () => {
+        const subtotal = get().getCartSubtotal();
+        const discount = get().getCartDiscount();
+        const shipping = get().getShippingFee();
+        return Math.max(0, subtotal - discount + shipping);
+      },
+
+      getTotalItemsCount: () => {
+        return get().cart.reduce((count, item) => count + item.quantity, 0);
+      },
+
+      // Search & Filter
+      searchQuery: '',
+      setSearchQuery: (query) => set({ searchQuery: query }),
+      selectedCategory: 'all',
+      setSelectedCategory: (cat) => set({ selectedCategory: cat }),
+      selectedConcern: 'all',
+      setSelectedConcern: (concern) => set({ selectedConcern: concern }),
+      maxPriceFilter: 5000,
+      setMaxPriceFilter: (price) => set({ maxPriceFilter: price }),
+
+      // Reviews
+      reviews: REVIEWS,
+      addReview: (review) => {
+        const newRev: ProductReview = {
+          ...review,
+          id: `rev-${Date.now()}`,
+          date: 'Just now',
+          helpfulCount: 1,
+        };
+        set((state) => ({ reviews: [newRev, ...state.reviews] }));
+      },
+      deleteReview: (reviewId) => {
+        set((state) => ({ reviews: state.reviews.filter((r) => r.id !== reviewId) }));
+      },
+
+      // Orders
+      currentOrder: null,
+      orders: INITIAL_ORDERS,
+
+      createOrder: (orderData) => {
+        const randNum = Math.floor(1000 + Math.random() * 9000);
+        const newOrderId = `DAIL-PK-${randNum}`;
+        const newOrder: OrderDetails = {
+          ...orderData,
+          orderId: newOrderId,
+          date: new Date().toISOString().split('T')[0],
+          status: 'confirmed',
+          courierName: 'Trax Express / TCS Pakistan',
+          trackingNumber: `TRX-${Math.floor(1000000 + Math.random() * 9000000)}-PK`
+        };
+
+        set((state) => ({
+          orders: [newOrder, ...state.orders],
+          currentOrder: newOrder,
+          cart: [],
+          appliedVoucher: null,
+          discountPercentage: 0
+        }));
+
+        return newOrder;
+      },
+
+      updateOrderStatus: (orderId, status, courierName, trackingNumber) => {
+        set((state) => ({
+          orders: state.orders.map((o) => {
+            if (o.orderId === orderId) {
+              return {
+                ...o,
+                status,
+                ...(courierName ? { courierName } : {}),
+                ...(trackingNumber ? { trackingNumber } : {})
+              };
+            }
+            return o;
+          }),
+          currentOrder: state.currentOrder?.orderId === orderId
+            ? {
+                ...state.currentOrder,
+                status,
+                ...(courierName ? { courierName } : {}),
+                ...(trackingNumber ? { trackingNumber } : {})
+              }
+            : state.currentOrder
+        }));
+      },
+
+      deleteOrder: (orderId) => {
+        set((state) => ({
+          orders: state.orders.filter((o) => o.orderId !== orderId),
+          currentOrder: state.currentOrder?.orderId === orderId ? null : state.currentOrder
+        }));
+      },
+
+      trackOrderById: (orderIdOrPhone) => {
+        const search = orderIdOrPhone.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+        if (!search) return null;
+        const found = get().orders.find((o) => {
+          const cleanOrderId = o.orderId.toUpperCase().replace(/[^A-Z0-9]/g, '');
+          const cleanPhone = o.phone.replace(/[^0-9]/g, '');
+          return cleanOrderId.includes(search) || cleanPhone.includes(search);
+        });
+        return found || null;
+      }
+    }),
+    {
+      name: 'dail_cosmetics_store_v2',
+      partialize: (state) => ({
+        products: state.products,
+        categories: state.categories,
+        concerns: state.concerns,
+        storeSettings: state.storeSettings,
+        orders: state.orders,
+        reviews: state.reviews,
+        wishlist: state.wishlist,
+        cart: state.cart,
+      }),
+    }
+  )
+);

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, HelpCircle, Phone } from 'lucide-react';
+import { useStore } from '../store/useStore';
 
 interface FAQItem {
   question: string;
@@ -8,6 +9,7 @@ interface FAQItem {
 }
 
 export const FaqSection: React.FC = () => {
+  const { storeSettings, getWhatsAppUrl } = useStore();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const faqs: FAQItem[] = [
@@ -34,7 +36,7 @@ export const FaqSection: React.FC = () => {
     {
       question: 'Kya main direct WhatsApp par order book karwa sakta hoon?',
       urduQuestion: 'کیا واٹس ایپ پر آرڈر دیا جا سکتا ہے؟',
-      answer: 'Jee bilkul! Website par maujood kisi bhi "Order on WhatsApp" button par click karein ya hamari official helpline 0300-1234567 par apna naam, pata aur desired products send karein. Hamara representative foran order confirm karega.'
+      answer: `Jee bilkul! Website par maujood kisi bhi "Order on WhatsApp" button par click karein ya hamari official helpline ${storeSettings.whatsappNumber} par apna naam, pata aur desired products send karein. Hamara representative foran order confirm karega.`
     },
     {
       question: 'Dail Hand & Foot Cream dark knuckles aur rough heels par kab asar karti hai?',
@@ -104,13 +106,13 @@ export const FaqSection: React.FC = () => {
           <p className="text-xs text-stone-600">Our certified botanical herbalists are available on WhatsApp 24/7.</p>
         </div>
         <a
-          href="https://wa.me/923001234567?text=Hello%20Dail%20Cosmetics,%20I%20have%20a%20question"
+          href={getWhatsAppUrl('Hello Dail Cosmetics! I have a question regarding your products.')}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-4 py-2 bg-[#25D366] text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs hover:bg-[#20ba59] transition-colors"
+          className="px-4 py-2 bg-[#25D366] text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs hover:bg-[#20ba59] transition-colors cursor-pointer"
         >
           <Phone className="w-3.5 h-3.5" />
-          <span>Ask on WhatsApp</span>
+          <span>Ask on WhatsApp ({storeSettings.whatsappNumber})</span>
         </a>
       </div>
 

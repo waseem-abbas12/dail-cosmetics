@@ -4,7 +4,7 @@ import { Search, Package, Truck, CheckCircle2, Clock, MapPin, Phone, ShieldCheck
 import type { OrderDetails } from '../types';
 
 export const OrderTrackingPage: React.FC = () => {
-  const { trackOrderById, orders } = useStore();
+  const { trackOrderById, orders, storeSettings, getWhatsAppUrl } = useStore();
   const [searchInput, setSearchInput] = useState('DAIL-PK-9824');
   const [trackedOrder, setTrackedOrder] = useState<OrderDetails | null>(() => {
     return trackOrderById('DAIL-PK-9824') || orders[0] || null;
@@ -174,13 +174,13 @@ export const OrderTrackingPage: React.FC = () => {
                 </div>
 
                 <a
-                  href={`https://wa.me/923001234567?text=Hi%20Dail%20Cosmetics,%20checking%20status%20for%20Order%20${trackedOrder.orderId}`}
+                  href={getWhatsAppUrl(`Hi Dail Cosmetics! Checking status for Order ${trackedOrder.orderId}`)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#7b3e1d] font-bold hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <Phone className="w-3.5 h-3.5" />
-                  <span>WhatsApp Dispatch Support</span>
+                  <span>WhatsApp Dispatch Support ({storeSettings.whatsappNumber})</span>
                 </a>
               </div>
             </div>
@@ -190,7 +190,7 @@ export const OrderTrackingPage: React.FC = () => {
           <div className="p-8 text-center bg-white rounded-3xl border border-stone-200 max-w-md mx-auto space-y-2">
             <p className="text-sm font-bold text-stone-800">No order found</p>
             <p className="text-xs text-stone-500">
-              Please verify your tracking ID or WhatsApp phone number. For assistance, contact our helpline at 0300-1234567.
+              Please verify your tracking ID or WhatsApp phone number. For assistance, contact our helpline at {storeSettings.whatsappNumber}.
             </p>
           </div>
         ) : null}

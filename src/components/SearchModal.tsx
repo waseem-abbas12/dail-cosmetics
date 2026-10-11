@@ -5,20 +5,20 @@ import { Search, X, ArrowRight, ShoppingBag, Star } from 'lucide-react';
 import type { Product } from '../types';
 
 export const SearchModal: React.FC = () => {
-  const { isSearchOpen, setIsSearchOpen, addToCart, setSelectedProduct, setCurrentPage } = useStore();
+  const { products, isSearchOpen, setIsSearchOpen, addToCart, setSelectedProduct, setCurrentPage } = useStore();
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredProducts = useMemo(() => {
-    if (!searchTerm.trim()) return PRODUCTS.slice(0, 4);
+    if (!searchTerm.trim()) return products.slice(0, 4);
     const query = searchTerm.toLowerCase();
-    return PRODUCTS.filter(
+    return products.filter(
       (p) =>
         p.name.toLowerCase().includes(query) ||
         p.tagline.toLowerCase().includes(query) ||
         p.description.toLowerCase().includes(query) ||
         p.concern.some((c) => c.toLowerCase().includes(query))
     );
-  }, [searchTerm]);
+  }, [searchTerm, products]);
 
   if (!isSearchOpen) return null;
 

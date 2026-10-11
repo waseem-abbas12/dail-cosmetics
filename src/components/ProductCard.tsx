@@ -14,7 +14,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setCurrentPage, 
     setQuickViewProduct,
     isInWishlist,
-    toggleWishlist 
+    toggleWishlist,
+    getWhatsAppUrl
   } = useStore();
 
   const [activeAngle, setActiveAngle] = useState<'product' | 'box'>('product');
@@ -50,10 +51,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const handleWhatsAppOrder = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const text = encodeURIComponent(
-      `As-salamu alaykum Dail Cosmetics! I want to order:\n• ${product.name} (Rs. ${product.price.toLocaleString()})\n\nPlease deliver via Cash on Delivery.`
-    );
-    window.open(`https://wa.me/923000000000?text=${text}`, '_blank');
+    const msg = `As-salamu alaykum Dail Cosmetics! I want to order:\n• ${product.name} (Rs. ${product.price.toLocaleString()})\n\nPlease deliver via Cash on Delivery.`;
+    window.open(getWhatsAppUrl(msg), '_blank');
   };
 
   const discountPercent = product.originalPrice

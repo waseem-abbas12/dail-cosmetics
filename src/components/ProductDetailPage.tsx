@@ -31,7 +31,9 @@ export const ProductDetailPage: React.FC = () => {
     isInWishlist,
     toggleWishlist,
     reviews,
-    addReview
+    addReview,
+    storeSettings,
+    getWhatsAppUrl
   } = useStore();
 
   const product = selectedProduct || PRODUCTS[0];
@@ -373,13 +375,13 @@ export const ProductDetailPage: React.FC = () => {
               </button>
 
               <a
-                href={`https://wa.me/923001234567?text=${whatsappMessage}`}
+                href={getWhatsAppUrl(`As-salamu alaykum Dail Cosmetics!\n\nI want to order:\n• ${product.name} (${selectedSize === 'jumbo' ? 'Jumbo Pack' : product.volume})\nQty: ${quantity} • Total: Rs. ${(currentPrice * quantity).toLocaleString()}\nCity: ${calcCity}\n\nPlease confirm delivery!`)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-xs"
+                className="w-full py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-xs cursor-pointer"
               >
                 <Phone className="w-3.5 h-3.5" />
-                <span>Instant Order via WhatsApp (0300-1234567)</span>
+                <span>Instant Order via WhatsApp ({storeSettings.whatsappNumber})</span>
               </a>
             </div>
 

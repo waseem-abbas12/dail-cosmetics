@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Phone, Mail, MapPin, Clock, MessageSquare, Send } from 'lucide-react';
+import { useStore } from '../store/useStore';
 
 export const ContactPage: React.FC = () => {
+  const { storeSettings, getWhatsAppUrl } = useStore();
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({ name: '', phone: '', concern: 'Hair Fall Consultation', message: '' });
 
@@ -38,17 +40,17 @@ export const ContactPage: React.FC = () => {
 
               {/* WhatsApp Quick Connect */}
               <a
-                href="https://wa.me/923001234567?text=Hi%20Dail%20Cosmetics,%20I%20need%20a%20consultation%20regarding%20my%20hair%20and%20skin."
+                href={getWhatsAppUrl('Hi Dail Cosmetics! I need a personalized organic consultation regarding my hair and skin.')}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center gap-4 hover:bg-emerald-100/70 transition-all group"
+                className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center gap-4 hover:bg-emerald-100/70 transition-all group cursor-pointer"
               >
                 <div className="w-12 h-12 rounded-xl bg-[#25d366] text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform">
                   <Phone className="w-6 h-6" />
                 </div>
                 <div>
                   <strong className="text-stone-900 text-sm block font-bold">Official WhatsApp Helpline</strong>
-                  <span className="text-emerald-800 text-xs font-mono font-bold">+92 300 1234567</span>
+                  <span className="text-emerald-800 text-xs font-mono font-bold">+92 {storeSettings.whatsappNumber.replace(/^0/, '')}</span>
                   <span className="text-[10px] text-stone-500 block mt-0.5">Instant replies 10 AM - 10 PM PKT</span>
                 </div>
               </a>

@@ -27,12 +27,13 @@ export const CartDrawer: React.FC = () => {
     getCartDiscount,
     getShippingFee,
     getCartTotal,
-    freeShippingThreshold,
     appliedVoucher,
     discountPercentage,
     applyVoucher,
     removeVoucher,
     setCurrentPage,
+    getWhatsAppUrl,
+    storeSettings
   } = useStore();
 
   const [voucherInput, setVoucherInput] = useState('');
@@ -44,6 +45,7 @@ export const CartDrawer: React.FC = () => {
   const discount = getCartDiscount();
   const shipping = getShippingFee();
   const total = getCartTotal();
+  const freeShippingThreshold = storeSettings.freeShippingThreshold;
 
   const amountNeededForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
   const freeShippingProgress = Math.min(100, Math.round((subtotal / freeShippingThreshold) * 100));
@@ -310,13 +312,13 @@ export const CartDrawer: React.FC = () => {
 
               {/* Secondary Action: WhatsApp 1-Click Order */}
               <a
-                href={`https://wa.me/923001234567?text=${generateWhatsAppOrderText()}`}
+                href={getWhatsAppUrl(generateWhatsAppOrderText())}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-xs"
+                className="w-full py-2.5 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-xs cursor-pointer"
               >
                 <Phone className="w-3.5 h-3.5" />
-                <span>Instant Order via WhatsApp</span>
+                <span>Instant Order via WhatsApp ({storeSettings.whatsappNumber})</span>
               </a>
 
               <div className="text-center text-[10px] text-stone-400 flex items-center justify-center gap-2 pt-1">
