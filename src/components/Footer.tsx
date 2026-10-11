@@ -147,6 +147,11 @@ export const Footer: React.FC = () => {
               </button>
             </li>
             <li>
+              <button onClick={() => navigateTo('admin')} className="text-amber-400 hover:text-white transition-colors font-medium">
+                ⚙️ Store Admin & Orders Hub
+              </button>
+            </li>
+            <li>
               <span className="text-stone-500">Cash on Delivery Available Nationwide</span>
             </li>
           </ul>

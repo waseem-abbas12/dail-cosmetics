@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import type { Product, CartItem, OrderDetails, PageView, ProductCategory } from '../types';
-import { PRODUCTS } from '../data/products';
+import type { Product, CartItem, OrderDetails, PageView, ProductCategory, ProductReview } from '../types';
+import { PRODUCTS, REVIEWS } from '../data/products';
 
 interface StoreState {
   // Navigation & Page State
@@ -21,6 +21,8 @@ interface StoreState {
   wishlist: string[]; // product IDs
   toggleWishlist: (productId: string) => void;
   isInWishlist: (productId: string) => boolean;
+  clearWishlist: () => void;
+  addAllWishlistToCart: () => void;
 
   // Cart State
   cart: CartItem[];
@@ -53,13 +55,19 @@ interface StoreState {
   setSelectedCategory: (cat: ProductCategory) => void;
   selectedConcern: string;
   setSelectedConcern: (concern: string) => void;
+  maxPriceFilter: number;
+  setMaxPriceFilter: (price: number) => void;
+
+  // Reviews
+  reviews: ProductReview[];
+  addReview: (review: Omit<ProductReview, 'id' | 'date' | 'helpfulCount'>) => void;
 
   // Orders & Admin
   currentOrder: OrderDetails | null;
   orders: OrderDetails[];
   createOrder: (orderData: Omit<OrderDetails, 'orderId' | 'date' | 'status'>) => OrderDetails;
   updateOrderStatus: (orderId: string, status: OrderDetails['status']) => void;
-  trackOrderById: (orderId: string) => OrderDetails | null;
+  trackOrderById: (orderIdOrPhone: string) => OrderDetails | null;
 }
 
 // Initial orders for realistic demo
@@ -135,7 +143,7 @@ export const useStore = create<StoreState>((set, get) => ({
   isSearchOpen: false,
   setIsSearchOpen: (open) => set({ isSearchOpen: open }),
 
-  wishlist: [PRODUCTS[0].id],
+  wishlist: [PRODUCTS[0].id, PRODUCTS[1].id],
   toggleWishlist: (productId) => {
     const { wishlist } = get();
     if (wishlist.includes(productId)) {
@@ -145,6 +153,14 @@ export const useStore = create<StoreState>((set, get) => ({
     }
   },
   isInWishlist: (productId) => get().wishlist.includes(productId),
+  clearWishlist: () => set({ wishlist: [] }),
+  addAllWishlistToCart: () => {
+    const { wishlist, addToCart } = get();
+    wishlist.forEach((id) => {
+      const prod = PRODUCTS.find((p) => p.id === id);
+      if (prod) addToCart(prod, 1);
+    });
+  },
 
   cart: [
     {
@@ -185,7 +201,7 @@ export const useStore = create<StoreState>((set, get) => ({
 
   clearCart: () => set({ cart: [], appliedVoucher: null, discountPercentage: 0 }),
 
-  // Vouchers: 'ORGANIC10' gives 10% off, 'DAIL20' gives 20% off
+  // Vouchers
   appliedVoucher: null,
   discountPercentage: 0,
   applyVoucher: (code) => {
@@ -198,11 +214,11 @@ export const useStore = create<StoreState>((set, get) => ({
       set({ appliedVoucher: 'DAIL20', discountPercentage: 20 });
       return { success: true, message: 'Special Welcome Code! 20% discount applied.' };
     }
-    return { success: false, message: 'Invalid voucher code. Try "ORGANIC10"' };
+    return { success: false, message: 'Invalid voucher code. Try "ORGANIC10" or "DAIL20"' };
   },
   removeVoucher: () => set({ appliedVoucher: null, discountPercentage: 0 }),
 
-  freeShippingThreshold: 2500, // PKR 2,500 for free delivery in Pakistan (like top stores)
+  freeShippingThreshold: 2500, // PKR 2,500 for free delivery in Pakistan
   flatShippingFee: 200,        // PKR 200 nationwide
 
   getCartSubtotal: () => {
@@ -238,6 +254,20 @@ export const useStore = create<StoreState>((set, get) => ({
   setSelectedCategory: (cat) => set({ selectedCategory: cat }),
   selectedConcern: 'all',
   setSelectedConcern: (concern) => set({ selectedConcern: concern }),
+  maxPriceFilter: 5000,
+  setMaxPriceFilter: (price) => set({ maxPriceFilter: price }),
+
+  // Reviews
+  reviews: REVIEWS,
+  addReview: (review) => {
+    const newRev: ProductReview = {
+      ...review,
+      id: `rev-${Date.now()}`,
+      date: 'Just now',
+      helpfulCount: 1,
+    };
+    set((state) => ({ reviews: [newRev, ...state.reviews] }));
+  },
 
   // Orders & Admin
   currentOrder: null,
@@ -273,9 +303,14 @@ export const useStore = create<StoreState>((set, get) => ({
     }));
   },
 
-  trackOrderById: (orderId) => {
-    const searchId = orderId.trim().toUpperCase();
-    const found = get().orders.find((o) => o.orderId.toUpperCase() === searchId);
+  trackOrderById: (orderIdOrPhone) => {
+    const search = orderIdOrPhone.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (!search) return null;
+    const found = get().orders.find((o) => {
+      const cleanOrderId = o.orderId.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      const cleanPhone = o.phone.replace(/[^0-9]/g, '');
+      return cleanOrderId.includes(search) || cleanPhone.includes(search);
+    });
     return found || null;
   }
 }));

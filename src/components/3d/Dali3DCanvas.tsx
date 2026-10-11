@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { RotateCcw, ZoomIn, ZoomOut, Award } from 'lucide-react';
+import { RotateCcw, ZoomIn, ZoomOut, Award, Sparkles, Sun, Eye, Droplet } from 'lucide-react';
 
 interface Dali3DCanvasProps {
   initialModel?: 'oil' | 'beauty-cream' | 'hand-foot';
@@ -24,38 +24,38 @@ export const Dali3DCanvas: React.FC<Dali3DCanvasProps> = ({
   const [modelType, setModelType] = useState<'oil' | 'beauty-cream' | 'hand-foot'>(initialModel);
   const [isAutoRotate, setIsAutoRotate] = useState<boolean>(true);
   const [activeHotspot, setActiveHotspot] = useState<Hotspot | null>(null);
-  const [zoomLevel, setZoomLevel] = useState<number>(4.2);
+  const [zoomLevel, setZoomLevel] = useState<number>(4.0);
+  const [lightingMode, setLightingMode] = useState<'studio' | 'warm' | 'soft'>('studio');
 
   // Three.js internal references
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const productGroupRef = useRef<THREE.Group | null>(null);
-  const leavesGroupRef = useRef<THREE.Group | null>(null);
-  const particlesRef = useRef<THREE.Points | null>(null);
+  const envTextureRef = useRef<THREE.Texture | null>(null);
   const reqIdRef = useRef<number | null>(null);
 
-  // Mouse & Touch interaction
+  // Interaction tracking
   const isDraggingRef = useRef(false);
   const previousMousePosition = useRef({ x: 0, y: 0 });
-  const targetRotation = useRef({ x: 0.05, y: 0.2 });
+  const targetRotation = useRef({ x: 0.08, y: 0.35 });
 
   // Hotspots definitions per model
   const hotspotsMap: Record<'oil' | 'beauty-cream' | 'hand-foot', Hotspot[]> = {
     oil: [
-      { id: 'h-oil-1', title: 'Export Quality 120ml Bottle', desc: '100% pure cold-pressed botanical hair oil. UV-protected amber glass prevents oxidation.', position: [0, 0.7, 0.55] },
-      { id: 'h-oil-2', title: 'Iconic Dail Monogram', desc: 'Official factory security seal. Guaranteed authentic herbal active batch.', position: [0, 0.2, 0.55] },
-      { id: 'h-oil-3', title: '100% Organic & Steroid-Free', desc: 'Zero mineral oil, zero parabens. Safe for daily use by men & women.', position: [0, -0.6, 0.55] },
+      { id: 'h-oil-1', title: 'Pharmaceutical Amber Glass', desc: '120ml UV-filtering flint amber glass preserves active cold-pressed rosemary and kalonji bio-flavonoids from oxidation.', position: [0, 0.6, 0.6] },
+      { id: 'h-oil-2', title: 'Authentic Dail Security Seal', desc: 'Embossed gold foil seal and registered trademark monogram guarantee zero adulteration or mineral filler oil.', position: [0, 0.1, 0.6] },
+      { id: 'h-oil-3', title: 'Precision Dispenser Cap', desc: '24K gold-plated ribbed metallic dropper collar with anti-leak silicone seal for mess-free scalp partings.', position: [0, 1.1, 0.4] },
     ],
     'beauty-cream': [
-      { id: 'h-cream-1', title: 'Signature Round Tin Lid', desc: 'Embossed Dail metallic lid ensures airtight hygiene and prevents counterfeit.', position: [0, 0.55, 0.85] },
-      { id: 'h-cream-2', title: 'Strictly Without Steroid', desc: 'Tested to be 100% free from clobetasol, betamethasone, and mercury.', position: [0, 0.0, 0.85] },
-      { id: 'h-cream-3', title: '5-Day Beauty Plan', desc: 'Dual-action Anti-Acne and Anti-Aging natural saffron and arbutin illumination.', position: [0, -0.4, 0.85] },
+      { id: 'h-cream-1', title: 'Embossed Gold Safety Lid', desc: 'Concentric precision-threaded lid prevents moisture evaporation and guarantees factory-sealed sterility.', position: [0, 0.6, 0.8] },
+      { id: 'h-cream-2', title: '100% Steroid-Free Certification', desc: 'Certified free from clobetasol, betamethasone, mercury, and chemical bleaches. Safe for lifelong barrier repair.', position: [0, 0.0, 0.8] },
+      { id: 'h-cream-3', title: '5-Day Radiance Plan', desc: 'Active Kashmiri saffron, niacinamide, and cold-pressed botanical lipids for cellular illumination without peeling.', position: [0, -0.4, 0.8] },
     ],
     'hand-foot': [
-      { id: 'h-hf-1', title: 'Sunburst Gold Lid', desc: 'Distinctive Dail Hand & Foot signature yellow screw cap with embossed logo.', position: [0, 0.55, 0.85] },
-      { id: 'h-hf-2', title: '3-Action Repair Matrix', desc: 'Moisturizing, Multi-Effect, and Barrier Repair for dark knuckles and rough heels.', position: [0, 0.0, 0.85] },
-      { id: 'h-hf-3', title: 'Zero Steroids / Safe', desc: 'Non-greasy rapid absorption formula formulated for South Asian skin.', position: [0, -0.4, 0.85] },
+      { id: 'h-hf-1', title: 'Sunburst Gold Cap', desc: 'Signature Dail Hand & Foot vibrant gold threaded lid with tamper-proof security ring.', position: [0, 0.6, 0.8] },
+      { id: 'h-hf-2', title: '3-Action Cellular Repair', desc: 'Dissolves stubborn melanin on dark knuckles, rough ankles, and calloused heels with raw shea butter and urea.', position: [0, 0.0, 0.8] },
+      { id: 'h-hf-3', title: 'Non-Greasy Absorption', desc: 'Rapid skin penetration matrix formulated specifically for Pakistani climates and daily routine.', position: [0, -0.4, 0.8] },
     ]
   };
 
@@ -69,79 +69,69 @@ export const Dali3DCanvas: React.FC<Dali3DCanvasProps> = ({
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
-    // 2. Camera with cinematic focal length
-    const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
-    camera.position.set(0, 0.35, zoomLevel);
+    // 2. Camera
+    const camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 50);
+    camera.position.set(0, 0.4, zoomLevel);
     cameraRef.current = camera;
 
-    // 3. WebGL Renderer with High-End Color Management
+    // 3. High-Quality WebGL Renderer
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
       powerPreference: 'high-performance',
+      stencil: false,
     });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.35;
+    renderer.toneMappingExposure = 1.25;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     rendererRef.current = renderer;
 
     container.replaceChildren(renderer.domElement);
 
-    // 4. Studio Lighting Rig (Warm Gold & Clean Speculars)
-    const ambientLight = new THREE.AmbientLight(0xfff6e6, 1.2);
+    // 4. Generate Procedural High-End Studio Environment Map
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    pmremGenerator.compileEquirectangularShader();
+    const studioEnvTexture = createPhotorealisticStudioEnvironment(pmremGenerator);
+    scene.environment = studioEnvTexture;
+    envTextureRef.current = studioEnvTexture;
+
+    // 5. Studio Lighting Rig
+    const ambientLight = new THREE.AmbientLight(0xfffdfa, 1.4);
     scene.add(ambientLight);
 
-    // Main Studio Key Light (Champagne Gold highlight)
-    const keyLight = new THREE.DirectionalLight(0xfff3db, 3.2);
-    keyLight.position.set(3.5, 4.5, 3.5);
+    // Key Light (Main softbox overhead right)
+    const keyLight = new THREE.DirectionalLight(0xfffaed, 3.5);
+    keyLight.position.set(4, 5, 4);
     keyLight.castShadow = true;
+    keyLight.shadow.mapSize.width = 1024;
+    keyLight.shadow.mapSize.height = 1024;
+    keyLight.shadow.bias = -0.0001;
     scene.add(keyLight);
 
-    // Fill Light
-    const fillLight = new THREE.DirectionalLight(0xe8d5a7, 1.8);
-    fillLight.position.set(-3.5, 2, 2.5);
+    // Fill Light (Cool daylight softbox from left)
+    const fillLight = new THREE.DirectionalLight(0xedf4ff, 1.8);
+    fillLight.position.set(-4, 2.5, 3);
     scene.add(fillLight);
 
-    // Gold Rim Light from Behind
-    const rimLight = new THREE.DirectionalLight(0xd4af37, 2.5);
-    rimLight.position.set(0, 3, -3.5);
+    // Rim/Back Light (Warm amber highlight outlining bottle curves)
+    const rimLight = new THREE.DirectionalLight(0xf5d996, 2.8);
+    rimLight.position.set(0, 3.5, -4);
     scene.add(rimLight);
 
-    // Bottom Specular Bounce
-    const bounceLight = new THREE.DirectionalLight(0xc41e3a, 0.8);
-    bounceLight.position.set(0, -3, 2);
-    scene.add(bounceLight);
+    // Soft Marble / Travertine Pedestal Ground
+    const pedestalGroup = createLuxuryPedestal();
+    scene.add(pedestalGroup);
 
-    // Soft Shadow Ground Plane
-    const groundGeo = new THREE.PlaneGeometry(12, 12);
-    const groundMat = new THREE.ShadowMaterial({ opacity: 0.35 });
-    const groundMesh = new THREE.Mesh(groundGeo, groundMat);
-    groundMesh.rotation.x = -Math.PI / 2;
-    groundMesh.position.y = -1.15;
-    groundMesh.receiveShadow = true;
-    scene.add(groundMesh);
-
-    // 5. Product Mesh Group
+    // 6. Product Group
     const productGroup = new THREE.Group();
     scene.add(productGroup);
     productGroupRef.current = productGroup;
 
-    // 6. Floating Botanical Leaves Group
-    const leavesGroup = new THREE.Group();
-    scene.add(leavesGroup);
-    leavesGroupRef.current = leavesGroup;
-    createBotanicalFoliage(leavesGroup);
-
-    // 7. Floating 24K Gold Particles
-    const particles = createGoldParticles();
-    scene.add(particles);
-    particlesRef.current = particles;
-
-    // 8. Build initial 3D model
-    buildProductModel(productGroup, modelType);
+    // Build the realistic model
+    buildRealisticProduct(productGroup, modelType);
 
     // Animation Loop
     let clock = new THREE.Clock();
@@ -151,30 +141,16 @@ export const Dali3DCanvas: React.FC<Dali3DCanvasProps> = ({
 
       if (productGroupRef.current) {
         if (isAutoRotate && !isDraggingRef.current) {
-          targetRotation.current.y += 0.007;
-          targetRotation.current.x = Math.sin(elapsedTime * 0.6) * 0.05;
+          targetRotation.current.y += 0.0055;
+          targetRotation.current.x = Math.sin(elapsedTime * 0.7) * 0.03 + 0.05;
         }
 
-        // Smooth inertia lerping
-        productGroupRef.current.rotation.y += (targetRotation.current.y - productGroupRef.current.rotation.y) * 0.07;
-        productGroupRef.current.rotation.x += (targetRotation.current.x - productGroupRef.current.rotation.x) * 0.07;
+        // Smooth physics-based damping lerp
+        productGroupRef.current.rotation.y += (targetRotation.current.y - productGroupRef.current.rotation.y) * 0.075;
+        productGroupRef.current.rotation.x += (targetRotation.current.x - productGroupRef.current.rotation.x) * 0.075;
 
-        // Subtle organic breathing float
-        productGroupRef.current.position.y = Math.sin(elapsedTime * 1.8) * 0.045;
-      }
-
-      // Gentle leaf sway
-      if (leavesGroupRef.current) {
-        leavesGroupRef.current.children.forEach((leaf, idx) => {
-          const offset = idx * 1.5;
-          leaf.rotation.z += Math.sin(elapsedTime * 0.9 + offset) * 0.0006;
-          leaf.position.y += Math.sin(elapsedTime * 1.3 + offset) * 0.0005;
-        });
-      }
-
-      // Golden particle float
-      if (particlesRef.current) {
-        particlesRef.current.rotation.y = elapsedTime * 0.025;
+        // Subtle organic levitation float above pedestal
+        productGroupRef.current.position.y = Math.sin(elapsedTime * 1.6) * 0.025 + 0.02;
       }
 
       renderer.render(scene, camera);
@@ -183,7 +159,7 @@ export const Dali3DCanvas: React.FC<Dali3DCanvasProps> = ({
 
     animate();
 
-    // Mouse Parallax & Drag Handlers
+    // Mouse Drag Controls
     const handleMouseDown = (e: MouseEvent) => {
       isDraggingRef.current = true;
       previousMousePosition.current = { x: e.clientX, y: e.clientY };
@@ -194,9 +170,9 @@ export const Dali3DCanvas: React.FC<Dali3DCanvasProps> = ({
       const deltaX = e.clientX - previousMousePosition.current.x;
       const deltaY = e.clientY - previousMousePosition.current.y;
 
-      targetRotation.current.y += deltaX * 0.008;
-      targetRotation.current.x += deltaY * 0.008;
-      targetRotation.current.x = Math.max(-0.4, Math.min(0.4, targetRotation.current.x));
+      targetRotation.current.y += deltaX * 0.007;
+      targetRotation.current.x += deltaY * 0.007;
+      targetRotation.current.x = Math.max(-0.35, Math.min(0.35, targetRotation.current.x));
 
       previousMousePosition.current = { x: e.clientX, y: e.clientY };
     };
@@ -205,7 +181,7 @@ export const Dali3DCanvas: React.FC<Dali3DCanvasProps> = ({
       isDraggingRef.current = false;
     };
 
-    // Touch support for mobile
+    // Touch Support
     const handleTouchStart = (e: TouchEvent) => {
       if (e.touches.length === 1) {
         isDraggingRef.current = true;
@@ -218,9 +194,9 @@ export const Dali3DCanvas: React.FC<Dali3DCanvasProps> = ({
       const deltaX = e.touches[0].clientX - previousMousePosition.current.x;
       const deltaY = e.touches[0].clientY - previousMousePosition.current.y;
 
-      targetRotation.current.y += deltaX * 0.008;
-      targetRotation.current.x += deltaY * 0.008;
-      targetRotation.current.x = Math.max(-0.4, Math.min(0.4, targetRotation.current.x));
+      targetRotation.current.y += deltaX * 0.007;
+      targetRotation.current.x += deltaY * 0.007;
+      targetRotation.current.x = Math.max(-0.35, Math.min(0.35, targetRotation.current.x));
 
       previousMousePosition.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     };
@@ -257,123 +233,125 @@ export const Dali3DCanvas: React.FC<Dali3DCanvasProps> = ({
       dom.removeEventListener('touchstart', handleTouchStart);
       dom.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('touchend', handleTouchEnd);
+      pmremGenerator.dispose();
       renderer.dispose();
     };
   }, []);
 
-  // Update model when type changes
+  // Switch 3D Model on selection change
   useEffect(() => {
     if (productGroupRef.current) {
-      buildProductModel(productGroupRef.current, modelType);
+      buildRealisticProduct(productGroupRef.current, modelType);
       setActiveHotspot(null);
     }
   }, [modelType]);
 
-  // Handle zoom changes
-  const handleZoom = (direction: 'in' | 'out') => {
+  const handleZoom = (dir: 'in' | 'out') => {
     if (!cameraRef.current) return;
-    const newZoom = direction === 'in' ? Math.max(2.8, zoomLevel - 0.4) : Math.min(5.5, zoomLevel + 0.4);
-    setZoomLevel(newZoom);
-    cameraRef.current.position.z = newZoom;
+    const nextZoom = dir === 'in' ? Math.max(2.6, zoomLevel - 0.4) : Math.min(5.2, zoomLevel + 0.4);
+    setZoomLevel(nextZoom);
+    cameraRef.current.position.z = nextZoom;
   };
 
   const currentHotspots = hotspotsMap[modelType];
 
   return (
-    <div className={`relative w-full h-full min-h-[480px] sm:min-h-[540px] flex items-center justify-center select-none ${className}`}>
+    <div className={`relative w-full h-full min-h-[460px] sm:min-h-[520px] flex items-center justify-center select-none overflow-hidden ${className}`}>
       
-      {/* 3D WebGL Canvas */}
-      <div 
-        ref={mountRef} 
+      {/* 3D WebGL Canvas Viewport */}
+      <div
+        ref={mountRef}
         className="w-full h-full cursor-grab active:cursor-grabbing flex items-center justify-center"
       />
 
-      {/* Top Floating Badge with Gold Accent */}
+      {/* Top Left Studio Badge */}
       <div className="absolute top-4 left-4 z-20 pointer-events-none flex items-center gap-2">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#0a0b0e]/85 backdrop-blur-md border border-[#d4af37]/40 text-[#f3e5ab] text-xs font-semibold shadow-xl">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#d4af37] animate-pulse" />
-          <span>3D Studio • 360° Drag & Inspect</span>
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md border border-stone-200 text-stone-800 text-xs font-semibold shadow-xs">
+          <span className="w-2 h-2 rounded-full bg-[#7b3e1d] animate-pulse" />
+          <span>Real 3D Studio • Drag 360° to Inspect</span>
         </div>
       </div>
 
-      {/* Zoom & Spin Tools on Top Right */}
-      <div className="absolute top-4 right-4 z-20 flex items-center gap-2 pointer-events-auto">
+      {/* Top Right Tool Controls */}
+      <div className="absolute top-4 right-4 z-20 flex items-center gap-1.5 pointer-events-auto">
         <button
           onClick={() => handleZoom('in')}
-          className="p-2 rounded-full gold-glass-panel text-white hover:text-[#d4af37] transition-colors"
+          className="p-2 rounded-xl bg-white/90 hover:bg-white border border-stone-200 text-stone-700 shadow-xs transition-colors"
           title="Zoom In"
         >
           <ZoomIn className="w-4 h-4" />
         </button>
         <button
           onClick={() => handleZoom('out')}
-          className="p-2 rounded-full gold-glass-panel text-white hover:text-[#d4af37] transition-colors"
+          className="p-2 rounded-xl bg-white/90 hover:bg-white border border-stone-200 text-stone-700 shadow-xs transition-colors"
           title="Zoom Out"
         >
           <ZoomOut className="w-4 h-4" />
         </button>
         <button
           onClick={() => setIsAutoRotate(!isAutoRotate)}
-          className={`p-2 rounded-full gold-glass-panel transition-all ${
-            isAutoRotate ? 'text-[#d4af37] bg-black/60 border-[#d4af37]' : 'text-stone-400 hover:text-white'
+          className={`p-2 rounded-xl border transition-all ${
+            isAutoRotate
+              ? 'bg-[#7b3e1d] text-white border-[#7b3e1d] shadow-xs'
+              : 'bg-white/90 text-stone-700 border-stone-200 hover:bg-white'
           }`}
           title={isAutoRotate ? 'Pause 360° Spin' : 'Resume 360° Spin'}
         >
-          <RotateCcw className={`w-4 h-4 ${isAutoRotate ? 'animate-spin' : ''}`} style={{ animationDuration: '8s' }} />
+          <RotateCcw className={`w-4 h-4 ${isAutoRotate ? 'animate-spin' : ''}`} style={{ animationDuration: '9s' }} />
         </button>
       </div>
 
-      {/* Active Hotspot Info Card Modal */}
+      {/* Active Hotspot Modal Card */}
       {activeHotspot && (
-        <div className="absolute top-16 left-4 right-4 sm:left-auto sm:right-6 sm:w-72 z-30 p-4 rounded-2xl gold-glass-card border border-[#d4af37]/50 shadow-2xl animate-fade-in pointer-events-auto">
+        <div className="absolute top-16 left-4 right-4 sm:left-auto sm:right-6 sm:w-80 z-30 p-4 rounded-2xl bg-white border border-[#c59b27]/60 shadow-xl animate-in fade-in duration-200 pointer-events-auto">
           <div className="flex items-start justify-between gap-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#d4af37] uppercase tracking-wider">
-              <Award className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-2 text-xs font-bold text-[#7b3e1d] uppercase tracking-wider">
+              <Award className="w-3.5 h-3.5 text-[#c59b27]" />
               <span>{activeHotspot.title}</span>
             </div>
-            <button 
+            <button
               onClick={() => setActiveHotspot(null)}
-              className="text-stone-400 hover:text-white text-xs font-bold p-0.5"
+              className="text-stone-400 hover:text-stone-800 text-xs font-bold p-0.5"
             >
               ✕
             </button>
           </div>
-          <p className="text-xs text-stone-200 mt-2 leading-relaxed">
+          <p className="text-xs text-stone-600 mt-2 leading-relaxed">
             {activeHotspot.desc}
           </p>
         </div>
       )}
 
-      {/* Interactive Hotspot Trigger Buttons (Positioned Over Canvas) */}
-      <div className="absolute inset-0 pointer-events-none flex flex-col justify-center items-end pr-6 gap-3 z-20">
+      {/* Floating Interactive Hotspot Buttons */}
+      <div className="absolute inset-y-0 right-4 sm:right-6 pointer-events-none flex flex-col justify-center items-end gap-2.5 z-20">
         <div className="pointer-events-auto flex flex-col gap-2">
           {currentHotspots.map((h) => (
             <button
               key={h.id}
               onClick={() => setActiveHotspot(activeHotspot?.id === h.id ? null : h)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all shadow-lg backdrop-blur-md ${
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all shadow-xs backdrop-blur-md ${
                 activeHotspot?.id === h.id
-                  ? 'bg-[#d4af37] text-black font-bold shadow-amber-500/40 scale-105'
-                  : 'bg-black/75 border border-[#d4af37]/30 text-stone-200 hover:border-[#d4af37] hover:text-white'
+                  ? 'bg-[#7b3e1d] text-white font-bold scale-105 shadow-md'
+                  : 'bg-white/95 border border-stone-200 text-stone-700 hover:border-[#7b3e1d] hover:text-[#7b3e1d]'
               }`}
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-[#d4af37]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#c59b27]" />
               <span>{h.title}</span>
             </button>
           ))}
         </div>
       </div>
 
-      {/* Bottom Model Switcher HUD matching actual packaging! */}
+      {/* Bottom Model Switcher HUD */}
       {showControls && (
         <div className="absolute bottom-4 left-4 right-4 z-20 flex flex-wrap items-center justify-center gap-2 pointer-events-none">
-          <div className="flex items-center gap-1 p-1 rounded-full gold-glass-panel pointer-events-auto border border-[#d4af37]/30 shadow-2xl">
+          <div className="flex items-center gap-1.5 p-1.5 rounded-full bg-white/95 backdrop-blur-md pointer-events-auto border border-stone-200 shadow-lg">
             <button
               onClick={() => setModelType('oil')}
               className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 modelType === 'oil'
-                  ? 'bg-gradient-to-r from-[#d4af37] to-[#aa820a] text-black shadow-lg font-bold'
-                  : 'text-stone-300 hover:text-white'
+                  ? 'bg-[#7b3e1d] text-white shadow-xs font-bold'
+                  : 'text-stone-600 hover:text-stone-900'
               }`}
             >
               <span>🧴</span>
@@ -384,20 +362,20 @@ export const Dali3DCanvas: React.FC<Dali3DCanvasProps> = ({
               onClick={() => setModelType('beauty-cream')}
               className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 modelType === 'beauty-cream'
-                  ? 'bg-gradient-to-r from-[#d4af37] to-[#aa820a] text-black shadow-lg font-bold'
-                  : 'text-stone-300 hover:text-white'
+                  ? 'bg-[#7b3e1d] text-white shadow-xs font-bold'
+                  : 'text-stone-600 hover:text-stone-900'
               }`}
             >
               <span>✨</span>
-              <span>Beauty Cream (5-Day Plan)</span>
+              <span>Beauty Cream (0% Steroid)</span>
             </button>
 
             <button
               onClick={() => setModelType('hand-foot')}
               className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all flex items-center gap-1.5 ${
                 modelType === 'hand-foot'
-                  ? 'bg-gradient-to-r from-[#d4af37] to-[#aa820a] text-black shadow-lg font-bold'
-                  : 'text-stone-300 hover:text-white'
+                  ? 'bg-[#7b3e1d] text-white shadow-xs font-bold'
+                  : 'text-stone-600 hover:text-stone-900'
               }`}
             >
               <span>💛</span>
@@ -411,11 +389,93 @@ export const Dali3DCanvas: React.FC<Dali3DCanvasProps> = ({
   );
 };
 
-// ==========================================
-// 3D PBR Geometry & Material Builders
-// ==========================================
+// ==============================================================
+// 1. Photorealistic Studio Environment Map Generator
+// ==============================================================
+function createPhotorealisticStudioEnvironment(pmremGenerator: THREE.PMREMGenerator): THREE.Texture {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1024;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d')!;
 
-function buildProductModel(group: THREE.Group, type: 'oil' | 'beauty-cream' | 'hand-foot') {
+  // Soft neutral gradient backdrop
+  const grad = ctx.createLinearGradient(0, 0, 0, 512);
+  grad.addColorStop(0, '#f2eee9');
+  grad.addColorStop(0.5, '#eae5dc');
+  grad.addColorStop(1, '#dfd8cc');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1024, 512);
+
+  // Overhead Key Softbox (Bright diffused highlight)
+  ctx.fillStyle = 'rgba(255, 253, 245, 0.95)';
+  ctx.beginPath();
+  ctx.ellipse(320, 140, 180, 80, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Left Softbox (Cool clean daylight fill)
+  ctx.fillStyle = 'rgba(235, 243, 255, 0.75)';
+  ctx.beginPath();
+  ctx.ellipse(820, 180, 140, 70, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Subtle warm amber studio light
+  ctx.fillStyle = 'rgba(255, 218, 145, 0.55)';
+  ctx.beginPath();
+  ctx.ellipse(512, 280, 220, 60, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+  const renderTarget = pmremGenerator.fromEquirectangular(texture);
+  return renderTarget.texture;
+}
+
+// ==============================================================
+// 2. Luxury Travertine / Marble Pedestal
+// ==============================================================
+function createLuxuryPedestal(): THREE.Group {
+  const pedestalGroup = new THREE.Group();
+
+  // Cylindrical Stone Podium
+  const podiumGeo = new THREE.CylinderGeometry(1.6, 1.7, 0.22, 64);
+  const podiumMat = new THREE.MeshStandardMaterial({
+    color: 0xf5f0e8,
+    roughness: 0.65,
+    metalness: 0.05,
+  });
+  const podiumMesh = new THREE.Mesh(podiumGeo, podiumMat);
+  podiumMesh.position.y = -1.02;
+  podiumMesh.receiveShadow = true;
+  pedestalGroup.add(podiumMesh);
+
+  // Polished Gold Trim Bevel Ring around podium
+  const trimGeo = new THREE.TorusGeometry(1.61, 0.02, 16, 64);
+  const goldMat = new THREE.MeshStandardMaterial({
+    color: 0xd4af37,
+    roughness: 0.2,
+    metalness: 0.85,
+  });
+  const trimMesh = new THREE.Mesh(trimGeo, goldMat);
+  trimMesh.rotation.x = Math.PI / 2;
+  trimMesh.position.y = -0.91;
+  pedestalGroup.add(trimMesh);
+
+  // Soft Contact Shadow Receiver Plane
+  const groundGeo = new THREE.PlaneGeometry(10, 10);
+  const groundMat = new THREE.ShadowMaterial({ opacity: 0.22 });
+  const groundMesh = new THREE.Mesh(groundGeo, groundMat);
+  groundMesh.rotation.x = -Math.PI / 2;
+  groundMesh.position.y = -1.13;
+  groundMesh.receiveShadow = true;
+  pedestalGroup.add(groundMesh);
+
+  return pedestalGroup;
+}
+
+// ==============================================================
+// 3. Realistic 3D Product Factory
+// ==============================================================
+function buildRealisticProduct(group: THREE.Group, type: 'oil' | 'beauty-cream' | 'hand-foot') {
   while (group.children.length > 0) {
     const obj = group.children[0];
     group.remove(obj);
@@ -423,531 +483,580 @@ function buildProductModel(group: THREE.Group, type: 'oil' | 'beauty-cream' | 'h
   }
 
   if (type === 'oil') {
-    buildHairOilPackage(group);
+    createRealisticHairOil(group);
   } else if (type === 'beauty-cream') {
-    buildBeautyCreamPackage(group);
+    createRealisticBeautyCream(group);
   } else {
-    buildHandFootPackage(group);
+    createRealisticHandFoot(group);
   }
 }
 
-/**
- * 1. Dail Premium Herbal Hair Oil (120ml) — Jet Black, Red Base & Gold Accents
- */
-function buildHairOilPackage(group: THREE.Group) {
-  // Bottle Glass Cylinder (120ml Luxury Amber Glass)
-  const radius = 0.54;
-  const height = 1.65;
-  const bodyGeo = new THREE.CylinderGeometry(radius, radius, height, 48);
+// ==============================================================
+// 4. Photorealistic Dail Herbal Hair Oil (120ml Flint Amber Glass)
+// ==============================================================
+function createRealisticHairOil(group: THREE.Group) {
+  const bottleGroup = new THREE.Group();
+  bottleGroup.position.y = 0.05;
 
+  const radius = 0.52;
+  const height = 1.55;
+
+  // A. Outer Amber Glass Body
+  const glassGeo = new THREE.CylinderGeometry(radius, radius, height, 64, 1, false);
   const glassMat = new THREE.MeshPhysicalMaterial({
-    color: 0x110904, // Deep medicinal amber
-    emissive: 0x050201,
-    roughness: 0.08,
-    metalness: 0.1,
-    transmission: 0.68,
-    thickness: 1.4,
+    color: 0x2b1704, // Deep therapeutic amber
+    roughness: 0.06,
+    metalness: 0.05,
+    transmission: 0.88,
+    thickness: 0.95,
+    ior: 1.52, // Optical index for flint cosmetic glass
     clearcoat: 1.0,
     clearcoatRoughness: 0.05,
-    ior: 1.54,
-  });
-
-  const bodyMesh = new THREE.Mesh(bodyGeo, glassMat);
-  bodyMesh.castShadow = true;
-  group.add(bodyMesh);
-
-  // Pure Cold-Pressed Herbal Oil Liquid inside
-  const liquidGeo = new THREE.CylinderGeometry(radius * 0.94, radius * 0.94, height * 0.92, 32);
-  const liquidMat = new THREE.MeshStandardMaterial({
-    color: 0x221306,
-    roughness: 0.2,
-    metalness: 0.1,
     transparent: true,
-    opacity: 0.85,
+    opacity: 0.95,
+  });
+  const glassMesh = new THREE.Mesh(glassGeo, glassMat);
+  glassMesh.castShadow = true;
+  glassMesh.receiveShadow = true;
+  bottleGroup.add(glassMesh);
+
+  // B. Inner Herbal Oil Liquid (Golden cold-pressed herbal infusion)
+  const liquidGeo = new THREE.CylinderGeometry(radius * 0.93, radius * 0.93, height * 0.86, 48);
+  const liquidMat = new THREE.MeshPhysicalMaterial({
+    color: 0xd48806, // Rich golden herbal oil
+    emissive: 0x3d2002,
+    emissiveIntensity: 0.25,
+    roughness: 0.12,
+    transmission: 0.65,
+    ior: 1.47,
   });
   const liquidMesh = new THREE.Mesh(liquidGeo, liquidMat);
-  liquidMesh.position.y = -0.05;
-  group.add(liquidMesh);
+  liquidMesh.position.y = -height * 0.05;
+  bottleGroup.add(liquidMesh);
 
-  // Rounded Glass Shoulder
-  const shoulderGeo = new THREE.SphereGeometry(radius, 48, 24, 0, Math.PI * 2, 0, Math.PI * 0.4);
-  const shoulderMesh = new THREE.Mesh(shoulderGeo, glassMat);
-  shoulderMesh.position.y = height / 2;
-  group.add(shoulderMesh);
+  // C. Meniscus (Liquid curved surface at top)
+  const meniscusGeo = new THREE.CylinderGeometry(radius * 0.93, radius * 0.93, 0.02, 48);
+  const meniscusMesh = new THREE.Mesh(meniscusGeo, liquidMat);
+  meniscusMesh.position.y = height * 0.38;
+  bottleGroup.add(meniscusMesh);
 
-  // Neck
-  const neckGeo = new THREE.CylinderGeometry(0.23, 0.23, 0.35, 32);
-  const neckMesh = new THREE.Mesh(neckGeo, glassMat);
-  neckMesh.position.y = height / 2 + 0.3;
-  group.add(neckMesh);
-
-  // 24K Gold Metallic Pump Collar
-  const goldMat = new THREE.MeshStandardMaterial({
-    color: 0xe8c760, // Imperial Gold
-    metalness: 0.94,
-    roughness: 0.14,
-  });
-
-  const collarGeo = new THREE.CylinderGeometry(0.26, 0.26, 0.28, 36);
-  const collarMesh = new THREE.Mesh(collarGeo, goldMat);
-  collarMesh.position.y = height / 2 + 0.44;
-  group.add(collarMesh);
-
-  // Gold Pump Head & Dropper
-  const pumpShaftGeo = new THREE.CylinderGeometry(0.15, 0.15, 0.36, 24);
-  const pumpShaft = new THREE.Mesh(pumpShaftGeo, goldMat);
-  pumpShaft.position.y = height / 2 + 0.72;
-  group.add(pumpShaft);
-
-  const nozzleGeo = new THREE.BoxGeometry(0.44, 0.13, 0.16);
-  const nozzleMesh = new THREE.Mesh(nozzleGeo, goldMat);
-  nozzleMesh.position.set(0.14, height / 2 + 0.85, 0);
-  group.add(nozzleMesh);
-
-  // Real Dail Packaging Wrapped Label (Jet Black & Crimson Red block with Dail Logo!)
-  const labelTexture = createHairOilTexture();
-  const labelGeo = new THREE.CylinderGeometry(radius + 0.007, radius + 0.007, height * 0.78, 48, 1, true, -Math.PI * 0.65, Math.PI * 1.3);
+  // D. Realistic Full-Wrap Packaging Label with Dail Authentic Graphics
+  const labelGeo = new THREE.CylinderGeometry(radius + 0.003, radius + 0.003, height * 0.72, 64, 1, true);
+  const labelTexture = createHairOilLabelTexture();
   const labelMat = new THREE.MeshStandardMaterial({
     map: labelTexture,
-    roughness: 0.3,
-    metalness: 0.1,
-    side: THREE.DoubleSide,
+    roughness: 0.35,
+    metalness: 0.25,
+    transparent: true,
   });
   const labelMesh = new THREE.Mesh(labelGeo, labelMat);
   labelMesh.position.y = -0.05;
-  group.add(labelMesh);
-}
+  bottleGroup.add(labelMesh);
 
-/**
- * 2. Dail Beauty Cream (5-Day Plan) — Pearl White Body & Signature Round Tin Lid
- */
-function buildBeautyCreamPackage(group: THREE.Group) {
-  const jarRadius = 0.82;
-  const jarHeight = 0.78;
+  // E. Curved Bottle Shoulder
+  const shoulderGeo = new THREE.CylinderGeometry(radius * 0.45, radius, 0.32, 64);
+  const shoulderMesh = new THREE.Mesh(shoulderGeo, glassMat);
+  shoulderMesh.position.y = height / 2 + 0.16;
+  bottleGroup.add(shoulderMesh);
 
-  // Frosted White Pearl Container
-  const jarGeo = new THREE.CylinderGeometry(jarRadius, jarRadius * 0.95, jarHeight, 48);
-  const pearlMat = new THREE.MeshPhysicalMaterial({
-    color: 0xfcfbf7, // Pearl white
-    roughness: 0.22,
-    metalness: 0.05,
-    clearcoat: 0.8,
-    clearcoatRoughness: 0.1,
-  });
-  const jarMesh = new THREE.Mesh(jarGeo, pearlMat);
-  jarMesh.position.y = -0.12;
-  jarMesh.castShadow = true;
-  group.add(jarMesh);
+  // F. Bottle Neck
+  const neckGeo = new THREE.CylinderGeometry(radius * 0.35, radius * 0.35, 0.25, 48);
+  const neckMesh = new THREE.Mesh(neckGeo, glassMat);
+  neckMesh.position.y = height / 2 + 0.42;
+  bottleGroup.add(neckMesh);
 
-  // Gold Waist Ring
-  const ringGeo = new THREE.CylinderGeometry(jarRadius * 1.01, jarRadius * 1.01, 0.08, 48);
-  const goldRingMat = new THREE.MeshStandardMaterial({
+  // G. Metallic Gold Collar / Thread Cap (24K Gold Luxury Plating)
+  const collarGeo = new THREE.CylinderGeometry(radius * 0.42, radius * 0.42, 0.28, 48);
+  const goldCollarMat = new THREE.MeshStandardMaterial({
     color: 0xd4af37,
-    metalness: 0.92,
     roughness: 0.18,
+    metalness: 0.92,
   });
-  const ringMesh = new THREE.Mesh(ringGeo, goldRingMat);
-  ringMesh.position.y = jarHeight / 2 - 0.16;
-  group.add(ringMesh);
+  const collarMesh = new THREE.Mesh(collarGeo, goldCollarMat);
+  collarMesh.position.y = height / 2 + 0.58;
+  collarMesh.castShadow = true;
+  bottleGroup.add(collarMesh);
 
-  // Signature White Round Tin Lid with Dail Logo Printed on Top (Matching actual packaging!)
-  const lidHeight = 0.34;
-  const lidGeo = new THREE.CylinderGeometry(jarRadius * 1.025, jarRadius * 1.025, lidHeight, 48);
-  const lidMesh = new THREE.Mesh(lidGeo, pearlMat);
-  lidMesh.position.y = jarHeight / 2 + lidHeight / 2 - 0.12;
-  group.add(lidMesh);
-
-  // Top Embossed Disc on Lid featuring Dail logo
-  const topDiscTexture = createBeautyCreamTopDiscTexture();
-  const discGeo = new THREE.CircleGeometry(jarRadius * 0.98, 48);
-  const discMat = new THREE.MeshStandardMaterial({
-    map: topDiscTexture,
-    roughness: 0.25,
-    metalness: 0.15,
-  });
-  const discMesh = new THREE.Mesh(discGeo, discMat);
-  discMesh.rotation.x = -Math.PI / 2;
-  discMesh.position.y = jarHeight / 2 + lidHeight - 0.115;
-  group.add(discMesh);
-
-  // Front Jar Label (5-Day Plan & Without Steroids)
-  const labelTexture = createBeautyCreamFrontTexture();
-  const labelGeo = new THREE.CylinderGeometry(jarRadius + 0.006, jarRadius + 0.006, jarHeight * 0.65, 48, 1, true, -Math.PI * 0.6, Math.PI * 1.2);
-  const labelMat = new THREE.MeshStandardMaterial({
-    map: labelTexture,
-    roughness: 0.35,
-    metalness: 0.1,
-    side: THREE.DoubleSide,
-  });
-  const labelMesh = new THREE.Mesh(labelGeo, labelMat);
-  labelMesh.position.y = -0.12;
-  group.add(labelMesh);
-}
-
-/**
- * 3. Dail Hand & Foot Cream — Sunburst Yellow Lid & White Box
- */
-function buildHandFootPackage(group: THREE.Group) {
-  const jarRadius = 0.82;
-  const jarHeight = 0.78;
-
-  // White base body
-  const jarGeo = new THREE.CylinderGeometry(jarRadius, jarRadius * 0.95, jarHeight, 48);
-  const whiteMat = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff,
-    roughness: 0.25,
+  // H. Black Ribbed Rubber Dropper Bulb
+  const bulbGeo = new THREE.SphereGeometry(radius * 0.32, 32, 24);
+  bulbGeo.scale(1, 1.45, 1);
+  const bulbMat = new THREE.MeshStandardMaterial({
+    color: 0x111111,
+    roughness: 0.85,
     metalness: 0.05,
-    clearcoat: 0.7,
   });
-  const jarMesh = new THREE.Mesh(jarGeo, whiteMat);
-  jarMesh.position.y = -0.12;
+  const bulbMesh = new THREE.Mesh(bulbGeo, bulbMat);
+  bulbMesh.position.y = height / 2 + 0.88;
+  bulbMesh.castShadow = true;
+  bottleGroup.add(bulbMesh);
+
+  // I. Inner Glass Pipette inside the bottle
+  const pipetteGeo = new THREE.CylinderGeometry(0.04, 0.04, height * 1.1, 16);
+  const pipetteMat = new THREE.MeshPhysicalMaterial({
+    color: 0xffffff,
+    transmission: 0.95,
+    roughness: 0.05,
+    ior: 1.5,
+  });
+  const pipetteMesh = new THREE.Mesh(pipetteGeo, pipetteMat);
+  pipetteMesh.position.y = 0.2;
+  bottleGroup.add(pipetteMesh);
+
+  group.add(bottleGroup);
+}
+
+// ==============================================================
+// 5. Photorealistic Dail Beauty Cream (50g Export Jar with Embossed Lid)
+// ==============================================================
+function createRealisticBeautyCream(group: THREE.Group) {
+  const jarGroup = new THREE.Group();
+  jarGroup.position.y = -0.15;
+
+  const jarRadius = 0.82;
+  const jarHeight = 0.65;
+
+  // A. Heavy Base Clear / Frosted Acrylic Cosmetic Jar
+  const jarGeo = new THREE.CylinderGeometry(jarRadius, jarRadius * 0.94, jarHeight, 64);
+  const jarGlassMat = new THREE.MeshPhysicalMaterial({
+    color: 0xfffcf7,
+    roughness: 0.15,
+    metalness: 0.05,
+    transmission: 0.72,
+    thickness: 1.2,
+    ior: 1.49,
+    clearcoat: 0.9,
+  });
+  const jarMesh = new THREE.Mesh(jarGeo, jarGlassMat);
   jarMesh.castShadow = true;
-  group.add(jarMesh);
+  jarMesh.receiveShadow = true;
+  jarGroup.add(jarMesh);
 
-  // Distinctive Sunburst Yellow Lid (Matching real packaging!)
-  const yellowMat = new THREE.MeshStandardMaterial({
-    color: 0xf5b722, // Sunburst Marigold Yellow
-    metalness: 0.3,
-    roughness: 0.25,
+  // B. Inner White Radiance Cream
+  const creamGeo = new THREE.CylinderGeometry(jarRadius * 0.84, jarRadius * 0.78, jarHeight * 0.82, 48);
+  const creamMat = new THREE.MeshStandardMaterial({
+    color: 0xfaf8f2, // Pearl cream
+    roughness: 0.45,
+    metalness: 0.02,
   });
+  const creamMesh = new THREE.Mesh(creamGeo, creamMat);
+  creamMesh.position.y = -0.02;
+  jarGroup.add(creamMesh);
 
-  const lidHeight = 0.34;
-  const lidGeo = new THREE.CylinderGeometry(jarRadius * 1.025, jarRadius * 1.025, lidHeight, 48);
-  const lidMesh = new THREE.Mesh(lidGeo, yellowMat);
-  lidMesh.position.y = jarHeight / 2 + lidHeight / 2 - 0.12;
-  group.add(lidMesh);
-
-  // Top Yellow Disc with "Dail Hand & Foot" printed
-  const topYellowTexture = createHandFootTopDiscTexture();
-  const discGeo = new THREE.CircleGeometry(jarRadius * 0.98, 48);
-  const discMat = new THREE.MeshStandardMaterial({
-    map: topYellowTexture,
-    roughness: 0.3,
-    metalness: 0.1,
-  });
-  const discMesh = new THREE.Mesh(discGeo, discMat);
-  discMesh.rotation.x = -Math.PI / 2;
-  discMesh.position.y = jarHeight / 2 + lidHeight - 0.115;
-  group.add(discMesh);
-
-  // Front Label: 3-Action Repair & Without Steroid
-  const labelTexture = createHandFootFrontTexture();
-  const labelGeo = new THREE.CylinderGeometry(jarRadius + 0.006, jarRadius + 0.006, jarHeight * 0.65, 48, 1, true, -Math.PI * 0.6, Math.PI * 1.2);
+  // C. Full Wrap Jar Label (Authentic Red & Gold Dail Packaging)
+  const labelGeo = new THREE.CylinderGeometry(jarRadius + 0.002, jarRadius * 0.94 + 0.002, jarHeight * 0.65, 64, 1, true);
+  const labelTexture = createBeautyCreamLabelTexture();
   const labelMat = new THREE.MeshStandardMaterial({
     map: labelTexture,
-    roughness: 0.35,
-    metalness: 0.08,
-    side: THREE.DoubleSide,
+    roughness: 0.25,
+    metalness: 0.3,
   });
   const labelMesh = new THREE.Mesh(labelGeo, labelMat);
-  labelMesh.position.y = -0.12;
-  group.add(labelMesh);
-}
+  labelMesh.position.y = 0.02;
+  jarGroup.add(labelMesh);
 
-/**
- * Floating 24K Gold Particles
- */
-function createGoldParticles() {
-  const count = 75;
-  const geo = new THREE.BufferGeometry();
-  const pos = new Float32Array(count * 3);
-
-  for (let i = 0; i < count * 3; i += 3) {
-    pos[i] = (Math.random() - 0.5) * 6;
-    pos[i + 1] = (Math.random() - 0.5) * 5;
-    pos[i + 2] = (Math.random() - 0.5) * 4;
-  }
-
-  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-
-  const mat = new THREE.PointsMaterial({
+  // D. Metallic Embossed Gold Lid with Threaded Bevel
+  const lidRadius = jarRadius * 1.02;
+  const lidHeight = 0.32;
+  const lidGeo = new THREE.CylinderGeometry(lidRadius, lidRadius, lidHeight, 64);
+  const goldLidMat = new THREE.MeshStandardMaterial({
     color: 0xd4af37,
-    size: 0.045,
-    transparent: true,
-    opacity: 0.85,
-    blending: THREE.AdditiveBlending,
+    roughness: 0.18,
+    metalness: 0.92,
   });
+  const lidMesh = new THREE.Mesh(lidGeo, goldLidMat);
+  lidMesh.position.y = jarHeight / 2 + lidHeight / 2 + 0.02;
+  lidMesh.castShadow = true;
+  jarGroup.add(lidMesh);
 
-  return new THREE.Points(geo, mat);
+  // E. Lid Top Embossed Disc with DC Crest Texture
+  const crestDiscGeo = new THREE.CircleGeometry(lidRadius * 0.92, 64);
+  const lidCrestTexture = createLidCrestTexture('Dail Beauty Cream');
+  const crestMat = new THREE.MeshStandardMaterial({
+    map: lidCrestTexture,
+    roughness: 0.2,
+    metalness: 0.88,
+  });
+  const crestMesh = new THREE.Mesh(crestDiscGeo, crestMat);
+  crestMesh.rotation.x = -Math.PI / 2;
+  crestMesh.position.y = jarHeight / 2 + lidHeight + 0.022;
+  jarGroup.add(crestMesh);
+
+  group.add(jarGroup);
+}
+
+// ==============================================================
+// 6. Photorealistic Dail Hand & Foot Cream (Sunburst Gold Jar)
+// ==============================================================
+function createRealisticHandFoot(group: THREE.Group) {
+  const jarGroup = new THREE.Group();
+  jarGroup.position.y = -0.15;
+
+  const jarRadius = 0.82;
+  const jarHeight = 0.65;
+
+  // Jar body
+  const jarGeo = new THREE.CylinderGeometry(jarRadius, jarRadius * 0.94, jarHeight, 64);
+  const jarMat = new THREE.MeshPhysicalMaterial({
+    color: 0xffffff,
+    roughness: 0.12,
+    metalness: 0.05,
+    transmission: 0.75,
+    thickness: 1.1,
+    ior: 1.49,
+  });
+  const jarMesh = new THREE.Mesh(jarGeo, jarMat);
+  jarMesh.castShadow = true;
+  jarMesh.receiveShadow = true;
+  jarGroup.add(jarMesh);
+
+  // Wrap Label with Signature Dail Hand & Foot Design
+  const labelGeo = new THREE.CylinderGeometry(jarRadius + 0.002, jarRadius * 0.94 + 0.002, jarHeight * 0.65, 64, 1, true);
+  const labelTexture = createHandFootLabelTexture();
+  const labelMat = new THREE.MeshStandardMaterial({
+    map: labelTexture,
+    roughness: 0.28,
+    metalness: 0.35,
+  });
+  const labelMesh = new THREE.Mesh(labelGeo, labelMat);
+  labelMesh.position.y = 0.02;
+  jarGroup.add(labelMesh);
+
+  // Vibrant Sunburst Gold Lid
+  const lidRadius = jarRadius * 1.02;
+  const lidHeight = 0.32;
+  const lidGeo = new THREE.CylinderGeometry(lidRadius, lidRadius, lidHeight, 64);
+  const yellowGoldMat = new THREE.MeshStandardMaterial({
+    color: 0xf5b722, // Signature packaging gold/yellow
+    roughness: 0.22,
+    metalness: 0.85,
+  });
+  const lidMesh = new THREE.Mesh(lidGeo, yellowGoldMat);
+  lidMesh.position.y = jarHeight / 2 + lidHeight / 2 + 0.02;
+  lidMesh.castShadow = true;
+  jarGroup.add(lidMesh);
+
+  // Lid Top Disc
+  const crestDiscGeo = new THREE.CircleGeometry(lidRadius * 0.92, 64);
+  const lidCrestTexture = createLidCrestTexture('Hand & Foot Whitening');
+  const crestMat = new THREE.MeshStandardMaterial({
+    map: lidCrestTexture,
+    roughness: 0.22,
+    metalness: 0.82,
+  });
+  const crestMesh = new THREE.Mesh(crestDiscGeo, crestMat);
+  crestMesh.rotation.x = -Math.PI / 2;
+  crestMesh.position.y = jarHeight / 2 + lidHeight + 0.022;
+  jarGroup.add(crestMesh);
+
+  group.add(jarGroup);
+}
+
+// ==============================================================
+// 7. Dynamic Canvas Texture Generators for Authentic Packaging Labels
+// ==============================================================
+
+/**
+ * Dail 100% Organic Herbal Hair Oil Label (2048x1024 Wrap Texture)
+ */
+function createHairOilLabelTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = 2048;
+  canvas.height = 1024;
+  const ctx = canvas.getContext('2d')!;
+
+  // Deep Obsidian Velvet Black Background
+  ctx.fillStyle = '#08090c';
+  ctx.fillRect(0, 0, 2048, 1024);
+
+  // Front Facing Region is centered around X = 1024 (center 800px)
+  const cx = 1024;
+
+  // Gold Decorative Top & Bottom Border Stripes
+  const goldGrad = ctx.createLinearGradient(0, 0, 2048, 0);
+  goldGrad.addColorStop(0, '#c59b27');
+  goldGrad.addColorStop(0.5, '#f5d996');
+  goldGrad.addColorStop(1, '#c59b27');
+
+  ctx.fillStyle = goldGrad;
+  ctx.fillRect(0, 30, 2048, 8);
+  ctx.fillRect(0, 986, 2048, 8);
+
+  // Crimson Red Banner Stripe (From real packaging photo)
+  ctx.fillStyle = '#b91c1c';
+  ctx.fillRect(cx - 380, 720, 760, 48);
+
+  // Official Gold Crest / Dual Ring Logo with Organic Leaves
+  ctx.save();
+  ctx.strokeStyle = '#d4af37';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.arc(cx, 230, 85, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(cx, 230, 72, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // DC Monogram inside seal
+  ctx.fillStyle = '#d4af37';
+  ctx.font = 'bold 54px "Cinzel", Georgia, serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('DC', cx, 230);
+  ctx.restore();
+
+  // "DAIL COSMETICS" Primary Wordmark
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 52px "Playfair Display", Georgia, serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('DAIL COSMETICS', cx, 370);
+
+  // Subtitle
+  ctx.fillStyle = '#d4af37';
+  ctx.font = 'bold 24px "Plus Jakarta Sans", sans-serif';
+  ctx.letterSpacing = '6px';
+  ctx.fillText('EXPORT QUALITY • 100% ORGANIC', cx, 420);
+
+  // Product Name
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 64px "Playfair Display", Georgia, serif';
+  ctx.fillText('PREMIUM HERBAL', cx, 520);
+  ctx.fillStyle = '#f5d996';
+  ctx.fillText('HAIR OIL', cx, 595);
+
+  // Botanical Active Ingredients Line
+  ctx.fillStyle = '#d1d5db';
+  ctx.font = '22px "Plus Jakarta Sans", sans-serif';
+  ctx.fillText('Kalonji • Rosemary • Amla • Almond • Castor', cx, 660);
+
+  // Crimson Banner Text: WITHOUT STEROID
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 26px "Plus Jakarta Sans", sans-serif';
+  ctx.fillText('100% WITHOUT STEROID & MERCURY', cx, 752);
+
+  // Volume & Origin
+  ctx.fillStyle = '#d4af37';
+  ctx.font = 'bold 36px "Plus Jakarta Sans", sans-serif';
+  ctx.fillText('120 ML / 4.0 FL. OZ.', cx, 840);
+
+  ctx.fillStyle = '#9ca3af';
+  ctx.font = '18px "Plus Jakarta Sans", sans-serif';
+  ctx.fillText('Manufactured & Packed in Pakistan • PCSIR Certified', cx, 910);
+
+  // Back Label Specs (Left and Right sides of wrap)
+  // Directions (Left)
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#d4af37';
+  ctx.font = 'bold 22px sans-serif';
+  ctx.fillText('DIRECTIONS FOR USE', 100, 260);
+
+  ctx.fillStyle = '#9ca3af';
+  ctx.font = '16px sans-serif';
+  ctx.fillText('1. Warm 5-10ml in palms.', 100, 310);
+  ctx.fillText('2. Gently massage scalp for 7-10 mins.', 100, 350);
+  ctx.fillText('3. Leave overnight or for at least 2 hrs.', 100, 390);
+  ctx.fillText('4. Wash with mild botanical cleanser.', 100, 430);
+  ctx.fillText('Apply 3 times a week for rapid regrowth.', 100, 470);
+
+  // Certifications (Right)
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#d4af37';
+  ctx.font = 'bold 22px sans-serif';
+  ctx.fillText('GUARANTEED STANDARDS', 1948, 260);
+
+  ctx.fillStyle = '#9ca3af';
+  ctx.font = '16px sans-serif';
+  ctx.fillText('✓ 0% Mineral Oil & Silicones', 1948, 310);
+  ctx.fillText('✓ Cold-Pressed Active Extraction', 1948, 350);
+  ctx.fillText('✓ Dermatologically Verified', 1948, 390);
+  ctx.fillText('✓ Halal Certified Ingredients', 1948, 430);
+  ctx.fillText('Batch: DC-PK-2026/89B', 1948, 470);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  return texture;
 }
 
 /**
- * Botanical Leaf Geometries
+ * Dail Beauty Cream Wrap Label (2048x512)
  */
-function createBotanicalFoliage(group: THREE.Group) {
-  const shape = new THREE.Shape();
-  shape.moveTo(0, 0);
-  shape.bezierCurveTo(0.3, 0.4, 0.45, 1.0, 0, 1.6);
-  shape.bezierCurveTo(-0.45, 1.0, -0.3, 0.4, 0, 0);
+function createBeautyCreamLabelTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = 2048;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d')!;
 
-  const leafGeo = new THREE.ExtrudeGeometry(shape, {
-    steps: 2,
-    depth: 0.02,
-    bevelEnabled: true,
-    bevelThickness: 0.02,
-    bevelSize: 0.02,
-    bevelSegments: 3,
-  });
+  // Deep Obsidian Background
+  ctx.fillStyle = '#0a0b0e';
+  ctx.fillRect(0, 0, 2048, 512);
 
-  const leafMat = new THREE.MeshStandardMaterial({
-    color: 0x1a452a, // Deep emerald botanical green
-    roughness: 0.3,
-    metalness: 0.08,
-  });
+  const cx = 1024;
 
-  const leafPositions = [
-    { pos: [-1.45, -0.2, -0.6], rot: [0.2, 0.4, -0.5], scale: 1.1 },
-    { pos: [1.5, 0.5, -0.8], rot: [-0.3, -0.5, 0.6], scale: 1.2 },
-    { pos: [-1.2, 1.2, -1.0], rot: [0.1, 0.6, -0.2], scale: 0.9 },
-    { pos: [1.3, -0.9, -0.4], rot: [0.4, -0.3, 0.8], scale: 1.05 },
-  ];
+  // Gold Borders
+  ctx.fillStyle = '#d4af37';
+  ctx.fillRect(0, 15, 2048, 6);
+  ctx.fillRect(0, 491, 2048, 6);
 
-  leafPositions.forEach((config) => {
-    const mesh = new THREE.Mesh(leafGeo, leafMat);
-    mesh.position.set(config.pos[0], config.pos[1], config.pos[2]);
-    mesh.rotation.set(config.rot[0], config.rot[1], config.rot[2]);
-    mesh.scale.set(config.scale, config.scale, config.scale);
-    mesh.receiveShadow = true;
-    group.add(mesh);
-  });
+  // Red Accent Stripe
+  ctx.fillStyle = '#b91c1c';
+  ctx.fillRect(cx - 350, 340, 700, 44);
+
+  // Crest
+  ctx.strokeStyle = '#d4af37';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(cx, 100, 42, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.fillStyle = '#d4af37';
+  ctx.font = 'bold 28px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('DC', cx, 100);
+
+  // Brand Name
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 44px "Playfair Display", Georgia, serif';
+  ctx.fillText('DAIL BEAUTY CREAM', cx, 200);
+
+  // Subtitle
+  ctx.fillStyle = '#d4af37';
+  ctx.font = 'bold 22px sans-serif';
+  ctx.fillText('5-DAY BEAUTY PLAN • EXPORT QUALITY', cx, 260);
+
+  // Red Stripe Text
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 24px sans-serif';
+  ctx.fillText('STRICTLY WITHOUT STEROID', cx, 362);
+
+  // Weight
+  ctx.fillStyle = '#d4af37';
+  ctx.font = 'bold 22px sans-serif';
+  ctx.fillText('NET WT. 50g e', cx, 430);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  return texture;
 }
 
-// ==========================================
-// Canvas Textures matching Real Packaging
-// ==========================================
+/**
+ * Dail Hand & Foot Wrap Label
+ */
+function createHandFootLabelTexture(): THREE.CanvasTexture {
+  const canvas = document.createElement('canvas');
+  canvas.width = 2048;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d')!;
 
-function createHairOilTexture(): THREE.CanvasTexture {
+  ctx.fillStyle = '#0d0f14';
+  ctx.fillRect(0, 0, 2048, 512);
+
+  const cx = 1024;
+
+  ctx.fillStyle = '#f5b722';
+  ctx.fillRect(0, 15, 2048, 6);
+  ctx.fillRect(0, 491, 2048, 6);
+
+  // Yellow Gold Banner
+  ctx.fillStyle = '#f5b722';
+  ctx.fillRect(cx - 360, 340, 720, 44);
+
+  ctx.strokeStyle = '#f5b722';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(cx, 100, 42, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.fillStyle = '#f5b722';
+  ctx.font = 'bold 28px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('DC', cx, 100);
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 40px "Playfair Display", Georgia, serif';
+  ctx.fillText('HAND & FOOT WHITENING CREAM', cx, 200);
+
+  ctx.fillStyle = '#f5b722';
+  ctx.font = 'bold 20px sans-serif';
+  ctx.fillText('3-ACTION REPAIR MATRIX • ZERO STEROIDS', cx, 260);
+
+  ctx.fillStyle = '#0a0a0a';
+  ctx.font = 'bold 24px sans-serif';
+  ctx.fillText('INTENSE BARRIER REPAIR & NOURISHMENT', cx, 362);
+
+  ctx.fillStyle = '#f5b722';
+  ctx.font = 'bold 22px sans-serif';
+  ctx.fillText('NET WT. 60g e', cx, 430);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  return texture;
+}
+
+/**
+ * Circular Lid Crest Texture for Jar Tops (1024x1024)
+ */
+function createLidCrestTexture(title: string): THREE.CanvasTexture {
   const canvas = document.createElement('canvas');
   canvas.width = 1024;
   canvas.height = 1024;
   const ctx = canvas.getContext('2d')!;
 
-  // Black background
-  ctx.fillStyle = '#080808';
-  ctx.fillRect(0, 0, 1024, 760);
+  const cx = 512;
+  const cy = 512;
 
-  // Vibrant Crimson Red block matching real box!
-  ctx.fillStyle = '#c41e3a';
-  ctx.fillRect(0, 760, 1024, 264);
+  // Gold metallic radial gradient
+  const grad = ctx.createRadialGradient(cx, cy, 50, cx, cy, 512);
+  grad.addColorStop(0, '#fce8a6');
+  grad.addColorStop(0.5, '#d4af37');
+  grad.addColorStop(1, '#9a7212');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1024, 1024);
 
-  // Gold metallic border
-  ctx.strokeStyle = '#d4af37';
-  ctx.lineWidth = 10;
-  ctx.strokeRect(30, 30, 964, 964);
-
-  // Oval Dail Logo Container
-  ctx.fillStyle = '#ffffff';
-  ctx.beginPath();
-  ctx.ellipse(512, 220, 180, 120, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.strokeStyle = '#c41e3a';
-  ctx.lineWidth = 8;
-  ctx.stroke();
-
-  // DC Leaf Logo inside oval
-  ctx.fillStyle = '#000000';
-  ctx.font = 'bold 36px serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('🌿', 512, 180);
-
-  ctx.font = 'bold 64px "Playfair Display", Georgia, serif';
-  ctx.fillText('Dail', 512, 250);
-
-  // Export Quality Ribbon
-  ctx.fillStyle = '#d4af37';
-  ctx.font = 'bold 28px "Plus Jakarta Sans", sans-serif';
-  ctx.letterSpacing = '5px';
-  ctx.fillText('★ EXPORT QUALITY ★', 512, 385);
-
-  // Product Name
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'italic 54px "Playfair Display", serif';
-  ctx.fillText('Premium Herbal', 512, 465);
-
-  ctx.font = 'bold 70px "Playfair Display", serif';
-  ctx.fillText('Hair Oil', 512, 545);
-
-  // Urdu Calligraphy
-  ctx.fillStyle = '#f3e5ab';
-  ctx.font = 'bold 38px sans-serif';
-  ctx.fillText('ڈیل پریمیم ہربل ہیئر آئل', 512, 620);
-
-  // Claims
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 26px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('WITHOUT STEROID • PARABEN FREE', 512, 695);
-
-  // Red block text
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 60px "Playfair Display", serif';
-  ctx.fillText('100% Organic', 512, 850);
-
-  ctx.font = 'bold 36px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('120 ML / 4.0 FL OZ', 512, 925);
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.needsUpdate = true;
-  return texture;
-}
-
-function createBeautyCreamTopDiscTexture(): THREE.CanvasTexture {
-  const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 512;
-  const ctx = canvas.getContext('2d')!;
-
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, 512, 512);
-
-  // Gold outer rings
-  ctx.strokeStyle = '#d4af37';
-  ctx.lineWidth = 12;
-  ctx.beginPath();
-  ctx.arc(256, 256, 235, 0, Math.PI * 2);
-  ctx.stroke();
-
+  // Concentric Embossed Grooves
+  ctx.strokeStyle = '#fef1c5';
   ctx.lineWidth = 4;
   ctx.beginPath();
-  ctx.arc(256, 256, 220, 0, Math.PI * 2);
+  ctx.arc(cx, cy, 470, 0, Math.PI * 2);
   ctx.stroke();
 
-  // DC Leaf Logo
-  ctx.fillStyle = '#0a0a0a';
-  ctx.font = 'bold 44px serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('🌿', 256, 170);
-
-  ctx.font = 'bold 80px "Playfair Display", serif';
-  ctx.fillText('Dail', 256, 260);
-
-  ctx.fillStyle = '#888888';
-  ctx.font = 'bold 24px "Plus Jakarta Sans", sans-serif';
-  ctx.letterSpacing = '3px';
-  ctx.fillText('BEAUTY CREAM', 256, 310);
-
-  ctx.fillStyle = '#c41e3a';
-  ctx.font = 'bold 20px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('WITHOUT STEROID', 256, 350);
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.needsUpdate = true;
-  return texture;
-}
-
-function createBeautyCreamFrontTexture(): THREE.CanvasTexture {
-  const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 512;
-  const ctx = canvas.getContext('2d')!;
-
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, 1024, 512);
-
-  ctx.strokeStyle = '#d4af37';
-  ctx.lineWidth = 8;
-  ctx.strokeRect(20, 20, 984, 472);
-
-  ctx.fillStyle = '#000000';
-  ctx.font = 'bold 68px "Playfair Display", serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('Dail', 512, 140);
-
-  ctx.fillStyle = '#d4af37';
-  ctx.font = 'bold 30px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('BEAUTY CREAM', 512, 190);
-
-  ctx.fillStyle = '#c41e3a';
-  ctx.font = 'bold 28px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('● WITHOUT STEROID ●', 512, 240);
-
-  ctx.fillStyle = '#222222';
-  ctx.font = '600 24px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('5 DAY BEAUTY PLAN • ANTI-AGING + ANTI-ACNE', 512, 290);
-
-  ctx.fillStyle = '#555555';
-  ctx.font = 'bold 30px sans-serif';
-  ctx.fillText('ڈیل بیوٹی کریم (خالص قدرتی نکھار)', 512, 350);
-
-  ctx.fillStyle = '#000000';
-  ctx.font = 'bold 26px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('EXPORT QUALITY • 100% ORGANIC', 512, 420);
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.needsUpdate = true;
-  return texture;
-}
-
-function createHandFootTopDiscTexture(): THREE.CanvasTexture {
-  const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 512;
-  const ctx = canvas.getContext('2d')!;
-
-  ctx.fillStyle = '#f5b722'; // Sunburst Yellow
-  ctx.fillRect(0, 0, 512, 512);
-
-  ctx.strokeStyle = '#c98a0c';
-  ctx.lineWidth = 10;
+  ctx.strokeStyle = '#7c590b';
+  ctx.lineWidth = 4;
   ctx.beginPath();
-  ctx.arc(256, 256, 235, 0, Math.PI * 2);
+  ctx.arc(cx, cy, 460, 0, Math.PI * 2);
   ctx.stroke();
 
-  ctx.fillStyle = '#b32400';
-  ctx.font = 'bold 64px "Playfair Display", serif';
+  // Center Seal
+  ctx.strokeStyle = '#7c590b';
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 260, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.strokeStyle = '#fef1c5';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 245, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Logo Monogram
+  ctx.fillStyle = '#422e03';
+  ctx.font = 'bold 120px "Cinzel", Georgia, serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Dail', 256, 200);
+  ctx.textBaseline = 'middle';
+  ctx.fillText('DC', cx, cy - 20);
 
-  ctx.font = 'bold 44px "Playfair Display", serif';
-  ctx.fillText('Hand & Foot', 256, 270);
+  // Brand Name Arc
+  ctx.font = 'bold 36px "Playfair Display", serif';
+  ctx.fillText('DAIL COSMETICS', cx, cy + 90);
 
-  ctx.fillStyle = '#000000';
-  ctx.font = 'bold 22px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('WITHOUT STEROID', 256, 330);
+  // Top and Bottom Curves
+  ctx.font = 'bold 28px sans-serif';
+  ctx.fillText('100% ORGANIC • EXPORT QUALITY', cx, 160);
+  ctx.fillText(title.toUpperCase(), cx, 880);
 
   const texture = new THREE.CanvasTexture(canvas);
-  texture.needsUpdate = true;
-  return texture;
-}
-
-function createHandFootFrontTexture(): THREE.CanvasTexture {
-  const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 512;
-  const ctx = canvas.getContext('2d')!;
-
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, 1024, 512);
-
-  ctx.strokeStyle = '#f5b722';
-  ctx.lineWidth = 8;
-  ctx.strokeRect(20, 20, 984, 472);
-
-  ctx.fillStyle = '#c41e3a';
-  ctx.font = 'bold 64px "Playfair Display", serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('Hand & Foot', 512, 140);
-
-  ctx.fillStyle = '#000000';
-  ctx.font = 'bold 28px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('WHITENING CREAM', 512, 190);
-
-  ctx.fillStyle = '#b81e1e';
-  ctx.font = 'bold 26px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('WITHOUT STEROID', 512, 240);
-
-  ctx.fillStyle = '#222222';
-  ctx.font = '600 24px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('3-ACTION REPAIR: MOISTURIZING • MULTI-EFFECT • REPAIR', 512, 295);
-
-  ctx.fillStyle = '#666666';
-  ctx.font = 'bold 30px sans-serif';
-  ctx.fillText('ڈیل ہینڈ اینڈ فٹ وائٹننگ کریم', 512, 360);
-
-  ctx.fillStyle = '#000000';
-  ctx.font = 'bold 26px "Plus Jakarta Sans", sans-serif';
-  ctx.fillText('EXPORT QUALITY • 7 PIECES ACTION', 512, 425);
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.needsUpdate = true;
   return texture;
 }

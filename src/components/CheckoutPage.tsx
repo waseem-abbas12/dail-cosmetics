@@ -3,15 +3,13 @@ import { useStore } from '../store/useStore';
 import { PAKISTAN_CITIES } from '../data/products';
 import {
   ShieldCheck,
-  Phone,
   ArrowLeft,
-  Lock,
-  MapPin,
   CheckCircle,
   Truck,
-  Building,
-  CreditCard,
-  ShoppingBag
+  Printer,
+  Tag,
+  Phone,
+  FileText
 } from 'lucide-react';
 
 export const CheckoutPage: React.FC = () => {
@@ -21,6 +19,10 @@ export const CheckoutPage: React.FC = () => {
     getCartDiscount,
     getShippingFee,
     getCartTotal,
+    appliedVoucher,
+    discountPercentage,
+    applyVoucher,
+    removeVoucher,
     createOrder,
     setCurrentPage,
   } = useStore();
@@ -36,6 +38,9 @@ export const CheckoutPage: React.FC = () => {
   });
 
   const [paymentMethod, setPaymentMethod] = useState<'cod' | 'jazzcash' | 'easypaisa' | 'bank_transfer'>('cod');
+  const [transactionId, setTransactionId] = useState('');
+  const [checkoutVoucher, setCheckoutVoucher] = useState('');
+  const [voucherMsg, setVoucherMsg] = useState<string | null>(null);
   const [orderCompleted, setOrderCompleted] = useState(false);
   const [createdOrderDetails, setCreatedOrderDetails] = useState<any>(null);
 
@@ -60,9 +65,18 @@ export const CheckoutPage: React.FC = () => {
     );
   }
 
+  const handleApplyCoupon = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!checkoutVoucher.trim()) return;
+    const res = applyVoucher(checkoutVoucher);
+    setVoucherMsg(res.message);
+    if (res.success) setCheckoutVoucher('');
+    setTimeout(() => setVoucherMsg(null), 4000);
+  };
+
   const handleSubmitOrder = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.fullName || !formData.phone || !formData.address) {
+    if (!formData.fullName.trim() || !formData.phone.trim() || !formData.address.trim()) {
       alert('Please fill in your name, phone number, and delivery address.');
       return;
     }
@@ -105,32 +119,32 @@ export const CheckoutPage: React.FC = () => {
 
           <div>
             <span className="text-xs font-bold uppercase tracking-widest text-[#c59b27]">
-              Order Confirmed
+              Order Confirmed & Allocated
             </span>
             <h1 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-stone-900 mt-1">
               Shukriya, {createdOrderDetails.customerName}!
             </h1>
             <p className="text-xs sm:text-sm text-stone-600 mt-1">
-              Your order has been received and sent to our Karachi / Lahore warehouse for priority packing.
+              Your order has been allocated and sent to our Karachi / Lahore warehouse for priority packing.
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200 text-left space-y-2 text-xs">
-            <div className="flex justify-between">
-              <span className="text-stone-500">Order ID:</span>
-              <strong className="font-mono text-stone-900">{createdOrderDetails.orderId}</strong>
+          <div className="p-5 rounded-2xl bg-stone-50 border border-stone-200 text-left space-y-2.5 text-xs">
+            <div className="flex justify-between border-b border-stone-200 pb-2">
+              <span className="text-stone-500">Official Order ID:</span>
+              <strong className="font-mono text-stone-900 text-sm font-bold">{createdOrderDetails.orderId}</strong>
             </div>
             <div className="flex justify-between">
-              <span className="text-stone-500">Payment:</span>
+              <span className="text-stone-500">Payment Method:</span>
               <span className="font-semibold text-stone-900 uppercase">{createdOrderDetails.paymentMethod}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-stone-500">Total Payable:</span>
-              <strong className="text-[#7b3e1d] text-sm">Rs. {createdOrderDetails.total.toLocaleString()}</strong>
+              <span className="text-stone-500">Total Payable at Doorstep:</span>
+              <strong className="text-[#7b3e1d] text-base font-bold">Rs. {createdOrderDetails.total.toLocaleString()}</strong>
             </div>
             <div className="flex justify-between">
               <span className="text-stone-500">Tracking Number:</span>
-              <span className="font-mono text-stone-700">{createdOrderDetails.trackingNumber}</span>
+              <span className="font-mono text-stone-700 font-bold">{createdOrderDetails.trackingNumber}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-stone-500">Courier Partner:</span>
@@ -141,17 +155,25 @@ export const CheckoutPage: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <button
               onClick={() => setCurrentPage('track-order')}
-              className="flex-1 py-3 rounded-xl bg-[#7b3e1d] hover:bg-[#622f14] text-white text-xs font-bold transition-all"
+              className="flex-1 py-3.5 rounded-xl bg-[#7b3e1d] hover:bg-[#622f14] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
             >
-              Live Order Tracking
+              Track Order Live
             </button>
             <button
-              onClick={() => setCurrentPage('home')}
-              className="flex-1 py-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold transition-all"
+              onClick={() => window.print()}
+              className="px-4 py-3.5 rounded-xl bg-white border border-stone-300 text-stone-700 hover:text-stone-900 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
             >
-              Continue Shopping
+              <Printer className="w-4 h-4" />
+              <span>Print Invoice</span>
             </button>
           </div>
+
+          <button
+            onClick={() => setCurrentPage('home')}
+            className="text-xs text-[#7b3e1d] hover:underline font-bold block mx-auto pt-2"
+          >
+            Return to Storefront
+          </button>
         </div>
       </div>
     );
@@ -164,7 +186,7 @@ export const CheckoutPage: React.FC = () => {
         {/* Back Link */}
         <button
           onClick={() => setCurrentPage('shop')}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-[#7b3e1d] mb-6"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-[#7b3e1d] mb-6 cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Return to Shopping</span>
@@ -177,8 +199,8 @@ export const CheckoutPage: React.FC = () => {
             
             {/* Step 1: Customer Contact */}
             <div className="p-6 sm:p-8 rounded-3xl bg-white border border-stone-200/90 shadow-xs space-y-4">
-              <h2 className="font-serif-luxury text-xl font-bold text-stone-900 flex items-center gap-2">
-                <span>1. Contact & Shipping Details</span>
+              <h2 className="font-serif-luxury text-xl font-bold text-stone-900">
+                1. Contact & Shipping Details
               </h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -285,63 +307,105 @@ export const CheckoutPage: React.FC = () => {
                 </label>
 
                 {/* JazzCash */}
-                <label className={`p-4 rounded-2xl border-2 flex items-center justify-between cursor-pointer transition-all ${
+                <label className={`p-4 rounded-2xl border-2 flex flex-col gap-3 cursor-pointer transition-all ${
                   paymentMethod === 'jazzcash' ? 'border-[#7b3e1d] bg-amber-50/50' : 'border-stone-200 bg-white hover:bg-stone-50'
                 }`}>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      name="payment"
-                      checked={paymentMethod === 'jazzcash'}
-                      onChange={() => setPaymentMethod('jazzcash')}
-                      className="text-[#7b3e1d] focus:ring-[#7b3e1d]"
-                    />
-                    <div>
-                      <strong className="text-stone-900 block font-bold text-sm">JazzCash Mobile Account</strong>
-                      <span className="text-stone-500">Transfer directly to 0300-1234567 (Dail Cosmetics)</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        name="payment"
+                        checked={paymentMethod === 'jazzcash'}
+                        onChange={() => setPaymentMethod('jazzcash')}
+                        className="text-[#7b3e1d] focus:ring-[#7b3e1d]"
+                      />
+                      <div>
+                        <strong className="text-stone-900 block font-bold text-sm">JazzCash Mobile Account</strong>
+                        <span className="text-stone-500">Send Rs. {total.toLocaleString()} to JazzCash: <strong>0300-1234567</strong></span>
+                      </div>
                     </div>
+                    <span className="text-xs font-bold text-stone-700">JazzCash</span>
                   </div>
-                  <span className="text-xs font-bold text-stone-700">JazzCash</span>
+                  {paymentMethod === 'jazzcash' && (
+                    <div className="pt-2 border-t border-amber-200/60">
+                      <label className="block text-stone-700 font-bold mb-1">Enter JazzCash Transaction ID (TID):</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 19284710928"
+                        value={transactionId}
+                        onChange={(e) => setTransactionId(e.target.value)}
+                        className="w-full bg-white border border-stone-200 rounded-xl p-2.5 text-stone-900"
+                      />
+                    </div>
+                  )}
                 </label>
 
                 {/* EasyPaisa */}
-                <label className={`p-4 rounded-2xl border-2 flex items-center justify-between cursor-pointer transition-all ${
+                <label className={`p-4 rounded-2xl border-2 flex flex-col gap-3 cursor-pointer transition-all ${
                   paymentMethod === 'easypaisa' ? 'border-[#7b3e1d] bg-amber-50/50' : 'border-stone-200 bg-white hover:bg-stone-50'
                 }`}>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      name="payment"
-                      checked={paymentMethod === 'easypaisa'}
-                      onChange={() => setPaymentMethod('easypaisa')}
-                      className="text-[#7b3e1d] focus:ring-[#7b3e1d]"
-                    />
-                    <div>
-                      <strong className="text-stone-900 block font-bold text-sm">EasyPaisa Mobile Account</strong>
-                      <span className="text-stone-500">Transfer directly to 0300-1234567 (Dail Cosmetics)</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        name="payment"
+                        checked={paymentMethod === 'easypaisa'}
+                        onChange={() => setPaymentMethod('easypaisa')}
+                        className="text-[#7b3e1d] focus:ring-[#7b3e1d]"
+                      />
+                      <div>
+                        <strong className="text-stone-900 block font-bold text-sm">EasyPaisa Mobile Account</strong>
+                        <span className="text-stone-500">Send Rs. {total.toLocaleString()} to EasyPaisa: <strong>0300-1234567</strong></span>
+                      </div>
                     </div>
+                    <span className="text-xs font-bold text-stone-700">EasyPaisa</span>
                   </div>
-                  <span className="text-xs font-bold text-stone-700">EasyPaisa</span>
+                  {paymentMethod === 'easypaisa' && (
+                    <div className="pt-2 border-t border-amber-200/60">
+                      <label className="block text-stone-700 font-bold mb-1">Enter EasyPaisa Transaction ID (TID):</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 4829104928"
+                        value={transactionId}
+                        onChange={(e) => setTransactionId(e.target.value)}
+                        className="w-full bg-white border border-stone-200 rounded-xl p-2.5 text-stone-900"
+                      />
+                    </div>
+                  )}
                 </label>
 
                 {/* Bank Transfer */}
-                <label className={`p-4 rounded-2xl border-2 flex items-center justify-between cursor-pointer transition-all ${
+                <label className={`p-4 rounded-2xl border-2 flex flex-col gap-3 cursor-pointer transition-all ${
                   paymentMethod === 'bank_transfer' ? 'border-[#7b3e1d] bg-amber-50/50' : 'border-stone-200 bg-white hover:bg-stone-50'
                 }`}>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="radio"
-                      name="payment"
-                      checked={paymentMethod === 'bank_transfer'}
-                      onChange={() => setPaymentMethod('bank_transfer')}
-                      className="text-[#7b3e1d] focus:ring-[#7b3e1d]"
-                    />
-                    <div>
-                      <strong className="text-stone-900 block font-bold text-sm">Direct Bank Transfer (IBFT)</strong>
-                      <span className="text-stone-500">Meezan Bank / HBL Account Details sent upon order</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        name="payment"
+                        checked={paymentMethod === 'bank_transfer'}
+                        onChange={() => setPaymentMethod('bank_transfer')}
+                        className="text-[#7b3e1d] focus:ring-[#7b3e1d]"
+                      />
+                      <div>
+                        <strong className="text-stone-900 block font-bold text-sm">Direct Bank Transfer (Meezan Bank)</strong>
+                        <span className="text-stone-500">Account: Dail Cosmetics • IBAN: PK42MEZN00019284719284</span>
+                      </div>
                     </div>
+                    <span className="text-xs font-bold text-stone-700">Bank Transfer</span>
                   </div>
-                  <span className="text-xs font-bold text-stone-700">Bank Transfer</span>
+                  {paymentMethod === 'bank_transfer' && (
+                    <div className="pt-2 border-t border-amber-200/60">
+                      <label className="block text-stone-700 font-bold mb-1">Enter Reference / Sender Account Name:</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Ayesha Khan - Meezan Bank"
+                        value={transactionId}
+                        onChange={(e) => setTransactionId(e.target.value)}
+                        className="w-full bg-white border border-stone-200 rounded-xl p-2.5 text-stone-900"
+                      />
+                    </div>
+                  )}
                 </label>
               </div>
             </div>
@@ -351,7 +415,7 @@ export const CheckoutPage: React.FC = () => {
               type="submit"
               className="w-full py-4 px-8 rounded-2xl bg-[#7b3e1d] hover:bg-[#622f14] text-white font-bold text-base shadow-md transition-all cursor-pointer"
             >
-              Complete Order • Rs. {total.toLocaleString()} (Cash on Delivery)
+              Confirm Order • Rs. {total.toLocaleString()} ({paymentMethod === 'cod' ? 'Cash on Delivery' : 'Prepaid'})
             </button>
 
           </form>
@@ -384,20 +448,55 @@ export const CheckoutPage: React.FC = () => {
               ))}
             </div>
 
+            {/* Coupon Code in Checkout */}
+            <div className="pt-3 border-t border-stone-100">
+              <form onSubmit={handleApplyCoupon} className="flex gap-2">
+                <div className="relative flex-1">
+                  <Tag className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Coupon code (Try: ORGANIC10)"
+                    value={checkoutVoucher}
+                    onChange={(e) => setCheckoutVoucher(e.target.value)}
+                    className="w-full bg-stone-50 border border-stone-200 rounded-xl pl-8 pr-3 py-2 text-xs text-stone-800"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-stone-800 text-white rounded-xl text-xs font-bold hover:bg-black cursor-pointer"
+                >
+                  Apply
+                </button>
+              </form>
+
+              {appliedVoucher && (
+                <div className="flex items-center justify-between text-xs bg-emerald-50 text-emerald-800 px-3 py-1.5 rounded-lg border border-emerald-200 mt-2">
+                  <span>Code <strong>{appliedVoucher}</strong> active ({discountPercentage}% off)</span>
+                  <button onClick={removeVoucher} className="text-rose-500 font-bold hover:underline">
+                    Remove
+                  </button>
+                </div>
+              )}
+
+              {voucherMsg && !appliedVoucher && (
+                <span className="text-[11px] text-rose-500 block mt-1">{voucherMsg}</span>
+              )}
+            </div>
+
             {/* Price Calculations */}
-            <div className="space-y-2 pt-4 border-t border-stone-200 text-xs text-stone-600">
+            <div className="space-y-2 pt-2 border-t border-stone-200 text-xs text-stone-600">
               <div className="flex justify-between">
                 <span>Subtotal</span>
                 <span className="font-semibold text-stone-900">Rs. {subtotal.toLocaleString()}</span>
               </div>
               {discount > 0 && (
-                <div className="flex justify-between text-emerald-700">
-                  <span>Special Discount</span>
+                <div className="flex justify-between text-emerald-700 font-bold">
+                  <span>Voucher Discount</span>
                   <span>-Rs. {discount.toLocaleString()}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span>Nationwide Express Shipping</span>
+                <span>Nationwide Courier Shipping</span>
                 <span>{shipping === 0 ? <strong className="text-emerald-700 font-bold">FREE</strong> : `Rs. ${shipping}`}</span>
               </div>
               <div className="flex justify-between text-base font-bold text-stone-900 pt-3 border-t border-stone-200">
