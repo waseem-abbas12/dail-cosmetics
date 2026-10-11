@@ -33,6 +33,7 @@ export const INITIAL_CONCERNS: string[] = [
 
 export const INITIAL_SETTINGS: StoreSettings = {
   whatsappNumber: '03346361218',
+  adminPassword: 'dail@2026',
   announcementText: '🇵🇰 Official Dail Cosmetics: 100% Herbal Hair Oil & Certified Without-Steroid Beauty Creams • Free Delivery Nationwide above Rs. 2,000',
   freeShippingThreshold: 2000,
   flatShippingFee: 199,

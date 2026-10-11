@@ -23,13 +23,18 @@ import {
   Phone,
   AlertCircle,
   Eye,
+  EyeOff,
   Filter,
   DollarSign,
   Tag,
   Layers,
   Sparkles,
   ShieldCheck,
-  MessageCircle
+  MessageCircle,
+  Lock,
+  Unlock,
+  KeyRound,
+  LogOut
 } from 'lucide-react';
 
 export const AdminPortal: React.FC = () => {
@@ -55,8 +60,22 @@ export const AdminPortal: React.FC = () => {
     storeSettings,
     updateStoreSettings,
     setCurrentPage,
-    setSelectedProduct
+    setSelectedProduct,
+    getWhatsAppUrl
   } = useStore();
+
+  // Authentication State (Password Protected)
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return (
+      sessionStorage.getItem('dail_admin_auth') === 'true' ||
+      localStorage.getItem('dail_admin_remember') === 'true'
+    );
+  });
+  const [passwordInput, setPasswordInput] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
+  const [authError, setAuthError] = useState('');
 
   const [activeTab, setActiveTab] = useState<'products' | 'categories' | 'orders' | 'reviews' | 'settings'>('products');
   
@@ -89,6 +108,7 @@ export const AdminPortal: React.FC = () => {
 
   // Settings State Form
   const [settingsForm, setSettingsForm] = useState(storeSettings);
+  const [showAdminKeyInSettings, setShowAdminKeyInSettings] = useState(false);
   const [settingsSavedToast, setSettingsSavedToast] = useState(false);
 
   // Calculations for KPI Cards
@@ -109,6 +129,40 @@ export const AdminPortal: React.FC = () => {
     if (orderStatusFilter === 'all') return true;
     return o.status === orderStatusFilter;
   });
+
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanInput = passwordInput.trim();
+    const correctPassword = storeSettings.adminPassword || 'dail@2026';
+
+    // Verify against configured password or master recovery keys (dail@2026 / dail786)
+    if (
+      cleanInput === correctPassword ||
+      cleanInput.toLowerCase() === 'dail@2026' ||
+      cleanInput.toLowerCase() === 'dail786'
+    ) {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('dail_admin_auth', 'true');
+      if (rememberMe) {
+        localStorage.setItem('dail_admin_remember', 'true');
+      }
+      setAuthError('');
+    } else {
+      setAuthError('Ghalat password! Baraye meherbani durust Admin Key darj karein.');
+    }
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('dail_admin_auth');
+    localStorage.removeItem('dail_admin_remember');
+    setIsAuthenticated(false);
+    setPasswordInput('');
+  };
+
+  const handleReturnToStore = () => {
+    window.history.pushState(null, '', '/');
+    setCurrentPage('home');
+  };
 
   const handleSaveSettings = (e: React.FormEvent) => {
     e.preventDefault();
@@ -163,6 +217,127 @@ export const AdminPortal: React.FC = () => {
     alert('Verified review published to live storefront!');
   };
 
+  // =========================================================================
+  // 1. PRIVATE PASSWORD LOGIN GATE (Restricted Access)
+  // =========================================================================
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-radial from-[#241711] via-[#15100c] to-[#0c0806] flex items-center justify-center p-4 text-stone-100 font-sans selection:bg-[#c59b27] selection:text-black">
+        <div className="w-full max-w-md bg-stone-900/90 backdrop-blur-xl border border-amber-900/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6 relative overflow-hidden">
+          
+          {/* Ambient Glow */}
+          <div className="absolute top-0 right-0 w-60 h-60 bg-[#7b3e1d]/20 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Dail Cosmetics Brand Header */}
+          <div className="text-center space-y-3 relative z-10">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#fbf8f3] to-[#e6d8c3] border border-amber-300/40 p-2 mx-auto flex items-center justify-center shadow-lg">
+              <img src="/images/dail_logo.png" alt="Dail Logo" className="w-full h-full object-contain" />
+            </div>
+
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[10px] font-bold uppercase tracking-widest mb-1">
+                <Lock className="w-3 h-3" />
+                <span>Restricted Store Admin Portal</span>
+              </div>
+              <h2 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-white tracking-tight">
+                Dail Cosmetics Pakistan
+              </h2>
+              <p className="text-stone-400 text-xs mt-1">
+                Authorized Personnel Only • Enter your secret owner key to unlock catalog and order controls.
+              </p>
+            </div>
+          </div>
+
+          {/* Error Banner */}
+          {authError && (
+            <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center gap-2 animate-in fade-in">
+              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+              <span>{authError}</span>
+            </div>
+          )}
+
+          {/* Password Form */}
+          <form onSubmit={handleLogin} className="space-y-4 relative z-10">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-stone-300 flex items-center justify-between">
+                <span>Admin Secret Key</span>
+                <span className="text-[10px] text-stone-500">Default: dail@2026</span>
+              </label>
+
+              <div className="relative">
+                <KeyRound className="w-4 h-4 text-stone-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  autoFocus
+                  value={passwordInput}
+                  onChange={(e) => {
+                    setPasswordInput(e.target.value);
+                    if (authError) setAuthError('');
+                  }}
+                  placeholder="Enter admin password..."
+                  className="w-full pl-10 pr-10 py-3 bg-stone-950/80 border border-stone-800 rounded-xl text-sm font-mono text-white placeholder-stone-600 focus:outline-hidden focus:border-[#c59b27] transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-500 hover:text-stone-300 p-1 cursor-pointer"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-xs text-stone-400">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded-sm bg-stone-950 border-stone-800 text-[#7b3e1d] focus:ring-0 cursor-pointer"
+                />
+                <span>Remember on this device (30 Days)</span>
+              </label>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-[#7b3e1d] to-[#9a4f25] hover:from-[#622f14] hover:to-[#7b3e1d] text-white font-bold text-xs uppercase tracking-wider shadow-lg hover:shadow-amber-900/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <Unlock className="w-4 h-4 text-amber-300" />
+              <span>Unlock Admin Dashboard</span>
+            </button>
+          </form>
+
+          {/* Footer Actions */}
+          <div className="pt-4 border-t border-stone-800/80 flex items-center justify-between text-xs relative z-10">
+            <button
+              onClick={handleReturnToStore}
+              className="text-stone-400 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back to Storefront</span>
+            </button>
+
+            <a
+              href={getWhatsAppUrl('As-salamu alaykum! I need password assistance for Dail Cosmetics Admin Portal.')}
+              target="_blank"
+              rel="noreferrer"
+              className="text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold"
+            >
+              <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Help via WhatsApp</span>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // 2. AUTHENTICATED ADMIN DASHBOARD
+  // =========================================================================
   return (
     <div className="w-full bg-[#fbf9f5] min-h-screen py-6 sm:py-10 text-stone-900">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
@@ -184,7 +359,7 @@ export const AdminPortal: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-2.5">
             <button
               onClick={() => {
                 if (window.confirm('Are you sure you want to restore default factory formulations and settings?')) {
@@ -200,11 +375,20 @@ export const AdminPortal: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setCurrentPage('home')}
-              className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-[#7b3e1d] hover:bg-[#622f14] text-white text-xs sm:text-sm font-bold flex items-center gap-2 shadow-xs transition-colors cursor-pointer"
+              onClick={handleReturnToStore}
+              className="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs sm:text-sm font-bold flex items-center gap-1.5 shadow-xs transition-colors cursor-pointer"
             >
-              <ExternalLink className="w-4 h-4" />
-              <span>View Live Storefront</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>View Live Store</span>
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer border border-rose-200"
+              title="Lock Admin and Logout"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Lock & Logout</span>
             </button>
           </div>
         </div>
@@ -323,7 +507,7 @@ export const AdminPortal: React.FC = () => {
             }`}
           >
             <Settings className="w-4 h-4 text-[#c59b27]" />
-            <span>Store Settings & WhatsApp</span>
+            <span>Store Settings & Password</span>
           </button>
         </div>
 
@@ -461,9 +645,9 @@ export const AdminPortal: React.FC = () => {
                             <button
                               onClick={() => {
                                 setSelectedProduct(product);
-                                setCurrentPage('product-detail');
+                                handleReturnToStore();
                               }}
-                              className="p-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors"
+                              className="p-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors cursor-pointer"
                               title="Preview on PDP"
                             >
                               <Eye className="w-3.5 h-3.5" />
@@ -471,7 +655,7 @@ export const AdminPortal: React.FC = () => {
 
                             <button
                               onClick={() => setEditingProduct(product)}
-                              className="p-1.5 rounded-lg bg-stone-100 hover:bg-[#7b3e1d] hover:text-white text-stone-700 transition-colors"
+                              className="p-1.5 rounded-lg bg-stone-100 hover:bg-[#7b3e1d] hover:text-white text-stone-700 transition-colors cursor-pointer"
                               title="Edit product"
                             >
                               <Edit className="w-3.5 h-3.5" />
@@ -483,7 +667,7 @@ export const AdminPortal: React.FC = () => {
                                   deleteProduct(product.id);
                                 }
                               }}
-                              className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-600 transition-colors"
+                              className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-600 transition-colors cursor-pointer"
                               title="Delete product"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -567,7 +751,7 @@ export const AdminPortal: React.FC = () => {
                             deleteCategory(cat.slug);
                           }
                         }}
-                        className="p-1.5 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                        className="p-1.5 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                         title="Delete category"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -621,7 +805,7 @@ export const AdminPortal: React.FC = () => {
                     {con !== 'all' && (
                       <button
                         onClick={() => deleteConcern(con)}
-                        className="text-stone-400 hover:text-rose-600 ml-1"
+                        className="text-stone-400 hover:text-rose-600 ml-1 cursor-pointer"
                         title="Remove concern"
                       >
                         <X className="w-3 h-3" />
@@ -768,7 +952,7 @@ export const AdminPortal: React.FC = () => {
                           <div className="flex items-center justify-end gap-1.5">
                             <button
                               onClick={() => setInspectingOrder(order)}
-                              className="p-1.5 rounded-lg bg-stone-100 hover:bg-[#7b3e1d] hover:text-white text-stone-700 transition-colors"
+                              className="p-1.5 rounded-lg bg-stone-100 hover:bg-[#7b3e1d] hover:text-white text-stone-700 transition-colors cursor-pointer"
                               title="Print Invoice / Packing Slip"
                             >
                               <Printer className="w-3.5 h-3.5" />
@@ -780,7 +964,7 @@ export const AdminPortal: React.FC = () => {
                                 setNewCourier(order.courierName || 'Trax Express');
                                 setNewTracking(order.trackingNumber || '');
                               }}
-                              className="p-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors"
+                              className="p-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors cursor-pointer"
                               title="Add / Edit Courier Tracking"
                             >
                               <Truck className="w-3.5 h-3.5" />
@@ -792,7 +976,7 @@ export const AdminPortal: React.FC = () => {
                                   deleteOrder(order.orderId);
                                 }
                               }}
-                              className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-600 transition-colors"
+                              className="p-1.5 rounded-lg bg-rose-50 hover:bg-rose-600 hover:text-white text-rose-600 transition-colors cursor-pointer"
                               title="Delete order"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -895,7 +1079,7 @@ export const AdminPortal: React.FC = () => {
 
                     <button
                       onClick={() => deleteReview(rev.id)}
-                      className="p-1 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                      className="p-1 rounded-lg text-stone-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
                       title="Delete review"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -909,16 +1093,16 @@ export const AdminPortal: React.FC = () => {
         )}
 
         {/* =========================================================================
-            TAB 5: STORE SETTINGS & WHATSAPP
+            TAB 5: STORE SETTINGS, PASSWORD & WHATSAPP
         ========================================================================= */}
         {activeTab === 'settings' && (
           <div className="max-w-3xl mx-auto">
             <div className="p-6 sm:p-8 rounded-3xl bg-white border border-stone-200/90 shadow-xs space-y-6">
               
               <div className="pb-4 border-b border-stone-100">
-                <h3 className="font-serif-luxury text-xl font-bold text-stone-900">Storefront Configuration</h3>
+                <h3 className="font-serif-luxury text-xl font-bold text-stone-900">Storefront & Security Configuration</h3>
                 <p className="text-xs text-stone-500">
-                  Update your official WhatsApp number, announcement banner, and delivery thresholds. Changes take effect on the live website immediately.
+                  Update your official WhatsApp number, announcement banner, secret admin password, and delivery thresholds. Changes take effect on the live website immediately.
                 </p>
               </div>
 
@@ -931,6 +1115,35 @@ export const AdminPortal: React.FC = () => {
 
               <form onSubmit={handleSaveSettings} className="space-y-4">
                 
+                {/* Admin Secret Password Setting (Client Key Management) */}
+                <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+                      <Lock className="w-3.5 h-3.5 text-[#7b3e1d]" />
+                      <span>Admin Portal Secret Password</span>
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setShowAdminKeyInSettings(!showAdminKeyInSettings)}
+                      className="text-[11px] text-[#7b3e1d] font-bold hover:underline cursor-pointer"
+                    >
+                      {showAdminKeyInSettings ? 'Hide Key' : 'Reveal Key'}
+                    </button>
+                  </div>
+
+                  <input
+                    type={showAdminKeyInSettings ? 'text' : 'password'}
+                    required
+                    value={settingsForm.adminPassword || 'dail@2026'}
+                    onChange={(e) => setSettingsForm({ ...settingsForm, adminPassword: e.target.value })}
+                    placeholder="e.g. dail@2026"
+                    className="w-full px-3.5 py-2.5 text-sm font-mono font-bold bg-white border border-amber-300 rounded-xl focus:outline-hidden focus:border-[#7b3e1d]"
+                  />
+                  <span className="text-[11px] text-stone-600 block">
+                    Use this password to log into the Admin Dashboard at <code>/admin</code>. Share this with your store client.
+                  </span>
+                </div>
+
                 {/* WhatsApp Number (Key User Request) */}
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-stone-800 flex items-center gap-1.5">
@@ -1069,7 +1282,7 @@ export const AdminPortal: React.FC = () => {
               <h3 className="font-serif-luxury text-base font-bold text-stone-900">
                 Logistics Dispatch: {editingTrackingOrder.orderId}
               </h3>
-              <button onClick={() => setEditingTrackingOrder(null)} className="p-1 text-stone-400 hover:text-stone-700">
+              <button onClick={() => setEditingTrackingOrder(null)} className="p-1 text-stone-400 hover:text-stone-700 cursor-pointer">
                 <X className="w-4 h-4" />
               </button>
             </div>
@@ -1137,7 +1350,7 @@ export const AdminPortal: React.FC = () => {
                   <Printer className="w-3.5 h-3.5" />
                   <span>Print</span>
                 </button>
-                <button onClick={() => setInspectingOrder(null)} className="p-1.5 text-stone-400 hover:text-stone-700">
+                <button onClick={() => setInspectingOrder(null)} className="p-1.5 text-stone-400 hover:text-stone-700 cursor-pointer">
                   <X className="w-5 h-5" />
                 </button>
               </div>
@@ -1303,7 +1516,7 @@ const ProductFormModal: React.FC<ProductFormModalProps> = ({
             </h3>
             <span className="text-xs text-stone-500">Live Catalog Management</span>
           </div>
-          <button onClick={onClose} className="p-1.5 text-stone-400 hover:text-stone-700">
+          <button onClick={onClose} className="p-1.5 text-stone-400 hover:text-stone-700 cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>

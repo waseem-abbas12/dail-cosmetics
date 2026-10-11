@@ -65,13 +65,6 @@ export const Navbar: React.FC = () => {
             >
               Track Order
             </button>
-            <span>•</span>
-            <button 
-              onClick={() => navigateTo('admin')}
-              className="px-2.5 py-0.5 rounded-md bg-amber-200 text-[#7b3e1d] font-bold hover:bg-white transition-colors cursor-pointer"
-            >
-              ⚙️ Store Admin
-            </button>
           </div>
         </div>
       </div>
@@ -270,15 +263,9 @@ export const Navbar: React.FC = () => {
             </button>
             <button
               onClick={() => navigateTo('about')}
-              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
+              className="block w-full text-left py-2 hover:text-[#7b3e1d]"
             >
               About Dail Cosmetics
-            </button>
-            <button
-              onClick={() => navigateTo('admin')}
-              className="block w-full text-left py-2 text-[#7b3e1d] font-bold"
-            >
-              ⚙️ Store Admin & Manager
             </button>
           </div>
 

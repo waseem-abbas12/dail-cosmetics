@@ -29,7 +29,30 @@ import { PRODUCTS } from './data/products';
 import { ArrowRight, Truck, ShieldCheck, Phone, CheckCircle2 } from 'lucide-react';
 
 export function App() {
-  const { currentPage } = useStore();
+  const { currentPage, setCurrentPage } = useStore();
+
+  React.useEffect(() => {
+    const handleUrlRoute = () => {
+      const path = window.location.pathname.toLowerCase();
+      const hash = window.location.hash.toLowerCase();
+      const search = window.location.search.toLowerCase();
+      if (path === '/admin' || path.startsWith('/admin') || hash === '#admin' || search.includes('admin')) {
+        setCurrentPage('admin');
+      }
+    };
+    handleUrlRoute();
+    window.addEventListener('popstate', handleUrlRoute);
+    window.addEventListener('hashchange', handleUrlRoute);
+    return () => {
+      window.removeEventListener('popstate', handleUrlRoute);
+      window.removeEventListener('hashchange', handleUrlRoute);
+    };
+  }, [setCurrentPage]);
+
+  // If Admin Portal is active, render the dedicated private workspace directly
+  if (currentPage === 'admin') {
+    return <AdminPortal />;
+  }
 
   const renderCurrentPage = () => {
     switch (currentPage) {
@@ -49,8 +72,6 @@ export function App() {
         return <AboutPage />;
       case 'contact':
         return <ContactPage />;
-      case 'admin':
-        return <AdminPortal />;
       default:
         return <HomeView />;
     }

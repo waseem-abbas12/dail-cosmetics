@@ -10,6 +10,7 @@ export interface CategoryItem {
 
 export interface StoreSettings {
   whatsappNumber: string; // e.g. "03346361218"
+  adminPassword?: string; // e.g. "dail@2026"
   announcementText: string;
   freeShippingThreshold: number;
   flatShippingFee: number;
