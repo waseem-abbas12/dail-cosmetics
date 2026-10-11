@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { useStore } from '../store/useStore';
 import { PAKISTAN_CITIES } from '../data/products';
-import confetti from 'canvas-confetti';
 import {
   ShieldCheck,
   Phone,
   ArrowLeft,
   Lock,
   MapPin,
-  ExternalLink
+  CheckCircle,
+  Truck,
+  Building,
+  CreditCard,
+  ShoppingBag
 } from 'lucide-react';
 
 export const CheckoutPage: React.FC = () => {
@@ -32,7 +35,7 @@ export const CheckoutPage: React.FC = () => {
     notes: '',
   });
 
-  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'bank_transfer' | 'card'>('cod');
+  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'jazzcash' | 'easypaisa' | 'bank_transfer'>('cod');
   const [orderCompleted, setOrderCompleted] = useState(false);
   const [createdOrderDetails, setCreatedOrderDetails] = useState<any>(null);
 
@@ -44,12 +47,12 @@ export const CheckoutPage: React.FC = () => {
   if (cart.length === 0 && !orderCompleted) {
     return (
       <div className="max-w-md mx-auto py-24 text-center px-4 space-y-4">
-        <div className="text-4xl">🌿</div>
-        <h2 className="font-serif-luxury text-2xl font-bold text-white">Your basket is empty</h2>
-        <p className="text-emerald-300/70 text-sm">Please add products before checking out.</p>
+        <div className="text-4xl">🧴</div>
+        <h2 className="font-serif-luxury text-2xl font-bold text-stone-900">Your shopping bag is empty</h2>
+        <p className="text-stone-500 text-xs sm:text-sm">Please add Dail herbal products before checking out.</p>
         <button
           onClick={() => setCurrentPage('shop')}
-          className="px-6 py-2.5 rounded-full bg-[#6aa84f] text-white text-xs font-semibold"
+          className="px-6 py-2.5 rounded-full bg-[#7b3e1d] text-white text-xs font-bold"
         >
           Browse Collection
         </button>
@@ -59,38 +62,25 @@ export const CheckoutPage: React.FC = () => {
 
   const handleSubmitOrder = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!formData.fullName || !formData.phone || !formData.address) {
-      alert('Please fill out your delivery name, phone number, and street address.');
+      alert('Please fill in your name, phone number, and delivery address.');
       return;
-    }
-
-    // Trigger confetti celebration
-    try {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-        colors: ['#6aa84f', '#a4e38b', '#d4af37', '#ffffff']
-      });
-    } catch {
-      // Fallback gracefully
     }
 
     const orderData = {
       customerName: formData.fullName,
-      email: formData.email || `${formData.phone}@customer.daliorganics.pk`,
+      email: formData.email || 'customer@dailcosmetics.pk',
       phone: formData.phone,
       address: formData.address,
       city: formData.city,
       province: formData.province,
       paymentMethod,
-      items: cart.map((item) => ({
-        productId: item.product.id,
-        name: item.product.name,
-        price: item.product.price,
-        quantity: item.quantity,
-        image: item.product.image,
+      items: cart.map((i) => ({
+        productId: i.product.id,
+        name: i.product.name,
+        price: i.product.price,
+        quantity: i.quantity,
+        image: i.product.image,
       })),
       subtotal,
       shippingFee: shipping,
@@ -101,73 +91,63 @@ export const CheckoutPage: React.FC = () => {
     const newOrder = createOrder(orderData);
     setCreatedOrderDetails(newOrder);
     setOrderCompleted(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Order Confirmation Success View
+  // Order Confirmed Screen
   if (orderCompleted && createdOrderDetails) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-12 sm:py-16">
-        <div className="rounded-[36px] bg-gradient-to-b from-[#0e3321] to-[#071d13] border border-emerald-500/30 p-6 sm:p-10 text-center shadow-2xl space-y-6">
-          <div className="w-16 h-16 rounded-full bg-[#185330] text-[#78c459] flex items-center justify-center mx-auto text-3xl shadow-inner border border-emerald-400/40">
-            ✓
+      <div className="w-full bg-[#fbf9f5] min-h-screen py-12 px-4 sm:px-8">
+        <div className="max-w-xl mx-auto bg-white rounded-3xl border border-stone-200/90 p-6 sm:p-10 shadow-sm text-center space-y-5">
+          <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto text-2xl">
+            <CheckCircle className="w-8 h-8" />
           </div>
 
           <div>
-            <span className="text-xs uppercase tracking-[0.2em] font-semibold text-[#78c459]">
-              Order Successfully Booked
+            <span className="text-xs font-bold uppercase tracking-widest text-[#c59b27]">
+              Order Confirmed
             </span>
-            <h1 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-white mt-1">
+            <h1 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-stone-900 mt-1">
               Shukriya, {createdOrderDetails.customerName}!
             </h1>
-            <p className="text-emerald-200/80 text-sm mt-2">
-              Aapka order receive ho chuka hai. Hamari team fresh batch pack karke courier ko hand over kar rahi hai.
+            <p className="text-xs sm:text-sm text-stone-600 mt-1">
+              Your order has been received and sent to our Karachi / Lahore warehouse for priority packing.
             </p>
           </div>
 
-          {/* Tracking ID Pill */}
-          <div className="p-4 rounded-2xl bg-emerald-950/80 border border-emerald-500/30 inline-block text-left max-w-md w-full">
-            <div className="flex justify-between items-center text-xs text-emerald-300 mb-1">
-              <span>Order Tracking ID:</span>
-              <span className="text-white font-mono font-bold">{createdOrderDetails.orderId}</span>
+          <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200 text-left space-y-2 text-xs">
+            <div className="flex justify-between">
+              <span className="text-stone-500">Order ID:</span>
+              <strong className="font-mono text-stone-900">{createdOrderDetails.orderId}</strong>
             </div>
-            <div className="flex justify-between items-center text-xs text-emerald-300 mb-1">
-              <span>Courier Partner:</span>
-              <span className="text-white font-medium">{createdOrderDetails.courierName}</span>
+            <div className="flex justify-between">
+              <span className="text-stone-500">Payment:</span>
+              <span className="font-semibold text-stone-900 uppercase">{createdOrderDetails.paymentMethod}</span>
             </div>
-            <div className="flex justify-between items-center text-xs text-emerald-300">
-              <span>Payment Mode:</span>
-              <span className="text-[#a4e38b] font-bold uppercase">{createdOrderDetails.paymentMethod}</span>
+            <div className="flex justify-between">
+              <span className="text-stone-500">Total Payable:</span>
+              <strong className="text-[#7b3e1d] text-sm">Rs. {createdOrderDetails.total.toLocaleString()}</strong>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-stone-500">Tracking Number:</span>
+              <span className="font-mono text-stone-700">{createdOrderDetails.trackingNumber}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-stone-500">Courier Partner:</span>
+              <span className="text-stone-700">{createdOrderDetails.courierName}</span>
             </div>
           </div>
 
-          {/* WhatsApp Order Update link */}
-          <div className="p-4 rounded-2xl bg-[#133e28] border border-emerald-400/20 text-xs text-emerald-100 flex items-center justify-between gap-3 text-left">
-            <div className="flex items-center gap-2.5">
-              <Phone className="w-4 h-4 text-[#25d366] shrink-0" />
-              <span>Receive live dispatch alerts and courier tracking via WhatsApp</span>
-            </div>
-            <a
-              href={`https://wa.me/923001234567?text=Hi%20Dali%20Organics,%20my%20Order%20ID%20is%20${createdOrderDetails.orderId}.%20Please%20confirm%20my%20dispatch.`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-3 py-1.5 rounded-full bg-[#25d366] text-black font-semibold text-[11px] shrink-0 flex items-center gap-1"
-            >
-              <span>Connect</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-
-          {/* Action buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row gap-3 pt-2">
             <button
               onClick={() => setCurrentPage('track-order')}
-              className="px-6 py-3 rounded-full bg-[#6aa84f] hover:bg-[#7bc05d] text-white text-xs font-semibold shadow-md transition-all"
+              className="flex-1 py-3 rounded-xl bg-[#7b3e1d] hover:bg-[#622f14] text-white text-xs font-bold transition-all"
             >
-              Track Order Status
+              Live Order Tracking
             </button>
             <button
-              onClick={() => setCurrentPage('shop')}
-              className="px-6 py-3 rounded-full glass-panel border border-emerald-500/30 text-emerald-200 hover:text-white text-xs font-semibold transition-all"
+              onClick={() => setCurrentPage('home')}
+              className="flex-1 py-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold transition-all"
             >
               Continue Shopping
             </button>
@@ -178,301 +158,270 @@ export const CheckoutPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      
-      {/* Back button */}
-      <button
-        onClick={() => setCurrentPage('shop')}
-        className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-300/80 hover:text-white transition-colors mb-6"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        <span>Back to Basket</span>
-      </button>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+    <div className="w-full bg-[#fbf9f5] min-h-screen py-10 sm:py-14">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Left Column: Delivery & Payment Form */}
-        <div className="lg:col-span-7 space-y-6">
+        {/* Back Link */}
+        <button
+          onClick={() => setCurrentPage('shop')}
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-600 hover:text-[#7b3e1d] mb-6"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Return to Shopping</span>
+        </button>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
-          <div className="p-6 sm:p-8 rounded-[32px] bg-gradient-to-b from-[#0e3120] to-[#082015] border border-emerald-500/25 shadow-xl space-y-6">
+          {/* Left Form: Delivery & Payment Details */}
+          <form onSubmit={handleSubmitOrder} className="lg:col-span-7 space-y-6">
             
-            <div className="flex items-center gap-2.5 pb-4 border-b border-emerald-500/20">
-              <MapPin className="w-5 h-5 text-[#78c459]" />
-              <h2 className="font-serif-luxury text-xl sm:text-2xl font-bold text-white">
-                Delivery Details (Pakistan)
+            {/* Step 1: Customer Contact */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-stone-200/90 shadow-xs space-y-4">
+              <h2 className="font-serif-luxury text-xl font-bold text-stone-900 flex items-center gap-2">
+                <span>1. Contact & Shipping Details</span>
               </h2>
-            </div>
 
-            <form onSubmit={handleSubmitOrder} className="space-y-4">
-              
-              {/* Full Name */}
-              <div>
-                <label className="block text-xs font-medium text-emerald-200 mb-1.5">
-                  Full Name (نام) *
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Fatima Ali / Muhammad Usman"
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                  className="w-full bg-emerald-950/70 border border-emerald-500/30 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-stone-400 focus:outline-none focus:border-[#78c459]"
-                />
-              </div>
-
-              {/* Phone & Email */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div>
-                  <label className="block text-xs font-medium text-emerald-200 mb-1.5">
-                    Mobile Phone (موبائل نمبر) *
-                  </label>
+                  <label className="block text-stone-700 font-bold mb-1">Full Name *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Ayesha Khan"
+                    value={formData.fullName}
+                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                    className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-900 focus:outline-hidden focus:border-[#7b3e1d]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-stone-700 font-bold mb-1">WhatsApp Phone Number *</label>
                   <input
                     type="tel"
                     required
                     placeholder="0300-1234567"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full bg-emerald-950/70 border border-emerald-500/30 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-stone-400 focus:outline-none focus:border-[#78c459]"
+                    className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-900 focus:outline-hidden focus:border-[#7b3e1d]"
                   />
-                  <span className="text-[10px] text-emerald-400/70 mt-1 block">
-                    Courier delivery call aur SMS update ke liye
-                  </span>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-medium text-emerald-200 mb-1.5">
-                    Email Address (Optional)
-                  </label>
+                <div className="sm:col-span-2">
+                  <label className="block text-stone-700 font-bold mb-1">Email Address (Optional)</label>
                   <input
                     type="email"
-                    placeholder="fatima@example.com"
+                    placeholder="name@gmail.com (For invoice & tracking updates)"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full bg-emerald-950/70 border border-emerald-500/30 rounded-xl px-4 py-2.5 text-sm text-white placeholder:text-stone-400 focus:outline-none focus:border-[#78c459]"
+                    className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-900 focus:outline-hidden focus:border-[#7b3e1d]"
                   />
                 </div>
-              </div>
 
-              {/* Street Address */}
-              <div>
-                <label className="block text-xs font-medium text-emerald-200 mb-1.5">
-                  Complete Street Address (مکمل پتہ) *
-                </label>
-                <textarea
-                  rows={2}
-                  required
-                  placeholder="House / Flat No., Street, Block / Sector, Landmark"
-                  value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  className="w-full bg-emerald-950/70 border border-emerald-500/30 rounded-xl px-4 py-2 text-sm text-white placeholder:text-stone-400 focus:outline-none focus:border-[#78c459]"
-                />
-              </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-stone-700 font-bold mb-1">Complete Street Address *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="House/Flat #, Street, Sector, Area Landmark"
+                    value={formData.address}
+                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                    className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-900 focus:outline-hidden focus:border-[#7b3e1d]"
+                  />
+                </div>
 
-              {/* City & Province Dropdowns */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-emerald-200 mb-1.5">
-                    City (شہر) *
-                  </label>
+                  <label className="block text-stone-700 font-bold mb-1">City *</label>
                   <select
                     value={formData.city}
                     onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                    className="w-full bg-[#0b2717] border border-emerald-500/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#78c459]"
+                    className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-900 focus:outline-hidden focus:border-[#7b3e1d] cursor-pointer"
                   >
                     {PAKISTAN_CITIES.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
+                      <option key={c} value={c}>{c}</option>
                     ))}
                   </select>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-emerald-200 mb-1.5">
-                    Province (صوبہ) *
-                  </label>
-                  <select
-                    value={formData.province}
-                    onChange={(e) => setFormData({ ...formData, province: e.target.value })}
-                    className="w-full bg-[#0b2717] border border-emerald-500/30 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#78c459]"
-                  >
-                    <option value="Punjab">Punjab</option>
-                    <option value="Sindh">Sindh</option>
-                    <option value="Khyber Pakhtunkhwa">Khyber Pakhtunkhwa</option>
-                    <option value="Balochistan">Balochistan</option>
-                    <option value="Islamabad Capital">Islamabad Capital</option>
-                    <option value="Azad Kashmir">Azad Jammu & Kashmir</option>
-                    <option value="Gilgit-Baltistan">Gilgit-Baltistan</option>
-                  </select>
+                  <label className="block text-stone-700 font-bold mb-1">Special Delivery Note</label>
+                  <input
+                    type="text"
+                    placeholder="Call before arrival, ring bell..."
+                    value={formData.notes}
+                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    className="w-full bg-stone-50 border border-stone-200 rounded-xl p-3 text-stone-900 focus:outline-hidden focus:border-[#7b3e1d]"
+                  />
                 </div>
               </div>
+            </div>
 
-              {/* Payment Method Selector */}
-              <div className="pt-4 border-t border-emerald-500/20 space-y-3">
-                <label className="block text-xs font-bold text-white uppercase tracking-wider">
-                  Select Payment Method (طریقہ ادائیگی)
+            {/* Step 2: Payment Options */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-stone-200/90 shadow-xs space-y-4">
+              <h2 className="font-serif-luxury text-xl font-bold text-stone-900">
+                2. Select Payment Method
+              </h2>
+
+              <div className="space-y-3 text-xs">
+                {/* Cash On Delivery */}
+                <label className={`p-4 rounded-2xl border-2 flex items-center justify-between cursor-pointer transition-all ${
+                  paymentMethod === 'cod' ? 'border-[#7b3e1d] bg-amber-50/50' : 'border-stone-200 bg-white hover:bg-stone-50'
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="payment"
+                      checked={paymentMethod === 'cod'}
+                      onChange={() => setPaymentMethod('cod')}
+                      className="text-[#7b3e1d] focus:ring-[#7b3e1d]"
+                    />
+                    <div>
+                      <strong className="text-stone-900 block font-bold text-sm">Cash on Delivery (COD)</strong>
+                      <span className="text-stone-500">Pay cash directly to courier rider upon doorstep delivery</span>
+                    </div>
+                  </div>
+                  <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                    Recommended
+                  </span>
                 </label>
 
-                {/* COD Option */}
-                <div
-                  onClick={() => setPaymentMethod('cod')}
-                  className={`p-4 rounded-2xl cursor-pointer border transition-all flex items-start gap-3.5 ${
-                    paymentMethod === 'cod'
-                      ? 'bg-emerald-900/60 border-[#78c459] ring-1 ring-[#78c459]'
-                      : 'bg-emerald-950/40 border-emerald-500/20 hover:border-emerald-400/40'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="payment"
-                    checked={paymentMethod === 'cod'}
-                    onChange={() => setPaymentMethod('cod')}
-                    className="mt-1 text-[#78c459] focus:ring-0"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <strong className="text-white text-sm">Cash On Delivery (COD)</strong>
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#6aa84f] text-white">
-                        Recommended
-                      </span>
+                {/* JazzCash */}
+                <label className={`p-4 rounded-2xl border-2 flex items-center justify-between cursor-pointer transition-all ${
+                  paymentMethod === 'jazzcash' ? 'border-[#7b3e1d] bg-amber-50/50' : 'border-stone-200 bg-white hover:bg-stone-50'
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="payment"
+                      checked={paymentMethod === 'jazzcash'}
+                      onChange={() => setPaymentMethod('jazzcash')}
+                      className="text-[#7b3e1d] focus:ring-[#7b3e1d]"
+                    />
+                    <div>
+                      <strong className="text-stone-900 block font-bold text-sm">JazzCash Mobile Account</strong>
+                      <span className="text-stone-500">Transfer directly to 0300-1234567 (Dail Cosmetics)</span>
                     </div>
-                    <p className="text-emerald-200/70 text-xs mt-1">
-                      Pay cash when the rider arrives at your doorstep anywhere in Pakistan.
-                    </p>
                   </div>
-                </div>
+                  <span className="text-xs font-bold text-stone-700">JazzCash</span>
+                </label>
 
-                {/* JazzCash / Easypaisa Transfer */}
-                <div
-                  onClick={() => setPaymentMethod('bank_transfer')}
-                  className={`p-4 rounded-2xl cursor-pointer border transition-all flex items-start gap-3.5 ${
-                    paymentMethod === 'bank_transfer'
-                      ? 'bg-emerald-900/60 border-[#78c459] ring-1 ring-[#78c459]'
-                      : 'bg-emerald-950/40 border-emerald-500/20 hover:border-emerald-400/40'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="payment"
-                    checked={paymentMethod === 'bank_transfer'}
-                    onChange={() => setPaymentMethod('bank_transfer')}
-                    className="mt-1 text-[#78c459] focus:ring-0"
-                  />
-                  <div className="flex-1">
-                    <strong className="text-white text-sm">JazzCash / Easypaisa Direct Transfer</strong>
-                    <p className="text-emerald-200/70 text-xs mt-1">
-                      Transfer to Account: 0300-1234567 (Title: Dali Organics PK) & share screenshot on WhatsApp.
-                    </p>
+                {/* EasyPaisa */}
+                <label className={`p-4 rounded-2xl border-2 flex items-center justify-between cursor-pointer transition-all ${
+                  paymentMethod === 'easypaisa' ? 'border-[#7b3e1d] bg-amber-50/50' : 'border-stone-200 bg-white hover:bg-stone-50'
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="payment"
+                      checked={paymentMethod === 'easypaisa'}
+                      onChange={() => setPaymentMethod('easypaisa')}
+                      className="text-[#7b3e1d] focus:ring-[#7b3e1d]"
+                    />
+                    <div>
+                      <strong className="text-stone-900 block font-bold text-sm">EasyPaisa Mobile Account</strong>
+                      <span className="text-stone-500">Transfer directly to 0300-1234567 (Dail Cosmetics)</span>
+                    </div>
                   </div>
-                </div>
+                  <span className="text-xs font-bold text-stone-700">EasyPaisa</span>
+                </label>
 
-                {/* Card Option */}
-                <div
-                  onClick={() => setPaymentMethod('card')}
-                  className={`p-4 rounded-2xl cursor-pointer border transition-all flex items-start gap-3.5 ${
-                    paymentMethod === 'card'
-                      ? 'bg-emerald-900/60 border-[#78c459] ring-1 ring-[#78c459]'
-                      : 'bg-emerald-950/40 border-emerald-500/20 hover:border-emerald-400/40'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name="payment"
-                    checked={paymentMethod === 'card'}
-                    onChange={() => setPaymentMethod('card')}
-                    className="mt-1 text-[#78c459] focus:ring-0"
-                  />
-                  <div className="flex-1">
-                    <strong className="text-white text-sm">Debit / Credit Card (Visa / Mastercard)</strong>
-                    <p className="text-emerald-200/70 text-xs mt-1">
-                      Encrypted 256-bit bank card checkout.
-                    </p>
+                {/* Bank Transfer */}
+                <label className={`p-4 rounded-2xl border-2 flex items-center justify-between cursor-pointer transition-all ${
+                  paymentMethod === 'bank_transfer' ? 'border-[#7b3e1d] bg-amber-50/50' : 'border-stone-200 bg-white hover:bg-stone-50'
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="payment"
+                      checked={paymentMethod === 'bank_transfer'}
+                      onChange={() => setPaymentMethod('bank_transfer')}
+                      className="text-[#7b3e1d] focus:ring-[#7b3e1d]"
+                    />
+                    <div>
+                      <strong className="text-stone-900 block font-bold text-sm">Direct Bank Transfer (IBFT)</strong>
+                      <span className="text-stone-500">Meezan Bank / HBL Account Details sent upon order</span>
+                    </div>
                   </div>
-                </div>
-
+                  <span className="text-xs font-bold text-stone-700">Bank Transfer</span>
+                </label>
               </div>
+            </div>
 
-              {/* Submit Button */}
-              <div className="pt-4">
-                <button
-                  type="submit"
-                  className="w-full py-4 rounded-full bg-[#6aa84f] hover:bg-[#7bc05d] text-white text-sm font-bold tracking-wide shadow-xl shadow-emerald-950/80 transition-all flex items-center justify-center gap-2 group active:scale-95"
-                >
-                  <Lock className="w-4 h-4 text-emerald-950" />
-                  <span>Confirm Order (Rs. {total.toLocaleString()} {paymentMethod === 'cod' ? '• COD' : ''})</span>
-                </button>
-              </div>
+            {/* Place Order CTA */}
+            <button
+              type="submit"
+              className="w-full py-4 px-8 rounded-2xl bg-[#7b3e1d] hover:bg-[#622f14] text-white font-bold text-base shadow-md transition-all cursor-pointer"
+            >
+              Complete Order • Rs. {total.toLocaleString()} (Cash on Delivery)
+            </button>
 
-            </form>
+          </form>
 
-          </div>
-
-        </div>
-
-        {/* Right Column: Order Summary Sidebar */}
-        <div className="lg:col-span-5 space-y-6">
-          <div className="p-6 sm:p-8 rounded-[32px] bg-gradient-to-b from-[#0e3120] to-[#071c12] border border-emerald-500/25 shadow-xl space-y-4">
-            
-            <h3 className="font-serif-luxury text-xl font-bold text-white border-b border-emerald-500/20 pb-3">
-              Order Summary ({cart.length} items)
+          {/* Right Summary Column */}
+          <div className="lg:col-span-5 p-6 sm:p-8 rounded-3xl bg-white border border-stone-200/90 shadow-xs space-y-6">
+            <h3 className="font-serif-luxury text-lg font-bold text-stone-900 pb-3 border-b border-stone-100">
+              Order Summary ({cart.reduce((s, i) => s + i.quantity, 0)} items)
             </h3>
 
-            {/* Items scroll */}
-            <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
+            {/* Item list */}
+            <div className="space-y-3.5 max-h-72 overflow-y-auto divide-y divide-stone-100">
               {cart.map((item) => (
-                <div key={item.product.id} className="flex items-center gap-3 text-xs">
-                  <img
-                    src={item.product.image}
-                    alt={item.product.name}
-                    className="w-12 h-12 rounded-xl object-cover border border-emerald-500/20 shrink-0"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <h5 className="font-medium text-white truncate">{item.product.name}</h5>
-                    <span className="text-emerald-300/70 text-[11px]">Qty: {item.quantity}</span>
+                <div key={item.product.id} className="pt-3 first:pt-0 flex items-center justify-between gap-3 text-xs">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={item.product.image}
+                      alt={item.product.name}
+                      className="w-12 h-12 object-contain rounded-xl bg-stone-50 border border-stone-200 p-0.5"
+                    />
+                    <div>
+                      <h4 className="font-bold text-stone-900 line-clamp-1">{item.product.name}</h4>
+                      <span className="text-stone-500 text-[11px]">Qty: {item.quantity} • {item.product.volume}</span>
+                    </div>
                   </div>
-                  <span className="font-bold text-white shrink-0">
+                  <span className="font-bold text-[#7b3e1d]">
                     Rs. {(item.product.price * item.quantity).toLocaleString()}
                   </span>
                 </div>
               ))}
             </div>
 
-            {/* Calculations Breakdown */}
-            <div className="pt-4 border-t border-emerald-500/20 space-y-2 text-xs text-emerald-200/80">
+            {/* Price Calculations */}
+            <div className="space-y-2 pt-4 border-t border-stone-200 text-xs text-stone-600">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span className="text-white font-medium">Rs. {subtotal.toLocaleString()}</span>
+                <span className="font-semibold text-stone-900">Rs. {subtotal.toLocaleString()}</span>
               </div>
               {discount > 0 && (
-                <div className="flex justify-between text-[#78c459]">
-                  <span>Voucher Discount</span>
-                  <span>- Rs. {discount.toLocaleString()}</span>
+                <div className="flex justify-between text-emerald-700">
+                  <span>Special Discount</span>
+                  <span>-Rs. {discount.toLocaleString()}</span>
                 </div>
               )}
               <div className="flex justify-between">
-                <span>Delivery (TCS / Trax Courier)</span>
-                <span>{shipping === 0 ? <strong className="text-[#78c459]">FREE</strong> : `Rs. ${shipping}`}</span>
+                <span>Nationwide Express Shipping</span>
+                <span>{shipping === 0 ? <strong className="text-emerald-700 font-bold">FREE</strong> : `Rs. ${shipping}`}</span>
               </div>
-              <div className="flex justify-between text-base font-bold text-white pt-3 border-t border-emerald-500/20">
-                <span>Total Payable (PKR)</span>
-                <span className="text-xl text-[#a4e38b]">Rs. {total.toLocaleString()}</span>
+              <div className="flex justify-between text-base font-bold text-stone-900 pt-3 border-t border-stone-200">
+                <span>Total Amount Payable</span>
+                <span className="text-xl text-[#7b3e1d]">Rs. {total.toLocaleString()}</span>
               </div>
             </div>
 
-            {/* Safe Delivery Promise */}
-            <div className="p-3.5 rounded-xl bg-emerald-950/70 border border-emerald-500/20 text-[11px] text-emerald-300/80 space-y-1">
-              <div className="flex items-center gap-2 text-white font-semibold">
-                <ShieldCheck className="w-4 h-4 text-[#78c459]" />
-                <span>100% Genuine Pakistani Botanicals</span>
+            <div className="pt-2 text-[11px] text-stone-500 space-y-1.5 bg-stone-50 p-3 rounded-xl border border-stone-100">
+              <div className="flex items-center gap-2">
+                <Truck className="w-3.5 h-3.5 text-[#7b3e1d]" />
+                <span>2-4 Working Days Delivery via TCS / Trax</span>
               </div>
-              <p>Fresh sun-infused batch. Parcels are packed in tamper-proof bubble mailers.</p>
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <span>100% Genuine Sealed Products • Return Guaranteed</span>
+              </div>
             </div>
 
           </div>
+
         </div>
 
       </div>
-
     </div>
   );
 };

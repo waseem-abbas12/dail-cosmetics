@@ -62,7 +62,7 @@ export interface OrderDetails {
   address: string;
   city: string;
   province: string;
-  paymentMethod: 'cod' | 'bank_transfer' | 'card';
+  paymentMethod: 'cod' | 'jazzcash' | 'easypaisa' | 'bank_transfer';
   items: OrderItem[];
   subtotal: number;
   shippingFee: number;
@@ -73,11 +73,24 @@ export interface OrderDetails {
   trackingNumber?: string;
 }
 
+export interface VideoTestimonial {
+  id: string;
+  title: string;
+  author: string;
+  city: string;
+  productName: string;
+  duration: string;
+  thumbnailUrl: string;
+  quote: string;
+}
+
 export type PageView = 
   | 'home' 
   | 'shop' 
   | 'product-detail' 
   | 'checkout' 
   | 'track-order' 
+  | 'wishlist'
   | 'about' 
-  | 'contact';
+  | 'contact'
+  | 'admin';

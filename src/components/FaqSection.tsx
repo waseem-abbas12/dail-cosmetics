@@ -19,22 +19,22 @@ export const FaqSection: React.FC = () => {
     {
       question: 'Dail Premium Herbal Hair Oil (120ml) se hair fall kitne din mein rukta hai?',
       urduQuestion: 'ڈیل ہربل ہیئر آئل سے بال گرنا کتنے دن میں بند ہوتے ہیں؟',
-      answer: 'Hamare 25,000+ Pakistani customers ke verified feedback ke mutabiq, 10 se 14 din ke baqaeda istemal (haftay mein 3 baar massage) se severe hair fall 80% se 90% tak ruk jata hai. Cold-pressed Rosemary aur Kalonji (Black Seed) oil dormant roots ko stimulate karke baby hairs ki growth ko tezi se shuru karte hain.'
+      answer: 'Hamare 14,000+ Pakistani customers ke verified feedback ke mutabiq, 10 se 14 din ke baqaeda istemal (haftay mein 3 baar massage) se severe hair fall 80% se 90% tak ruk jata hai. Cold-pressed Rosemary aur Kalonji (Black Seed) oil dormant roots ko stimulate karke baby hairs ki growth ko tezi se shuru karte hain.'
     },
     {
       question: 'Delivery charges aur delivery time kya hai Pakistan mein?',
       urduQuestion: 'ڈلیوری کا وقت اور چارجز کیا ہیں؟',
-      answer: 'Hum Trax Express aur TCS Logistics ke zariye poore Pakistan (Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Peshawar, Quetta aur tamam chhote shehron) mein 2 se 4 working days mein doorstep delivery karte hain. Rs. 3,500 se zyada ke order par Free Delivery hai. Standard flat courier fee sirf Rs. 250 hai.'
+      answer: 'Hum Trax Express aur TCS Logistics ke zariye poore Pakistan (Karachi, Lahore, Islamabad, Rawalpindi, Faisalabad, Peshawar, Quetta aur tamam shehron) mein 2 se 4 working days mein doorstep delivery karte hain. Rs. 2,500 se zyada ke order par Free Delivery hai. Standard flat courier fee sirf Rs. 200 hai.'
     },
     {
       question: 'Kya Cash On Delivery (COD) available hai?',
       urduQuestion: 'کیا کیش آن ڈلیوری کی سہولت موجود ہے؟',
-      answer: 'Jee haan! Cash On Delivery (COD) poore Pakistan mein 100% available hai. Aap rider se apna factory-sealed parcel receive karein aur doorstep par cash pay karein. Iske ilawa JazzCash, Easypaisa aur Credit/Debit Card payments bhi fully supported hain.'
+      answer: 'Jee haan! Cash On Delivery (COD) poore Pakistan mein 100% available hai. Aap courier rider se apna tamper-proof parcel receive karein aur doorstep par cash ada karein. Iske ilawa JazzCash, Easypaisa aur Direct Bank Transfer bhi supported hain.'
     },
     {
       question: 'Kya main direct WhatsApp par order book karwa sakta hoon?',
       urduQuestion: 'کیا واٹس ایپ پر آرڈر دیا جا سکتا ہے؟',
-      answer: 'Jee bilkul! Website par maujood kisi bhi "Order via WhatsApp" button par click karein ya hamari official helpline 0300-1234567 par apna naam, pata aur desired products send karein. Hamara representative foran order confirm karega.'
+      answer: 'Jee bilkul! Website par maujood kisi bhi "Order on WhatsApp" button par click karein ya hamari official helpline 0300-1234567 par apna naam, pata aur desired products send karein. Hamara representative foran order confirm karega.'
     },
     {
       question: 'Dail Hand & Foot Cream dark knuckles aur rough heels par kab asar karti hai?',
@@ -44,53 +44,51 @@ export const FaqSection: React.FC = () => {
   ];
 
   return (
-    <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+    <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
       
       {/* Header */}
-      <div className="text-center space-y-3 mb-12">
-        <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#d4af37]">
-          Customer Clarifications
-        </span>
-        <h2 className="font-serif-luxury text-3xl sm:text-5xl font-bold text-white">
-          Frequently Asked <span className="text-gold-gradient italic">Questions</span>
+      <div className="text-center space-y-3 mb-10">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-[#7b3e1d] text-xs font-bold uppercase tracking-wider">
+          <HelpCircle className="w-3.5 h-3.5 text-[#c59b27]" />
+          <span>Customer Clarifications</span>
+        </div>
+        <h2 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-stone-900">
+          Frequently Asked <span className="text-[#7b3e1d] italic">Questions</span>
         </h2>
-        <p className="text-stone-300 text-sm font-light">
+        <p className="text-stone-600 text-xs sm:text-sm font-normal">
           Aapke aam sawalaat ke sachay aur wazeh jawabaat.
         </p>
       </div>
 
       {/* Accordion List */}
       <div className="space-y-3.5">
-        {faqs.map((faq, idx) => {
-          const isOpen = openIndex === idx;
+        {faqs.map((faq, index) => {
+          const isOpen = openIndex === index;
           return (
             <div
-              key={idx}
-              className={`rounded-2xl transition-all duration-300 border ${
-                isOpen
-                  ? 'bg-gradient-to-r from-[#181a20] to-[#101216] border-[#d4af37]/60 shadow-xl'
-                  : 'bg-[#0f1115]/80 border-[#d4af37]/15 hover:border-[#d4af37]/35'
-              }`}
+              key={index}
+              className="rounded-2xl bg-white border border-stone-200/90 shadow-xs overflow-hidden transition-all duration-200"
             >
               <button
-                onClick={() => setOpenIndex(isOpen ? null : idx)}
-                className="w-full p-5 sm:p-6 text-left flex items-start justify-between gap-4 transition-colors"
+                onClick={() => setOpenIndex(isOpen ? null : index)}
+                className="w-full p-4 sm:p-5 text-left flex items-center justify-between gap-4 hover:bg-stone-50/50 transition-colors"
               >
-                <div className="space-y-1">
-                  <h3 className={`text-sm sm:text-base font-semibold leading-snug ${isOpen ? 'text-[#f3e5ab]' : 'text-white'}`}>
+                <div>
+                  <h3 className="font-serif-luxury text-sm sm:text-base font-bold text-stone-900">
                     {faq.question}
                   </h3>
-                  <p className="text-xs text-[#d4af37]/80 font-serif italic text-right sm:text-left">
+                  <span className="text-[11px] text-[#c59b27] font-medium block mt-0.5 font-serif italic">
                     {faq.urduQuestion}
-                  </p>
+                  </span>
                 </div>
-                <div className="p-1 rounded-full bg-black/40 text-[#d4af37] shrink-0 mt-0.5">
-                  {isOpen ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+
+                <div className="p-1.5 rounded-full bg-stone-100 text-stone-600 shrink-0">
+                  {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                 </div>
               </button>
 
               {isOpen && (
-                <div className="px-5 sm:px-6 pb-6 text-xs sm:text-sm text-stone-300 leading-relaxed border-t border-[#d4af37]/15 pt-4 animate-fade-in">
+                <div className="px-4 sm:px-5 pb-5 text-xs sm:text-sm text-stone-600 leading-relaxed border-t border-stone-100 pt-3">
                   <p>{faq.answer}</p>
                 </div>
               )}
@@ -99,17 +97,17 @@ export const FaqSection: React.FC = () => {
         })}
       </div>
 
-      {/* Live Support Prompt */}
-      <div className="mt-10 p-5 rounded-2xl gold-glass-card border border-[#d4af37]/30 flex flex-wrap items-center justify-between gap-4 text-xs">
-        <div className="flex items-center gap-3 text-stone-200">
-          <HelpCircle className="w-5 h-5 text-[#d4af37] shrink-0" />
-          <span>Koi aur sawal hai? Hamare certified herbalist se live baat karein.</span>
+      {/* Bottom WhatsApp Support Prompt */}
+      <div className="mt-10 p-5 rounded-2xl bg-amber-50/70 border border-amber-200/80 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h4 className="text-sm font-bold text-stone-900">Have a specific skin or hair question?</h4>
+          <p className="text-xs text-stone-600">Our certified botanical herbalists are available on WhatsApp 24/7.</p>
         </div>
         <a
-          href="https://wa.me/923001234567?text=Hi%20Dail%20Cosmetics,%20I%20have%20a%20question%20before%20ordering."
+          href="https://wa.me/923001234567?text=Hello%20Dail%20Cosmetics,%20I%20have%20a%20question"
           target="_blank"
           rel="noopener noreferrer"
-          className="px-4 py-2 rounded-full bg-[#25d366] text-black font-bold text-xs flex items-center gap-1.5 shadow-md hover:scale-105 transition-transform"
+          className="px-4 py-2 bg-[#25D366] text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs hover:bg-[#20ba59] transition-colors"
         >
           <Phone className="w-3.5 h-3.5" />
           <span>Ask on WhatsApp</span>

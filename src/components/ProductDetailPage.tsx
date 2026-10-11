@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useStore } from '../store/useStore';
 import { Dali3DCanvas } from './3d/Dali3DCanvas';
-import { REVIEWS } from '../data/products';
+import { PRODUCTS, REVIEWS } from '../data/products';
+import { ProductCard } from './ProductCard';
 import {
   Star,
   ShoppingBag,
@@ -11,7 +12,12 @@ import {
   Phone,
   Check,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Heart,
+  Share2,
+  Box,
+  Eye,
+  CheckCircle2
 } from 'lucide-react';
 
 export const ProductDetailPage: React.FC = () => {
@@ -20,424 +26,374 @@ export const ProductDetailPage: React.FC = () => {
     setCurrentPage,
     addToCart,
     setIsCartOpen,
+    isInWishlist,
+    toggleWishlist,
   } = useStore();
 
-  if (!selectedProduct) {
-    return (
-      <div className="py-20 text-center text-emerald-300">
-        <p>No product selected.</p>
-        <button
-          onClick={() => setCurrentPage('shop')}
-          className="mt-4 px-6 py-2 rounded-full bg-[#6aa84f] text-white text-sm"
-        >
-          Return to Shop
-        </button>
-      </div>
-    );
-  }
+  const product = selectedProduct || PRODUCTS[0];
 
-  const [activeViewMode, setActiveViewMode] = useState<'3d' | 'gallery'>('3d');
-  const [selectedImage, setSelectedImage] = useState<string>(selectedProduct.image);
+  const [activeViewMode, setActiveViewMode] = useState<'gallery' | '3d'>('gallery');
+  const [selectedImage, setSelectedImage] = useState<string>(product.image);
   const [quantity, setQuantity] = useState<number>(1);
-  const [openAccordion, setOpenAccordion] = useState<'ingredients' | 'howToUse' | 'fullList' | null>('ingredients');
+  const [openAccordion, setOpenAccordion] = useState<'benefits' | 'ingredients' | 'howToUse' | 'safety' | null>('benefits');
   const [addedToast, setAddedToast] = useState(false);
 
+  const isFavorited = isInWishlist(product.id);
+  const allImages = [product.image, ...product.galleryImages];
+  const relatedProducts = PRODUCTS.filter((p) => p.id !== product.id).slice(0, 4);
+
   const handleAddToCart = () => {
-    addToCart(selectedProduct, quantity);
+    addToCart(product, quantity);
     setAddedToast(true);
     setTimeout(() => setAddedToast(false), 2500);
   };
 
   const handleBuyNow = () => {
-    addToCart(selectedProduct, quantity);
+    addToCart(product, quantity);
     setIsCartOpen(false);
     setCurrentPage('checkout');
   };
 
   const whatsappMessage = encodeURIComponent(
-    `Hello Dali Organics! I want to order "${selectedProduct.name}" (Qty: ${quantity}, Rs. ${selectedProduct.price * quantity}). Please confirm delivery details.`
+    `As-salamu alaykum Dail Cosmetics!\n\nI want to order:\n• ${product.name} (Qty: ${quantity})\nTotal: Rs. ${(product.price * quantity).toLocaleString()}\n\nPlease confirm my Cash on Delivery order!`
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
-      
-      {/* Back button */}
-      <button
-        onClick={() => setCurrentPage('shop')}
-        className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-emerald-300/80 hover:text-white transition-colors mb-6"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        <span>Back to Botanical Catalog</span>
-      </button>
-
-      {/* Main PDP Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+    <div className="w-full bg-[#fbf9f5] min-h-screen py-8 sm:py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
-        {/* Left Column: 3D Canvas / Gallery Showcase */}
-        <div className="lg:col-span-7 space-y-4">
+        {/* Breadcrumb Back Button */}
+        <div>
+          <button
+            onClick={() => setCurrentPage('shop')}
+            className="inline-flex items-center gap-2 text-xs font-semibold text-stone-600 hover:text-[#7b3e1d] transition-colors"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Back to All Formulations</span>
+          </button>
+        </div>
+
+        {/* Main Product Showcase Split */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
           
-          {/* Main Visual Container */}
-          <div className="relative rounded-[32px] sm:rounded-[40px] bg-gradient-to-b from-[#0f3422] to-[#071d13] border border-emerald-500/25 p-4 sm:p-8 overflow-hidden min-h-[460px] sm:min-h-[540px] flex items-center justify-center shadow-2xl">
+          {/* Left Column: Visual Stage (Gallery + 3D Toggle) */}
+          <div className="lg:col-span-6 space-y-4">
             
-            {/* View Mode Switcher Pill */}
-            <div className="absolute top-4 right-4 z-30 flex items-center p-1 rounded-full glass-panel border border-emerald-500/30">
+            {/* View Mode Toggle Switcher */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5 p-1 bg-stone-100 rounded-xl border border-stone-200 text-xs">
+                <button
+                  onClick={() => setActiveViewMode('gallery')}
+                  className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
+                    activeViewMode === 'gallery'
+                      ? 'bg-white text-stone-900 shadow-xs'
+                      : 'text-stone-600 hover:text-stone-900'
+                  }`}
+                >
+                  Photo Gallery
+                </button>
+                <button
+                  onClick={() => setActiveViewMode('3d')}
+                  className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all ${
+                    activeViewMode === '3d'
+                      ? 'bg-[#7b3e1d] text-white shadow-xs'
+                      : 'text-stone-600 hover:text-stone-900'
+                  }`}
+                >
+                  <Box className="w-3.5 h-3.5" />
+                  <span>Interactive 3D</span>
+                </button>
+              </div>
+
               <button
-                onClick={() => setActiveViewMode('3d')}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-                  activeViewMode === '3d'
-                    ? 'bg-[#6aa84f] text-white shadow-md'
-                    : 'text-emerald-300/80 hover:text-white'
-                }`}
+                onClick={() => toggleWishlist(product.id)}
+                className="p-2 rounded-full bg-white border border-stone-200 text-stone-500 hover:text-rose-500 shadow-xs transition-colors"
+                title="Save to Wishlist"
               >
-                🔄 3D 360° Inspect
-              </button>
-              <button
-                onClick={() => setActiveViewMode('gallery')}
-                className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
-                  activeViewMode === 'gallery'
-                    ? 'bg-[#6aa84f] text-white shadow-md'
-                    : 'text-emerald-300/80 hover:text-white'
-                }`}
-              >
-                🖼️ Photos
+                <Heart className={`w-4 h-4 ${isFavorited ? 'fill-rose-500 text-rose-500' : ''}`} />
               </button>
             </div>
 
-            {/* Visual Content: 3D Scene or Image Gallery */}
-            {activeViewMode === '3d' ? (
-              <div className="w-full h-full min-h-[440px] flex items-center justify-center">
-                <Dali3DCanvas
-                  initialModel={selectedProduct.id.includes('oil') ? 'oil' : selectedProduct.id.includes('hand') ? 'hand-foot' : 'beauty-cream'}
-                  className="w-full h-full"
-                />
-              </div>
-            ) : (
-              <div className="w-full h-full min-h-[440px] flex items-center justify-center">
+            {/* Display Stage Container */}
+            <div className="relative aspect-square w-full rounded-3xl bg-white border border-stone-200/90 shadow-sm overflow-hidden flex items-center justify-center p-4">
+              {activeViewMode === 'gallery' ? (
                 <img
                   src={selectedImage}
-                  alt={selectedProduct.name}
-                  className="max-h-[460px] object-contain rounded-2xl drop-shadow-2xl"
+                  alt={product.name}
+                  className="w-full h-full object-contain transition-transform duration-300"
                 />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-b from-[#fbf9f5] to-[#f0e9dc] rounded-2xl overflow-hidden">
+                  <Dali3DCanvas initialModel={product.modelType as any} className="w-full h-full" />
+                </div>
+              )}
+
+              {/* Badges on Top Left */}
+              <div className="absolute top-4 left-4 flex flex-col gap-1.5 z-10">
+                {product.badge && (
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#7b3e1d] text-white uppercase tracking-wider shadow-xs">
+                    {product.badge}
+                  </span>
+                )}
+                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-[#7b3e1d]">
+                  {product.volume}
+                </span>
+              </div>
+            </div>
+
+            {/* Gallery Thumbnails */}
+            {activeViewMode === 'gallery' && (
+              <div className="flex gap-3 overflow-x-auto pb-1">
+                {allImages.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedImage(img)}
+                    className={`w-20 h-20 rounded-2xl overflow-hidden bg-white border-2 p-1 transition-all shrink-0 ${
+                      selectedImage === img ? 'border-[#7b3e1d] shadow-xs' : 'border-stone-200 opacity-70 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={img} alt="Thumbnail" className="w-full h-full object-contain" />
+                  </button>
+                ))}
               </div>
             )}
+          </div>
 
-            {/* Badges Overlay */}
-            <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
-              {selectedProduct.badge && (
-                <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-[#6aa84f] text-white shadow-md">
-                  {selectedProduct.badge}
+          {/* Right Column: Editorial Buying Box & Specifications */}
+          <div className="lg:col-span-6 space-y-6">
+            
+            <div className="space-y-2">
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#c59b27]">
+                Official Dail Cosmetics • {product.volume}
+              </span>
+              <h1 className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-900 leading-tight">
+                {product.name}
+              </h1>
+              {product.urduName && (
+                <p className="text-[#c59b27] font-serif text-lg italic">{product.urduName}</p>
+              )}
+            </div>
+
+            {/* Star Rating & Verified Count */}
+            <div className="flex items-center gap-3">
+              <div className="flex text-amber-400">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 fill-current" />
+                ))}
+              </div>
+              <span className="text-xs font-bold text-stone-900">{product.rating}</span>
+              <span className="text-xs text-stone-500 font-medium">({product.reviewCount} verified Pakistani reviews)</span>
+            </div>
+
+            {/* Pricing Section */}
+            <div className="p-4 rounded-2xl bg-white border border-stone-200/90 flex items-baseline justify-between shadow-xs">
+              <div className="flex items-baseline gap-3">
+                <span className="text-3xl font-bold text-[#7b3e1d]">
+                  Rs. {product.price.toLocaleString()}
+                </span>
+                {product.originalPrice && (
+                  <span className="text-base text-stone-400 line-through">
+                    Rs. {product.originalPrice.toLocaleString()}
+                  </span>
+                )}
+              </div>
+              {product.originalPrice && (
+                <span className="text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                  Save Rs. {(product.originalPrice - product.price).toLocaleString()}
                 </span>
               )}
             </div>
 
-          </div>
-
-          {/* Thumbnail Gallery (shown always for easy image clicking) */}
-          <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
-            {selectedProduct.galleryImages.map((img, idx) => (
-              <button
-                key={idx}
-                onClick={() => {
-                  setSelectedImage(img);
-                  setActiveViewMode('gallery');
-                }}
-                className={`w-20 h-20 rounded-2xl overflow-hidden border-2 transition-all shrink-0 ${
-                  activeViewMode === 'gallery' && selectedImage === img
-                    ? 'border-[#78c459] ring-2 ring-[#78c459]/40 scale-105'
-                    : 'border-emerald-500/20 opacity-70 hover:opacity-100'
-                }`}
-              >
-                <img src={img} alt="Thumbnail" className="w-full h-full object-cover" />
-              </button>
-            ))}
-          </div>
-
-        </div>
-
-        {/* Right Column: Details, Price, Ritual & Actions */}
-        <div className="lg:col-span-5 space-y-6">
-          
-          <div>
-            {/* Rating & Reviews Header */}
-            <div className="flex items-center gap-2 text-xs text-amber-400 mb-2">
-              <div className="flex items-center">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-                ))}
-              </div>
-              <span className="text-white font-bold">{selectedProduct.rating}</span>
-              <span className="text-emerald-400/80 font-medium">({selectedProduct.reviewCount} verified reviews)</span>
+            {/* In-Stock Indicator */}
+            <div className="flex items-center gap-2 text-xs text-emerald-800 bg-emerald-50/70 p-2.5 rounded-xl border border-emerald-200">
+              <span className="w-2 h-2 rounded-full bg-emerald-600 animate-pulse" />
+              <span className="font-semibold">In Stock & Ready for Express Dispatch across Pakistan</span>
             </div>
 
-            {/* Title & Urdu Name */}
-            <h1 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-white leading-tight">
-              {selectedProduct.name}
-            </h1>
-
-            {selectedProduct.urduName && (
-              <p className="text-emerald-300 text-lg font-serif italic mt-1.5">
-                {selectedProduct.urduName}
-              </p>
-            )}
-
-            {/* Tagline */}
-            <p className="text-emerald-200/80 text-sm mt-2 leading-relaxed font-light">
-              {selectedProduct.tagline}
+            {/* Product Tagline & Description */}
+            <p className="text-stone-600 text-xs sm:text-sm leading-relaxed">
+              {product.description}
             </p>
-          </div>
 
-          {/* Pricing Box */}
-          <div className="p-4 rounded-2xl bg-emerald-950/60 border border-emerald-500/25 flex items-center justify-between">
-            <div>
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold text-white tracking-tight">
-                  Rs. {selectedProduct.price.toLocaleString()}
-                </span>
-                {selectedProduct.originalPrice && (
-                  <span className="text-sm text-emerald-400/50 line-through">
-                    Rs. {selectedProduct.originalPrice.toLocaleString()}
-                  </span>
-                )}
-              </div>
-              <span className="text-xs text-emerald-400 font-medium block mt-0.5">
-                Free Nationwide Delivery on orders over Rs. 3,500
-              </span>
-            </div>
-
-            <div className="text-right">
-              <span className="px-3 py-1 rounded-full bg-emerald-900/80 text-emerald-200 text-xs font-mono font-medium border border-emerald-500/30">
-                {selectedProduct.volume}
-              </span>
-              <span className="block text-[10px] text-emerald-400/70 mt-1">In Stock • Fresh Batch</span>
-            </div>
-          </div>
-
-          {/* Quantity Selector & Action Buttons */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
+            {/* Quantity & CTA Buttons */}
+            <div className="space-y-3 pt-2">
               
-              {/* Stepper */}
-              <div className="flex items-center rounded-full glass-panel border border-emerald-500/30 p-1">
+              <div className="flex items-center gap-3">
+                {/* Quantity selector */}
+                <div className="flex items-center border border-stone-300 rounded-xl overflow-hidden bg-white shadow-xs">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="px-3.5 py-3 text-stone-600 hover:bg-stone-100 transition-colors text-sm font-bold"
+                  >
+                    -
+                  </button>
+                  <span className="px-3 py-3 text-stone-900 text-sm font-bold min-w-10 text-center">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="px-3.5 py-3 text-stone-600 hover:bg-stone-100 transition-colors text-sm font-bold"
+                  >
+                    +
+                  </button>
+                </div>
+
+                {/* Add to Cart */}
                 <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-emerald-200 hover:text-white hover:bg-emerald-800/50 transition-colors text-base"
+                  onClick={handleAddToCart}
+                  className="flex-1 py-3.5 px-6 rounded-xl bg-stone-900 hover:bg-black text-white font-bold text-sm flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
                 >
-                  -
-                </button>
-                <span className="w-10 text-center font-bold text-white text-sm">
-                  {quantity}
-                </span>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-emerald-200 hover:text-white hover:bg-emerald-800/50 transition-colors text-base"
-                >
-                  +
+                  <ShoppingBag className="w-4 h-4 text-amber-300" />
+                  <span>Add to Bag • Rs. {(product.price * quantity).toLocaleString()}</span>
                 </button>
               </div>
 
-              {/* Add to Cart Button */}
-              <button
-                onClick={handleAddToCart}
-                className="flex-1 py-3.5 px-6 rounded-full bg-[#6aa84f] hover:bg-[#7bc05d] text-white text-sm font-semibold tracking-wide shadow-lg shadow-emerald-950/70 transition-all flex items-center justify-center gap-2 group active:scale-95"
-              >
-                <ShoppingBag className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                <span>Add to Cart • Rs. {(selectedProduct.price * quantity).toLocaleString()}</span>
-              </button>
-
-            </div>
-
-            {/* Quick Buy & WhatsApp Buy */}
-            <div className="grid grid-cols-2 gap-3">
+              {/* Buy Now (Direct to Checkout) */}
               <button
                 onClick={handleBuyNow}
-                className="py-3 px-4 rounded-full bg-gradient-to-r from-[#17482d] to-[#25613c] hover:from-[#205b39] hover:to-[#2e7449] border border-emerald-400/40 text-white text-xs font-semibold shadow-md transition-all text-center"
+                className="w-full py-3.5 px-6 rounded-xl bg-[#7b3e1d] hover:bg-[#622f14] text-white font-bold text-sm shadow-md transition-all cursor-pointer"
               >
-                Instant Checkout (COD)
+                Buy Now (Cash on Delivery)
               </button>
 
+              {/* Order via WhatsApp */}
               <a
                 href={`https://wa.me/923001234567?text=${whatsappMessage}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="py-3 px-4 rounded-full bg-[#1b432a] hover:bg-[#235837] border border-emerald-500/30 text-emerald-100 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all text-center"
+                className="w-full py-3 px-4 rounded-xl bg-[#25D366] hover:bg-[#20ba59] text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-xs"
               >
-                <Phone className="w-3.5 h-3.5 text-[#25d366]" />
-                <span>Order via WhatsApp</span>
+                <Phone className="w-4 h-4" />
+                <span>Instant Order via WhatsApp (0300-1234567)</span>
               </a>
+
             </div>
 
-            {/* Added Toast Alert */}
+            {/* Toast Feedback */}
             {addedToast && (
-              <div className="p-3 rounded-xl bg-[#6aa84f] text-white text-xs font-medium flex items-center justify-between shadow-lg animate-fade-in">
-                <span className="flex items-center gap-1.5">
-                  <Check className="w-4 h-4" /> Added {quantity}x to your shopping cart!
-                </span>
-                <button
-                  onClick={() => setIsCartOpen(true)}
-                  className="underline font-bold text-xs"
-                >
-                  View Cart
-                </button>
+              <div className="p-3 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-xl text-center border border-emerald-300 animate-in fade-in duration-200">
+                ✓ Added {quantity}x {product.name} to your shopping bag!
               </div>
             )}
-          </div>
 
-          {/* Trust Guarantees */}
-          <div className="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/15 space-y-2 text-xs text-emerald-200/80">
-            <div className="flex items-center gap-2">
-              <Truck className="w-4 h-4 text-[#78c459] shrink-0" />
-              <span>Fast 2-4 days courier delivery via Trax / TCS across Pakistan</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-[#78c459] shrink-0" />
-              <span>100% Cash On Delivery (COD) — Inspect your package before paying</span>
-            </div>
-          </div>
-
-          {/* Accordion Tabs for Ingredients, How to Use, Clinical */}
-          <div className="space-y-2.5 pt-2">
-            
-            {/* Key Ingredients */}
-            <div className="rounded-2xl bg-[#0b2819] border border-emerald-500/20 overflow-hidden">
-              <button
-                onClick={() => setOpenAccordion(openAccordion === 'ingredients' ? null : 'ingredients')}
-                className="w-full px-4 py-3.5 flex items-center justify-between text-left text-sm font-semibold text-white"
-              >
-                <span className="flex items-center gap-2">
-                  <span>🌿</span> Key Active Botanicals
-                </span>
-                {openAccordion === 'ingredients' ? <ChevronUp className="w-4 h-4 text-emerald-400" /> : <ChevronDown className="w-4 h-4 text-emerald-400" />}
-              </button>
-              {openAccordion === 'ingredients' && (
-                <div className="px-4 pb-4 space-y-3 text-xs text-emerald-200/90 border-t border-emerald-500/15 pt-3">
-                  {selectedProduct.keyIngredients.map((item, idx) => (
-                    <div key={idx} className="p-2.5 rounded-xl bg-emerald-950/60 border border-emerald-500/15">
-                      <strong className="text-white block font-medium">{item.name}</strong>
-                      <span className="text-emerald-300/75 mt-0.5 block">{item.description}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* How to Use */}
-            <div className="rounded-2xl bg-[#0b2819] border border-emerald-500/20 overflow-hidden">
-              <button
-                onClick={() => setOpenAccordion(openAccordion === 'howToUse' ? null : 'howToUse')}
-                className="w-full px-4 py-3.5 flex items-center justify-between text-left text-sm font-semibold text-white"
-              >
-                <span className="flex items-center gap-2">
-                  <span>✨</span> Ayurvedic Ritual & Application Guide
-                </span>
-                {openAccordion === 'howToUse' ? <ChevronUp className="w-4 h-4 text-emerald-400" /> : <ChevronDown className="w-4 h-4 text-emerald-400" />}
-              </button>
-              {openAccordion === 'howToUse' && (
-                <div className="px-4 pb-4 space-y-2 text-xs text-emerald-200/90 border-t border-emerald-500/15 pt-3">
-                  {selectedProduct.howToUse.map((step, idx) => (
-                    <div key={idx} className="flex items-start gap-2">
-                      <span className="w-5 h-5 rounded-full bg-[#1b4e2f] text-emerald-200 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">
-                        {idx + 1}
-                      </span>
-                      <span>{step}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Full INCI Ingredients */}
-            <div className="rounded-2xl bg-[#0b2819] border border-emerald-500/20 overflow-hidden">
-              <button
-                onClick={() => setOpenAccordion(openAccordion === 'fullList' ? null : 'fullList')}
-                className="w-full px-4 py-3.5 flex items-center justify-between text-left text-sm font-semibold text-white"
-              >
-                <span className="flex items-center gap-2">
-                  <span>🔬</span> 100% Full Ingredients Disclosure
-                </span>
-                {openAccordion === 'fullList' ? <ChevronUp className="w-4 h-4 text-emerald-400" /> : <ChevronDown className="w-4 h-4 text-emerald-400" />}
-              </button>
-              {openAccordion === 'fullList' && (
-                <div className="px-4 pb-4 text-xs text-emerald-300/80 leading-relaxed border-t border-emerald-500/15 pt-3">
-                  <p>{selectedProduct.fullIngredients}</p>
-                  <p className="mt-2 text-[11px] text-[#78c459]">
-                    * Certified 0% Mineral Oil, 0% Silicones, 0% Parabens, 0% Artificial Colors.
-                  </p>
-                </div>
-              )}
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* Verified Pakistani Customer Reviews Section */}
-      <section className="mt-16 sm:mt-24 pt-12 border-t border-emerald-500/20">
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#78c459]">
-              Verified Feedback
-            </span>
-            <h2 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-white mt-1">
-              Customer Reviews from Pakistan
-            </h2>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-white">4.9</span>
-            <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
-              ))}
-            </div>
-            <span className="text-xs text-emerald-300">Based on 3,400+ orders</span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {REVIEWS.map((review) => (
-            <div
-              key={review.id}
-              className="p-6 rounded-3xl bg-gradient-to-b from-[#0e3120] to-[#082015] border border-emerald-500/20 space-y-3"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#1b4d2f] flex items-center justify-center font-bold text-emerald-200">
-                    {review.author[0]}
+            {/* Accordion Specs */}
+            <div className="pt-4 border-t border-stone-200 space-y-2.5">
+              
+              {/* Accordion 1: Benefits */}
+              <div className="rounded-xl border border-stone-200 bg-white overflow-hidden">
+                <button
+                  onClick={() => setOpenAccordion(openAccordion === 'benefits' ? null : 'benefits')}
+                  className="w-full p-4 text-left flex items-center justify-between text-xs font-bold text-stone-900 hover:bg-stone-50"
+                >
+                  <span>Clinical Benefits & Results</span>
+                  {openAccordion === 'benefits' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
+                {openAccordion === 'benefits' && (
+                  <div className="p-4 pt-0 text-xs text-stone-600 space-y-2 border-t border-stone-100">
+                    {product.benefits.map((b, i) => (
+                      <div key={i} className="flex items-start gap-2">
+                        <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                        <span>{b}</span>
+                      </div>
+                    ))}
                   </div>
-                  <div>
-                    <strong className="text-white text-sm block font-medium">{review.author}</strong>
-                    <span className="text-xs text-emerald-400/80">{review.city}</span>
-                  </div>
-                </div>
-                {review.verified && (
-                  <span className="px-2.5 py-1 rounded-full text-[10px] font-semibold bg-[#18482b] text-[#78c459] border border-emerald-500/30">
-                    ✓ Verified Pakistani Buyer
-                  </span>
                 )}
               </div>
 
-              <div className="flex items-center gap-1 text-amber-400">
-                {[...Array(review.rating)].map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-                ))}
-                <span className="text-[11px] text-emerald-400/60 ml-2">{review.date}</span>
+              {/* Accordion 2: Key Ingredients */}
+              <div className="rounded-xl border border-stone-200 bg-white overflow-hidden">
+                <button
+                  onClick={() => setOpenAccordion(openAccordion === 'ingredients' ? null : 'ingredients')}
+                  className="w-full p-4 text-left flex items-center justify-between text-xs font-bold text-stone-900 hover:bg-stone-50"
+                >
+                  <span>Active Herbal Ingredients</span>
+                  {openAccordion === 'ingredients' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
+                {openAccordion === 'ingredients' && (
+                  <div className="p-4 pt-0 text-xs text-stone-600 space-y-2 border-t border-stone-100">
+                    {product.keyIngredients.map((item, i) => (
+                      <div key={i} className="p-2 bg-stone-50 rounded-lg">
+                        <strong className="text-stone-900 block">{item.name}</strong>
+                        <p className="text-[11px] text-stone-500 mt-0.5">{item.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              <p className="text-emerald-100/80 text-xs sm:text-sm leading-relaxed">
-                "{review.comment}"
-              </p>
-
-              <div className="pt-2 text-right">
-                <span className="text-[11px] text-emerald-400/60">
-                  {review.helpfulCount} customers found this helpful
-                </span>
+              {/* Accordion 3: How to Apply */}
+              <div className="rounded-xl border border-stone-200 bg-white overflow-hidden">
+                <button
+                  onClick={() => setOpenAccordion(openAccordion === 'howToUse' ? null : 'howToUse')}
+                  className="w-full p-4 text-left flex items-center justify-between text-xs font-bold text-stone-900 hover:bg-stone-50"
+                >
+                  <span>How To Apply (Ritual Routine)</span>
+                  {openAccordion === 'howToUse' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
+                {openAccordion === 'howToUse' && (
+                  <div className="p-4 pt-0 text-xs text-stone-600 space-y-2 border-t border-stone-100">
+                    {product.howToUse.map((step, i) => (
+                      <div key={i} className="flex items-start gap-2">
+                        <span className="w-4 h-4 rounded-full bg-amber-100 text-[#7b3e1d] font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">
+                          {i + 1}
+                        </span>
+                        <span>{step}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
+
+              {/* Accordion 4: Safety & Guarantee */}
+              <div className="rounded-xl border border-stone-200 bg-white overflow-hidden">
+                <button
+                  onClick={() => setOpenAccordion(openAccordion === 'safety' ? null : 'safety')}
+                  className="w-full p-4 text-left flex items-center justify-between text-xs font-bold text-stone-900 hover:bg-stone-50"
+                >
+                  <span>0% Steroid & Tamper-Proof Seal Guarantee</span>
+                  {openAccordion === 'safety' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
+                {openAccordion === 'safety' && (
+                  <div className="p-4 pt-0 text-xs text-stone-600 leading-relaxed border-t border-stone-100">
+                    <p>
+                      Every batch of Dail Cosmetics is factory sealed with our signature embossed gold lids. 
+                      Strictly certified 0% betamethasone, 0% clobetasol, and 0% toxic mercury. Safe for lifelong daily use by Pakistani men and women.
+                    </p>
+                  </div>
+                )}
+              </div>
+
             </div>
-          ))}
-        </div>
-      </section>
 
+          </div>
+
+        </div>
+
+        {/* Related Products Section */}
+        <div className="pt-12 border-t border-stone-200 space-y-6">
+          <div className="flex items-end justify-between">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-wider text-[#c59b27]">Complementary Regimen</span>
+              <h3 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-stone-900 mt-0.5">
+                Complete Your Daily Ritual
+              </h3>
+            </div>
+            <button
+              onClick={() => setCurrentPage('shop')}
+              className="text-xs font-bold text-[#7b3e1d] hover:underline"
+            >
+              View All Formulations →
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {relatedProducts.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        </div>
+
+      </div>
     </div>
   );
 };

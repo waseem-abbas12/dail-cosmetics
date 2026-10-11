@@ -1,25 +1,28 @@
 import React, { useState } from 'react';
 import { useStore } from '../store/useStore';
-import { ShoppingBag, Search, Truck, Menu, X, Phone, Compass } from 'lucide-react';
-import type { PageView } from '../types';
+import { ShoppingBag, Search, Heart, Truck, Menu, X, Phone, ShieldCheck, Sparkles } from 'lucide-react';
+import type { PageView, ProductCategory } from '../types';
 
 export const Navbar: React.FC = () => {
   const { 
     currentPage, 
     setCurrentPage, 
     getTotalItemsCount, 
+    getCartSubtotal,
     setIsCartOpen, 
+    wishlist,
     searchQuery, 
     setSearchQuery,
-    setSelectedCategory 
+    setSelectedCategory,
+    setIsSearchOpen
   } = useStore();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-
   const cartCount = getTotalItemsCount();
+  const subtotal = getCartSubtotal();
+  const wishlistCount = wishlist.length;
 
-  const navigateTo = (page: PageView, category?: 'hair-oil' | 'cream' | 'bundles') => {
+  const navigateTo = (page: PageView, category?: ProductCategory) => {
     if (category) {
       setSelectedCategory(category);
     }
@@ -28,25 +31,63 @@ export const Navbar: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full">
-      {/* Top Pakistani Nationwide Announcement Bar */}
-      <div className="bg-[#0b2818] border-b border-emerald-500/20 text-xs py-2 px-4 text-emerald-200/90 text-center flex items-center justify-center gap-2 font-medium">
-        <Truck className="w-3.5 h-3.5 text-[#6aa84f] inline-block animate-pulse" />
-        <span>
-          🇵🇰 <strong>Free Delivery Nationwide</strong> across Pakistan on orders over <strong>Rs. 3,500</strong> | 100% Organic • Without Steroid • Cash On Delivery
-        </span>
+    <header className="sticky top-0 z-50 w-full shadow-xs">
+      {/* 1. Top Announcement Bar (Prestige Shopify Style) */}
+      <div className="bg-[#7b3e1d] text-white text-[11px] sm:text-xs py-2 px-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-300 animate-ping" />
+            <span className="font-medium tracking-wide">
+              🇵🇰 <strong>FREE Nationwide Express Shipping</strong> on orders over <strong>Rs. 2,500</strong>
+            </span>
+          </div>
+
+          <div className="hidden md:flex items-center gap-6 text-[11px] text-amber-100">
+            <span className="flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
+              Strictly 0% Steroids & Mercury
+            </span>
+            <span>•</span>
+            <a 
+              href="https://wa.me/923001234567?text=Hello%20Dail%20Cosmetics,%20I%20want%20to%20inquire%20about%20your%20products" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-white flex items-center gap-1 font-semibold underline decoration-amber-300/50"
+            >
+              <Phone className="w-3 h-3" /> WhatsApp: 0300-1234567
+            </a>
+            <span>•</span>
+            <button 
+              onClick={() => navigateTo('track-order')}
+              className="hover:text-white underline cursor-pointer"
+            >
+              Track Order
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Main Glassmorphic Navigation Bar */}
-      <nav className="glass-panel border-b border-emerald-500/15 px-4 lg:px-8 py-3 transition-all duration-300">
+      {/* 2. Main Luxury Header */}
+      <nav className="bg-white/95 backdrop-blur-md border-b border-stone-200/90 px-4 sm:px-6 lg:px-8 py-3.5 transition-all">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           
-          {/* Brand Logo with Official Circular Logo */}
+          {/* Mobile Menu Button */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-stone-700 hover:text-stone-900 rounded-lg hover:bg-stone-100 transition-colors"
+              aria-label="Toggle Navigation Menu"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+
+          {/* Brand Logo & Signature Crest */}
           <div 
             onClick={() => navigateTo('home')}
             className="cursor-pointer flex items-center gap-3 group"
           >
-            <div className="relative w-11 h-11 rounded-full overflow-hidden bg-white p-0.5 border-2 border-amber-400/60 shadow-lg shadow-emerald-950/60 group-hover:scale-105 transition-transform shrink-0">
+            <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden bg-white p-0.5 border border-[#c59b27]/40 shadow-xs group-hover:scale-105 transition-transform shrink-0">
               <img 
                 src="/images/dail_logo.png" 
                 alt="Dail Cosmetics Official Logo" 
@@ -54,195 +95,190 @@ export const Navbar: React.FC = () => {
               />
             </div>
             <div>
-              <span className="font-serif-luxury text-xl sm:text-2xl font-bold tracking-wider text-white flex items-center gap-1.5">
-                DAIL <span className="text-[#78c459] font-light italic">COSMETICS</span>
+              <span className="font-serif-luxury text-xl sm:text-2xl font-bold tracking-tight text-[#1a1a1a] flex items-center gap-1.5">
+                DAIL <span className="text-[#c59b27] font-normal italic">COSMETICS</span>
               </span>
-              <span className="block text-[9px] uppercase tracking-[0.22em] text-emerald-400/80 font-medium">
-                Export Quality • Without Steroid
+              <span className="block text-[9px] uppercase tracking-[0.25em] text-[#7b3e1d] font-semibold">
+                Pure Herbal • Without Steroid
               </span>
             </div>
           </div>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-7 text-sm font-medium text-emerald-100/80">
+          {/* Desktop Luxury Navigation Links */}
+          <div className="hidden lg:flex items-center gap-8 text-[13px] font-medium text-stone-700">
             <button
               onClick={() => navigateTo('home')}
-              className={`transition-colors hover:text-white ${currentPage === 'home' ? 'text-[#78c459] font-semibold' : ''}`}
+              className={`transition-colors hover:text-[#7b3e1d] relative py-1 ${
+                currentPage === 'home' ? 'text-[#7b3e1d] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#7b3e1d]' : ''
+              }`}
             >
               Home
             </button>
             <button
               onClick={() => navigateTo('shop')}
-              className={`transition-colors hover:text-white ${currentPage === 'shop' ? 'text-[#78c459] font-semibold' : ''}`}
+              className={`transition-colors hover:text-[#7b3e1d] relative py-1 ${
+                currentPage === 'shop' ? 'text-[#7b3e1d] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#7b3e1d]' : ''
+              }`}
             >
-              All Products
+              Shop All
             </button>
             <button
               onClick={() => navigateTo('shop', 'hair-oil')}
-              className="transition-colors hover:text-white"
+              className="transition-colors hover:text-[#7b3e1d] py-1"
             >
-              100% Organic Hair Oil
+              Herbal Hair Oil
             </button>
             <button
               onClick={() => navigateTo('shop', 'cream')}
-              className="transition-colors hover:text-white"
+              className="transition-colors hover:text-[#7b3e1d] py-1 flex items-center gap-1"
             >
-              Steroid-Free Creams
+              <span>Beauty Creams</span>
+              <span className="text-[10px] bg-amber-100 text-[#7b3e1d] px-1.5 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                0% Steroid
+              </span>
+            </button>
+            <button
+              onClick={() => navigateTo('shop', 'bundles')}
+              className="transition-colors hover:text-[#7b3e1d] py-1"
+            >
+              Regimen Bundles
             </button>
             <button
               onClick={() => navigateTo('about')}
-              className={`transition-colors hover:text-white ${currentPage === 'about' ? 'text-[#78c459] font-semibold' : ''}`}
+              className={`transition-colors hover:text-[#7b3e1d] relative py-1 ${
+                currentPage === 'about' ? 'text-[#7b3e1d] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#7b3e1d]' : ''
+              }`}
             >
               Our Story
             </button>
             <button
               onClick={() => navigateTo('track-order')}
-              className={`transition-colors hover:text-white flex items-center gap-1 text-xs px-2.5 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/20 ${currentPage === 'track-order' ? 'text-[#78c459] border-[#78c459]/50' : ''}`}
+              className={`transition-colors hover:text-[#7b3e1d] relative py-1 ${
+                currentPage === 'track-order' ? 'text-[#7b3e1d] font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#7b3e1d]' : ''
+              }`}
             >
-              <Compass className="w-3.5 h-3.5 text-emerald-400" />
               Track Order
             </button>
           </div>
 
-          {/* Right Action Icons & Buttons */}
-          <div className="flex items-center gap-3">
+          {/* Right Action Icons (Search, Wishlist, Cart Drawer Pill) */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            
             {/* Search Trigger */}
-            <div className="relative">
-              {searchOpen ? (
-                <div className="flex items-center bg-emerald-950/90 border border-emerald-500/40 rounded-full px-3 py-1 text-xs">
-                  <Search className="w-3.5 h-3.5 text-emerald-400 mr-2" />
-                  <input
-                    type="text"
-                    placeholder="Search oils, creams..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        navigateTo('shop');
-                      }
-                    }}
-                    autoFocus
-                    className="bg-transparent text-white focus:outline-none w-28 sm:w-44 text-xs"
-                  />
-                  <button 
-                    onClick={() => { setSearchOpen(false); setSearchQuery(''); }}
-                    className="text-emerald-400/70 hover:text-white ml-1"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => setSearchOpen(true)}
-                  className="p-2 rounded-full text-emerald-200/80 hover:text-white hover:bg-emerald-900/40 transition-colors"
-                  title="Search products"
-                >
-                  <Search className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-
-            {/* Currency Pill */}
-            <div className="hidden lg:flex items-center gap-1 text-[11px] font-semibold text-emerald-300 bg-emerald-950/70 px-2.5 py-1 rounded-full border border-emerald-500/25">
-              <span>🇵🇰 PKR</span>
-            </div>
-
-            {/* WhatsApp Direct Inquiry Button */}
-            <a
-              href="https://wa.me/923001234567?text=Hi%20Dail%20Cosmetics,%20I%20want%20to%20order%20your%20Organic%20Hair%20Oil%20and%20Beauty%20Cream."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-[#1e4e30] hover:bg-[#28663f] text-emerald-100 border border-emerald-400/30 transition-all shadow-sm"
-              title="Chat with Pharmacist on WhatsApp"
-            >
-              <Phone className="w-3.5 h-3.5 text-[#25d366]" />
-              <span>WhatsApp</span>
-            </a>
-
-            {/* Cart Trigger */}
             <button
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2.5 rounded-full bg-gradient-to-r from-[#17482d] to-[#25613c] border border-emerald-400/30 text-white hover:border-[#78c459] transition-all shadow-md flex items-center justify-center"
-              aria-label="View Shopping Cart"
+              onClick={() => setIsSearchOpen(true)}
+              className="p-2 sm:p-2.5 text-stone-700 hover:text-stone-900 hover:bg-stone-100 rounded-full transition-colors"
+              title="Search products..."
             >
-              <ShoppingBag className="w-4 h-4 text-emerald-100" />
-              {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-1 bg-[#6aa84f] text-white text-[11px] font-bold rounded-full flex items-center justify-center shadow-lg border border-emerald-950 animate-bounce">
-                  {cartCount}
+              <Search className="w-4 h-4 sm:w-5 sm:h-5" />
+            </button>
+
+            {/* Wishlist Button */}
+            <button
+              onClick={() => navigateTo('wishlist')}
+              className="relative p-2 sm:p-2.5 text-stone-700 hover:text-rose-600 hover:bg-rose-50 rounded-full transition-colors"
+              title="My Wishlist"
+            >
+              <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
+              {wishlistCount > 0 && (
+                <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] font-bold flex items-center justify-center shadow-xs">
+                  {wishlistCount}
                 </span>
               )}
             </button>
 
-            {/* Mobile Hamburger Toggle */}
+            {/* High-Converting Cart Drawer Trigger Pill */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-emerald-200 hover:text-white"
+              onClick={() => setIsCartOpen(true)}
+              className="flex items-center gap-2 sm:gap-2.5 bg-[#1a1a1a] hover:bg-[#7b3e1d] text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-full shadow-xs transition-all duration-200 group cursor-pointer"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <div className="relative">
+                <ShoppingBag className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-amber-300 group-hover:scale-110 transition-transform" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1.5 -right-2 bg-[#c59b27] text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </div>
+              
+              <div className="hidden sm:flex flex-col text-left leading-none">
+                <span className="text-[10px] text-stone-300 uppercase font-medium">Cart</span>
+                <span className="text-xs font-bold text-white mt-0.5">
+                  Rs. {subtotal.toLocaleString()}
+                </span>
+              </div>
             </button>
+
           </div>
         </div>
+      </nav>
 
-        {/* Mobile Navigation Drawer */}
-        {mobileMenuOpen && (
-          <div className="md:hidden mt-3 pt-3 border-t border-emerald-500/20 flex flex-col gap-3 px-2 pb-2 text-sm">
+      {/* Mobile Slide-Down Menu */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden bg-white border-b border-stone-200 px-6 py-6 shadow-xl animate-in slide-in-from-top-4 duration-200">
+          <div className="space-y-4 text-base font-medium text-stone-800">
             <button
               onClick={() => navigateTo('home')}
-              className="text-left py-2 text-emerald-100 hover:text-[#78c459] font-medium"
+              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
             >
               Home
             </button>
             <button
               onClick={() => navigateTo('shop')}
-              className="text-left py-2 text-emerald-100 hover:text-[#78c459] font-medium"
+              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
             >
-              All Dail Products
+              Shop All Products
             </button>
             <button
               onClick={() => navigateTo('shop', 'hair-oil')}
-              className="text-left py-2 text-emerald-200 hover:text-white pl-3 border-l border-emerald-600/40"
+              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
             >
-              • Dail Herbal Hair Oil (120ml)
+              100% Organic Hair Oil (120ml)
             </button>
             <button
               onClick={() => navigateTo('shop', 'cream')}
-              className="text-left py-2 text-emerald-200 hover:text-white pl-3 border-l border-emerald-600/40"
+              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
             >
-              • Dail Beauty Cream (Without Steroid)
+              Steroid-Free Beauty Creams
             </button>
             <button
-              onClick={() => navigateTo('shop', 'cream')}
-              className="text-left py-2 text-emerald-200 hover:text-white pl-3 border-l border-emerald-600/40"
+              onClick={() => navigateTo('shop', 'bundles')}
+              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
             >
-              • Dail Hand & Foot Cream
+              Value Regimen Bundles
             </button>
             <button
-              onClick={() => navigateTo('about')}
-              className="text-left py-2 text-emerald-100 hover:text-[#78c459] font-medium"
+              onClick={() => navigateTo('wishlist')}
+              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
             >
-              Our Story (Without Steroid Guarantee)
+              Wishlist ({wishlistCount})
             </button>
             <button
               onClick={() => navigateTo('track-order')}
-              className="text-left py-2 text-emerald-100 hover:text-[#78c459] font-medium flex items-center gap-2"
+              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#7b3e1d]"
             >
-              <Compass className="w-4 h-4 text-[#78c459]" />
-              Track Courier Parcel (TCS / Trax)
+              Track Your Order (TCS / Trax)
             </button>
+            <button
+              onClick={() => navigateTo('about')}
+              className="block w-full text-left py-2 hover:text-[#7b3e1d]"
+            >
+              About Dail Cosmetics
+            </button>
+          </div>
+
+          <div className="mt-6 pt-6 border-t border-stone-200 flex flex-col gap-3">
             <a
-              href="https://wa.me/923001234567"
+              href="https://wa.me/923001234567?text=Hello%20Dail%20Cosmetics,%20I%20want%20to%20order"
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2.5 px-3 rounded-lg bg-emerald-900/60 text-emerald-200 flex items-center justify-between"
+              className="w-full py-3 bg-[#25D366] text-white rounded-xl font-bold flex items-center justify-center gap-2 shadow-xs"
             >
-              <span className="flex items-center gap-2 text-xs">
-                <Phone className="w-4 h-4 text-[#25d366]" /> Direct WhatsApp Helpline
-              </span>
-              <span className="text-xs text-emerald-400">0300-1234567</span>
+              <Phone className="w-4 h-4" /> Order on WhatsApp (0300-1234567)
             </a>
           </div>
-        )}
-      </nav>
+        </div>
+      )}
     </header>
   );
 };

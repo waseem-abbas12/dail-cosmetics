@@ -1,7 +1,6 @@
 import React from 'react';
 import { useStore } from '../store/useStore';
-import { Dali3DCanvas } from './3d/Dali3DCanvas';
-import { ArrowRight, ShieldCheck, Star, Droplets } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Star, Droplets, Sparkles, CheckCircle2, Box } from 'lucide-react';
 
 export const HeroSection: React.FC = () => {
   const { setCurrentPage, setSelectedCategory } = useStore();
@@ -11,181 +10,152 @@ export const HeroSection: React.FC = () => {
     setCurrentPage('shop');
   };
 
+  const scrollTo3D = () => {
+    const el = document.getElementById('studio-3d-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section className="relative px-3 sm:px-6 lg:px-12 py-6 sm:py-10 max-w-[1400px] mx-auto overflow-hidden">
+    <section className="relative px-4 sm:px-6 lg:px-8 py-6 sm:py-10 max-w-7xl mx-auto">
       
-      {/* Background Ambient Botanical Lighting */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-700/15 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute -top-10 left-10 w-72 h-72 bg-[#6aa84f]/10 rounded-full blur-[100px] pointer-events-none" />
-
-      {/* Main Dribbble-Style Luxury Framed Container */}
-      <div className="relative rounded-[36px] sm:rounded-[48px] bg-gradient-to-b from-[#0e3120] to-[#071c13] border border-emerald-500/25 p-6 sm:p-10 lg:p-14 shadow-2xl shadow-emerald-950/80 overflow-hidden">
+      {/* Editorial Luxury Container (Clean Warm Ivory & White) */}
+      <div className="relative rounded-3xl sm:rounded-[36px] bg-white border border-stone-200/90 p-6 sm:p-10 lg:p-14 shadow-sm overflow-hidden">
         
-        {/* Subtle Decorative Foliage Overlay in Corner */}
-        <div className="absolute -top-12 -right-12 w-64 h-64 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none" />
+        {/* Soft Ambient Warm Glow */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#f5efe6] rounded-full blur-3xl pointer-events-none -z-10" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-50/60 rounded-full blur-2xl pointer-events-none -z-10" />
 
-        {/* ---------------- TOP HALF: HERO SHOWCASE ---------------- */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-6 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           
-          {/* Left Hero Content */}
-          <div className="lg:col-span-6 z-10 space-y-6">
+          {/* Left Column: Editorial Brand Headline */}
+          <div className="lg:col-span-7 space-y-6 z-10">
             
-            {/* Export Quality & Without Steroid Badges */}
+            {/* Prestige Badges */}
             <div className="flex flex-wrap items-center gap-2">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#133e28]/90 border border-emerald-400/40 text-[#a4e38b] text-[11px] font-bold tracking-wider uppercase">
-                <span className="w-2 h-2 rounded-full bg-[#78c459] animate-pulse" />
-                <span>EXPORT QUALITY</span>
-              </div>
-              <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-rose-950/70 border border-rose-500/40 text-rose-300 text-[11px] font-bold tracking-wider uppercase">
-                <span>🛡️ WITHOUT STEROID</span>
-              </div>
-              <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-950/60 border border-amber-500/30 text-amber-300 text-[11px] font-semibold">
-                <span>100% ORGANIC</span>
-              </div>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200/70 text-[#7b3e1d] text-xs font-bold tracking-wider uppercase">
+                <Sparkles className="w-3.5 h-3.5 text-[#c59b27]" />
+                100% PURE HERBAL FORMULATIONS
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200/70 text-emerald-800 text-xs font-bold tracking-wider uppercase">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                STRICTLY ZERO STEROIDS
+              </span>
+              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-stone-100 text-stone-700 text-xs font-semibold">
+                🇵🇰 Export Quality
+              </span>
             </div>
 
-            {/* Editorial Serif Giant Heading */}
-            <h1 className="font-serif-luxury text-4xl sm:text-6xl lg:text-7xl font-bold leading-[1.06] text-white tracking-tight">
-              Dail <br />
-              <span className="text-[#a4e38b] italic font-normal">Cosmetics</span>
-            </h1>
+            {/* Main Editorial Headline */}
+            <div className="space-y-2">
+              <h1 className="font-serif-luxury text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.12] text-[#1a1a1a] tracking-tight">
+                Pure Herbal Radiance. <br />
+                <span className="text-[#7b3e1d] italic font-serif">Zero Harmful Steroids.</span>
+              </h1>
+              
+              {/* Urdu Emotional Brand Subtitle */}
+              <p className="text-[#c59b27] font-serif text-base sm:text-lg italic font-medium">
+                « خالص جڑی بوٹیوں کا نچوڑ — بنا کسی سائیڈ ایفیکٹ اور اسٹیرائیڈ کے »
+              </p>
+            </div>
 
-            {/* Urdu Subtitle Badge */}
-            <p className="text-emerald-300/90 text-base sm:text-lg font-serif italic">
-              «100٪ آرگینک ہربل ہیئر آئل اور بغیر اسٹیرائیڈ بیوٹی کریم»
+            {/* Description Copy */}
+            <p className="text-stone-600 text-sm sm:text-base leading-relaxed max-w-xl font-normal">
+              Pakistan's most trusted certified organic beauty brand. Formulated with authentic 
+              cold-pressed botanical oils and natural actives. Our iconic <strong>Dail 100% Organic Herbal Hair Oil (120ml)</strong> stops hair fall at the root, while our <strong>Dail Beauty Cream (5-Day Plan)</strong> and <strong>Hand & Foot Whitening Cream</strong> restore radiant, flawless skin without mercury, bleaching, or skin thinning.
             </p>
 
-            {/* Description Copy tailored to real packaging */}
-            <p className="text-emerald-100/75 text-sm sm:text-base leading-relaxed max-w-lg font-light">
-              Pakistan's trusted export quality formulations. <strong>100% Organic Herbal Hair Oil (120ml)</strong> for instant hair fall control, plus our iconic <strong>Dail Beauty Cream (5-Day Plan)</strong> and <strong>Hand & Foot Whitening Cream</strong> — strictly without steroids, mercury, or harmful bleaches.
-            </p>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            {/* CTAs */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
                 onClick={handleOpenCatalog}
-                className="px-7 py-3.5 rounded-full bg-[#6aa84f] hover:bg-[#7bc05d] text-white text-sm font-semibold tracking-wide shadow-lg shadow-emerald-900/50 hover:shadow-emerald-700/50 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 group"
+                className="px-7 py-3.5 rounded-full bg-[#7b3e1d] hover:bg-[#622f14] text-white text-sm font-bold flex items-center gap-2 shadow-sm transition-all group"
               >
-                <span>Shop Dail Collection</span>
+                <span>Shop Best Sellers</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
 
               <button
-                onClick={() => setCurrentPage('about')}
-                className="px-5 py-3 rounded-full text-emerald-200 hover:text-white text-sm font-medium transition-colors flex items-center gap-1.5 hover:underline decoration-emerald-400 underline-offset-4"
+                onClick={scrollTo3D}
+                className="px-6 py-3.5 rounded-full bg-white hover:bg-stone-50 border border-stone-300 text-stone-800 text-sm font-semibold flex items-center gap-2 transition-all"
               >
-                <span>Why Without Steroids?</span>
-                <span className="text-xs">→</span>
+                <Box className="w-4 h-4 text-[#c59b27]" />
+                <span>Interactive 3D Studio</span>
               </button>
             </div>
 
-            {/* Trust Badges */}
-            <div className="pt-6 grid grid-cols-3 gap-3 border-t border-emerald-500/20 text-xs text-emerald-200/90">
+            {/* Live Social Proof Strip */}
+            <div className="pt-6 border-t border-stone-100 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-stone-600">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-[#78c459] shrink-0" />
-                <span>Zero Steroids / Safe</span>
+                <div className="flex text-amber-500">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-current" />
+                  ))}
+                </div>
+                <div>
+                  <span className="font-bold text-stone-900">4.9 / 5.0</span>
+                  <span className="text-stone-500 block text-[11px]">(1,400+ Verified Reviews)</span>
+                </div>
               </div>
+
               <div className="flex items-center gap-2">
-                <Droplets className="w-4 h-4 text-[#78c459] shrink-0" />
-                <span>120ml Cold-Pressed</span>
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Cash on Delivery across Pakistan</span>
               </div>
+
               <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 text-amber-400 shrink-0 fill-amber-400" />
-                <span>4.9★ (Export Quality)</span>
+                <ShieldCheck className="w-4 h-4 text-[#7b3e1d] shrink-0" />
+                <span>Tamper-Proof Gold Foil Seal</span>
               </div>
             </div>
 
           </div>
 
-          {/* Right Hero: Interactive 3D Canvas Centerpiece */}
-          <div className="lg:col-span-6 relative w-full h-[450px] sm:h-[520px] lg:h-[580px] flex items-center justify-center">
+          {/* Right Column: High-End Packaging Visual Showcase */}
+          <div className="lg:col-span-5 relative">
             
-            {/* Radial glow backdrop */}
-            <div className="absolute inset-0 bg-radial from-emerald-600/20 via-transparent to-transparent pointer-events-none rounded-3xl" />
-            
-            {/* The 3D Scene */}
-            <Dali3DCanvas className="w-full h-full rounded-2xl" />
+            {/* Clean Editorial Card */}
+            <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-stone-100 border border-stone-200 shadow-lg aspect-4/5 sm:aspect-square lg:aspect-4/5 group">
+              <img
+                src="/images/dail_packaging.jpg"
+                alt="Official Dail Cosmetics Herbal Hair Oil and Beauty Cream Packaging"
+                className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700"
+              />
 
-          </div>
+              {/* Gradient Overlay for Readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
 
-        </div>
-
-        {/* ---------------- BOTTOM HALF: ACTUAL PACKING SHOWCASE CARD ---------------- */}
-        <div className="mt-12 sm:mt-16 rounded-[28px] sm:rounded-[36px] bg-gradient-to-r from-[#14422b] to-[#0f3422] border border-emerald-400/20 p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center shadow-xl">
-          
-          <div className="lg:col-span-6 space-y-4">
-            <span className="text-xs font-semibold tracking-[0.2em] uppercase text-emerald-400 block">
-              Official Pakistani Packaging
-            </span>
-
-            <h2 className="font-serif-luxury text-3xl sm:text-4xl font-bold text-white leading-tight">
-              Pure <span className="italic text-[#a4e38b]">Export Quality</span> Formulations
-            </h2>
-
-            <p className="text-emerald-100/75 text-sm sm:text-base leading-relaxed">
-              Every Dail Cosmetics package is factory-sealed with the signature embossed round tin lid and hologram guarantee. Engineered specifically for South Asian hair & skin to deliver visible results without damaging your skin barrier.
-            </p>
-
-            <div className="pt-2">
-              <button
-                onClick={() => {
-                  setSelectedCategory('bundles');
-                  setCurrentPage('shop');
-                }}
-                className="text-xs uppercase tracking-wider font-semibold text-[#78c459] hover:text-white transition-colors flex items-center gap-1.5"
-              >
-                <span>Get the Complete 3-in-1 Regimen Box (Save Rs. 1,001)</span>
-                <span>→</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Right Highlights & Actual Product Images */}
-          <div className="lg:col-span-6 grid grid-cols-3 gap-3">
-            
-            <div 
-              onClick={() => { setSelectedCategory('hair-oil'); setCurrentPage('shop'); }}
-              className="group cursor-pointer rounded-2xl bg-emerald-950/70 border border-emerald-500/20 p-2.5 text-center transition-all hover:border-[#78c459]"
-            >
-              <div className="w-full h-32 rounded-xl overflow-hidden bg-black/40 mb-2">
-                <img 
-                  src="/images/dail_hair_oil.jpg" 
-                  alt="Dail Herbal Hair Oil" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                />
+              {/* Floating Quality Callout 1 (Hair Oil) */}
+              <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-xs border border-stone-200/80 rounded-2xl p-2.5 shadow-sm text-stone-800 text-xs flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-full bg-amber-100 text-[#7b3e1d] flex items-center justify-center font-bold text-xs">
+                  🌿
+                </div>
+                <div>
+                  <span className="font-bold block text-[11px] text-stone-900">100% Herbal Hair Oil</span>
+                  <span className="text-[10px] text-stone-500">120ml Cold-Pressed Formula</span>
+                </div>
               </div>
-              <strong className="text-white text-xs block truncate">Hair Oil 120ml</strong>
-              <span className="text-[10px] text-[#a4e38b] font-bold block mt-0.5">Rs. 1,850</span>
-            </div>
 
-            <div 
-              onClick={() => { setSelectedCategory('cream'); setCurrentPage('shop'); }}
-              className="group cursor-pointer rounded-2xl bg-emerald-950/70 border border-emerald-500/20 p-2.5 text-center transition-all hover:border-[#78c459]"
-            >
-              <div className="w-full h-32 rounded-xl overflow-hidden bg-black/40 mb-2">
-                <img 
-                  src="/images/dail_beauty_cream.jpg" 
-                  alt="Dail Beauty Cream" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                />
+              {/* Floating Quality Callout 2 (Beauty Cream) */}
+              <div className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-xs border border-stone-200/80 rounded-2xl p-3 shadow-md text-stone-800 text-xs flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-1 text-[11px] font-bold text-[#7b3e1d]">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Dail Beauty Cream (Without Steroid)</span>
+                  </div>
+                  <span className="text-[11px] text-stone-500">
+                    5-Day Beauty Plan • Export Quality Sealed
+                  </span>
+                </div>
+                <button
+                  onClick={handleOpenCatalog}
+                  className="px-3 py-1.5 bg-[#7b3e1d] text-white rounded-lg font-bold text-xs hover:bg-[#622f14] transition-colors"
+                >
+                  Buy Now
+                </button>
               </div>
-              <strong className="text-white text-xs block truncate">Beauty Cream</strong>
-              <span className="text-[10px] text-[#a4e38b] font-bold block mt-0.5">Rs. 1,450</span>
-            </div>
 
-            <div 
-              onClick={() => { setSelectedCategory('cream'); setCurrentPage('shop'); }}
-              className="group cursor-pointer rounded-2xl bg-emerald-950/70 border border-emerald-500/20 p-2.5 text-center transition-all hover:border-[#78c459]"
-            >
-              <div className="w-full h-32 rounded-xl overflow-hidden bg-black/40 mb-2">
-                <img 
-                  src="/images/dail_hand_foot.jpg" 
-                  alt="Dail Hand & Foot Cream" 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                />
-              </div>
-              <strong className="text-white text-xs block truncate">Hand & Foot</strong>
-              <span className="text-[10px] text-[#a4e38b] font-bold block mt-0.5">Rs. 1,350</span>
             </div>
 
           </div>
