@@ -145,6 +145,16 @@ export const ProductStudioSpotlight: React.FC = () => {
     setZoomPos({ x, y });
   };
 
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length > 0) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const touch = e.touches[0];
+      const x = ((touch.clientX - rect.left) / rect.width) * 100;
+      const y = ((touch.clientY - rect.top) / rect.height) * 100;
+      setZoomPos({ x, y });
+    }
+  };
+
   const handleInspectFullPDP = () => {
     setSelectedProduct(currentProduct);
     setCurrentPage('product-detail');
@@ -168,18 +178,18 @@ export const ProductStudioSpotlight: React.FC = () => {
   );
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+    <section id="product-studio-spotlight" className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-14">
       
       {/* Studio Luxury Framing Container */}
-      <div className="rounded-3xl sm:rounded-[36px] bg-white border border-stone-200/90 p-6 sm:p-10 lg:p-12 shadow-sm relative overflow-hidden">
+      <div className="rounded-2xl sm:rounded-[36px] bg-white border border-stone-200/90 p-3.5 sm:p-8 lg:p-12 shadow-sm relative overflow-hidden">
         
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto space-y-3 mb-8">
+        <div className="text-center max-w-2xl mx-auto space-y-2.5 mb-6 sm:mb-8">
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-[#7b3e1d] text-xs font-bold uppercase tracking-wider">
             <Sparkles className="w-3.5 h-3.5 text-[#c59b27]" />
             <span>Interactive Multi-Angle Packaging Studio</span>
           </div>
-          <h2 className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-900 leading-tight">
+          <h2 className="font-serif-luxury text-2xl sm:text-4xl lg:text-5xl font-bold text-stone-900 leading-tight">
             Examine Every <span className="text-[#7b3e1d] italic">Authentic Detail & Seal</span>
           </h2>
           <p className="text-stone-600 text-xs sm:text-sm font-normal">
@@ -188,7 +198,7 @@ export const ProductStudioSpotlight: React.FC = () => {
         </div>
 
         {/* Product Switcher Tabs */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mb-6 sm:mb-8">
           {PRODUCTS.slice(0, 3).map((p, idx) => (
             <button
               key={p.id}
@@ -198,7 +208,7 @@ export const ProductStudioSpotlight: React.FC = () => {
                 setActiveFeature(null);
                 setSelectedVariant('standard');
               }}
-              className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all border cursor-pointer ${
+              className={`px-3.5 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all border cursor-pointer ${
                 selectedProductIdx === idx
                   ? 'bg-[#7b3e1d] text-white border-[#7b3e1d] shadow-xs'
                   : 'bg-stone-50 text-stone-700 border-stone-200 hover:bg-stone-100 hover:text-stone-900'
@@ -212,17 +222,20 @@ export const ProductStudioSpotlight: React.FC = () => {
         </div>
 
         {/* Studio Showcase Split: Left Interactive Lens + Right Specs & Actions */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center">
           
           {/* Left Column: High-Definition Multi-Angle Lens */}
-          <div className="lg:col-span-7 space-y-4">
+          <div className="lg:col-span-7 space-y-3 sm:space-y-4">
             
             {/* Visual Stage Container */}
             <div
-              className="relative aspect-square sm:aspect-4/3 w-full rounded-3xl bg-gradient-to-b from-[#fbf9f5] via-[#f7f2ea] to-[#ede5d6] border border-stone-200/90 shadow-inner flex items-center justify-center p-6 overflow-hidden group cursor-crosshair"
+              className="relative aspect-4/5 sm:aspect-4/3 w-full rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#fbf9f5] via-[#f7f2ea] to-[#ede5d6] border border-stone-200/90 shadow-inner flex items-center justify-center p-3 sm:p-6 overflow-hidden group cursor-crosshair touch-none"
               onMouseEnter={() => setIsZoomed(true)}
               onMouseLeave={() => setIsZoomed(false)}
               onMouseMove={handleMouseMove}
+              onTouchStart={() => setIsZoomed(true)}
+              onTouchEnd={() => setIsZoomed(false)}
+              onTouchMove={handleTouchMove}
             >
               {/* Product Visual Image */}
               <img

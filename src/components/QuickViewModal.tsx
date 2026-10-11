@@ -60,14 +60,16 @@ export const QuickViewModal: React.FC = () => {
           
           {/* Left: Gallery Column */}
           <div className="space-y-4">
-            <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-stone-50 border border-stone-200/80">
+            <div className="relative aspect-4/5 sm:aspect-square w-full rounded-2xl overflow-hidden bg-gradient-to-b from-[#fdfbf7] via-[#f7f2ea] to-[#eee4d6] border border-stone-200/80 p-4 flex flex-col items-center justify-center group">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.95)_0%,rgba(247,242,234,0.4)_65%,transparent_100%)] pointer-events-none" />
               <img
                 src={images[selectedImgIndex] || product.image}
                 alt={product.name}
-                className="w-full h-full object-cover transition-transform duration-300"
+                className="max-h-[85%] max-w-[90%] object-contain drop-shadow-[0_18px_24px_rgba(123,62,29,0.2)] transition-transform duration-300 group-hover:scale-105 z-10"
               />
+              <div className="w-3/4 h-2.5 rounded-[50%] bg-[#7b3e1d]/14 blur-[5px] -mt-1.5 pointer-events-none z-5" />
               {product.badge && (
-                <span className="absolute top-3 left-3 bg-[#7b3e1d] text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-xs">
+                <span className="absolute top-3 left-3 bg-[#7b3e1d] text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-xs z-20">
                   {product.badge}
                 </span>
               )}

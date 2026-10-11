@@ -107,13 +107,13 @@ const HomeView: React.FC = () => {
       <RegimenDuoSection />
 
       {/* 4. Best Sellers Collection Showcase */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-wrap items-end justify-between gap-4 mb-8 sm:mb-10">
+      <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap items-end justify-between gap-3 mb-6 sm:mb-10">
           <div>
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#c59b27]">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#c59b27]">
               Official Pakistani Formulations
             </span>
-            <h2 className="font-serif-luxury text-3xl sm:text-4xl lg:text-5xl font-bold text-stone-900 mt-1">
+            <h2 className="font-serif-luxury text-2xl sm:text-4xl lg:text-5xl font-bold text-stone-900 mt-1">
               Best-Selling <span className="text-[#7b3e1d] italic">Organic Essentials</span>
             </h2>
             <p className="text-stone-600 text-xs sm:text-sm mt-1 max-w-lg font-normal">
@@ -126,15 +126,15 @@ const HomeView: React.FC = () => {
               setSelectedCategory('all');
               setCurrentPage('shop');
             }}
-            className="px-6 py-2.5 rounded-full bg-white hover:bg-stone-50 border border-stone-300 text-stone-800 hover:text-[#7b3e1d] text-xs font-bold flex items-center gap-2 group transition-all shadow-2xs"
+            className="px-5 py-2 sm:px-6 sm:py-2.5 rounded-full bg-white hover:bg-stone-50 border border-stone-300 text-stone-800 hover:text-[#7b3e1d] text-xs font-bold flex items-center gap-2 group transition-all shadow-2xs cursor-pointer"
           >
             <span>View All Products</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
 
-        {/* 4 Flagship Product Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Flagship Product Cards: 2-Cols on Mobile for zero side margin waste, 4-Cols on Desktop */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
           {flagshipProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

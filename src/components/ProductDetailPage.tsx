@@ -162,15 +162,22 @@ export const ProductDetailPage: React.FC = () => {
             </div>
 
             {/* Display Stage Container */}
-            <div className="relative aspect-square w-full rounded-3xl bg-white border border-stone-200/90 shadow-xs overflow-hidden flex items-center justify-center p-4">
+            <div className="relative aspect-4/5 sm:aspect-square lg:aspect-4/5 w-full rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#fdfbf7] via-[#f7f2ea] to-[#eee4d6] border border-stone-200/90 shadow-sm overflow-hidden flex flex-col items-center justify-center p-4 sm:p-8 group">
+              
+              {/* Radial Spotlight Glow */}
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.95)_0%,rgba(247,242,234,0.4)_65%,transparent_100%)] pointer-events-none" />
+
               {activeViewMode === 'gallery' ? (
-                <img
-                  src={selectedImage}
-                  alt={product.name}
-                  className="w-full h-full object-contain transition-transform duration-300"
-                />
+                <div className="relative z-10 w-full h-[85%] flex flex-col items-center justify-center">
+                  <img
+                    src={selectedImage}
+                    alt={product.name}
+                    className="max-h-full max-w-[90%] object-contain drop-shadow-[0_20px_28px_rgba(123,62,29,0.22)] group-hover:scale-104 transition-transform duration-500"
+                  />
+                  <div className="w-3/4 h-3 rounded-[50%] bg-[#7b3e1d]/14 blur-[6px] -mt-2 pointer-events-none" />
+                </div>
               ) : (
-                <div className="w-full h-full bg-gradient-to-b from-[#fbf9f5] to-[#ece5d8] rounded-2xl overflow-hidden">
+                <div className="relative z-10 w-full h-full bg-gradient-to-b from-[#fbf9f5] to-[#ece5d8] rounded-2xl overflow-hidden">
                   <Dali3DCanvas initialModel={product.modelType as any} className="w-full h-full" />
                 </div>
               )}
