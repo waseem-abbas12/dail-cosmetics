@@ -10,53 +10,53 @@ export const ValueBundlesSection: React.FC = () => {
     {
       id: 'bundle-trio',
       title: 'Dail Complete 3-in-1 Regimen Box',
-      tagline: '120ml Herbal Hair Oil + 5-Day Beauty Cream + Hand & Foot Whitening Cream',
+      tagline: '120ml Herbal Hair Oil (PKR 999) + Dail Beauty Cream (PKR 350) + Hand & Foot Cream (PKR 350)',
       badge: 'TOP VALUE DEAL',
-      price: 4199,
-      originalPrice: 5200,
-      saving: 1001,
+      price: 1499,
+      originalPrice: 1699,
+      saving: 200,
       image: '/images/dail_packaging.jpg',
       features: [
         'All 3 signature export-quality formulations in one box',
-        'Stops hair fall + imparts 5-day radiant facial glow',
-        'FREE nationwide express courier delivery',
-        'Tamper-proof golden factory seal'
+        'Stops hair fall + imparts radiant facial glow without steroids',
+        'Tamper-proof golden factory seal & export grade packing',
+        'Cash On Delivery available across Pakistan'
       ],
-      product: PRODUCTS[3] || PRODUCTS[0]
+      product: PRODUCTS[4] || PRODUCTS[0]
     },
     {
-      id: 'bundle-glow',
-      title: '7-Day Glass Skin Glow Routine',
-      tagline: 'Dail Beauty Cream (Without Steroid) + 24K Saffron Glow Serum',
-      badge: 'SKINCARE DUO',
-      price: 2990,
-      originalPrice: 3850,
-      saving: 860,
-      image: '/images/dail_beauty_cream.jpg',
+      id: 'bundle-duo',
+      title: 'Daily Beauty Cream + Herbal Hair Oil Duo',
+      tagline: 'Dail Beauty Cream (PKR 350) + Premium Herbal Hair Oil 120ml (PKR 999)',
+      badge: 'BESTSELLER DUO',
+      price: 1199,
+      originalPrice: 1349,
+      saving: 150,
+      image: '/images/dail_packaging.jpg',
       features: [
-        'Strictly 0% steroids — safe daily cell renewal',
-        'Fades stubborn blemishes, dark spots & tanning',
-        'FREE shipping across Pakistan on Rs. 2,000+',
-        'Visible results in 5 to 7 days guaranteed'
+        'Strictly 0% steroids — safe daily cell renewal and glow',
+        'Cold-pressed rosemary bio-actives & amla for rapid regrowth',
+        'Visible results in 5 to 7 days guaranteed',
+        'Official factory batch direct from Dail Cosmetics'
       ],
-      product: PRODUCTS[1]
+      product: PRODUCTS[3] || PRODUCTS[1]
     },
     {
-      id: 'bundle-hair',
-      title: 'Herbal Hair Regrowth & Repair Kit',
-      tagline: '120ml Botanical Hair Oil + Keratin & Biotin Shampoo + Scalp Mist',
-      badge: 'HAIR FALL SPECIAL',
-      price: 4290,
-      originalPrice: 5350,
-      saving: 1060,
-      image: '/images/dail_hair_oil.jpg',
+      id: 'bundle-family',
+      title: 'Dail Family Double Pack (FREE DELIVERY)',
+      tagline: '2x Herbal Hair Oils 120ml + 2x Dail Beauty Creams (Double supply)',
+      badge: 'FREE DELIVERY',
+      price: 2399,
+      originalPrice: 2698,
+      saving: 299,
+      image: '/images/dail_packaging.jpg',
       features: [
-        'Full anti-shedding wash and treatment protocol',
-        'Cold-pressed rosemary & kalonji active botanicals',
-        'Thickens hair density and repairs split ends',
-        'FREE delivery with cash on delivery'
+        'Double supply (2x Hair Oils 120ml + 2x Beauty Creams 50g)',
+        'FREE express courier delivery nationwide included',
+        'Pure rosemary, kalonji, amla & glutathione formulations',
+        'Best family value savings pack'
       ],
-      product: PRODUCTS[0]
+      product: PRODUCTS[5] || PRODUCTS[0]
     }
   ];
 
@@ -84,7 +84,7 @@ export const ValueBundlesSection: React.FC = () => {
               Save More With Bundles
             </h2>
             <p className="text-stone-500 text-xs sm:text-sm mt-1 max-w-xl font-normal">
-              Get complete routines and save up to Rs. 1,060 with complimentary nationwide courier shipping.
+              Get complete routines and save with complimentary nationwide courier shipping on orders above Rs. 2,000.
             </p>
           </div>
 

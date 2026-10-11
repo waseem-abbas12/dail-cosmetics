@@ -154,27 +154,15 @@ export const Navbar: React.FC = () => {
                     onClick={() => navigateTo('shop', 'cream')}
                     className="w-full text-left px-3 py-2 text-xs font-semibold text-stone-700 hover:text-[#d0473e] hover:bg-stone-50 rounded-xs flex items-center justify-between"
                   >
-                    <span>Dail Beauty Cream (5-Day Plan)</span>
-                    <span className="text-[10px] text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">0% Steroid</span>
+                    <span>Dail Beauty Cream (50g)</span>
+                    <span className="text-[10px] text-[#d0473e] font-bold">PKR 350</span>
                   </button>
                   <button
                     onClick={() => navigateTo('shop', 'cream')}
                     className="w-full text-left px-3 py-2 text-xs font-semibold text-stone-700 hover:text-[#d0473e] hover:bg-stone-50 rounded-xs flex items-center justify-between"
                   >
                     <span>Hand & Foot Whitening Cream</span>
-                    <span className="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded">3-Action</span>
-                  </button>
-                  <button
-                    onClick={() => navigateTo('shop', 'serum')}
-                    className="w-full text-left px-3 py-2 text-xs font-semibold text-stone-700 hover:text-[#d0473e] hover:bg-stone-50 rounded-xs"
-                  >
-                    24K Saffron Glow Serum
-                  </button>
-                  <button
-                    onClick={() => navigateTo('shop', 'cleanser')}
-                    className="w-full text-left px-3 py-2 text-xs font-semibold text-stone-700 hover:text-[#d0473e] hover:bg-stone-50 rounded-xs"
-                  >
-                    Vitamin C & Neem Face Wash
+                    <span className="text-[10px] text-[#d0473e] font-bold">PKR 350</span>
                   </button>
                 </div>
               )}
@@ -197,26 +185,14 @@ export const Navbar: React.FC = () => {
               {haircareDropdownOpen && (
                 <div className="absolute top-full left-0 w-64 bg-white border border-[#e8e8e1] shadow-xl py-3 px-2 rounded-xs z-50 animate-in fade-in slide-in-from-top-1 duration-150">
                   <div className="text-[10px] tracking-widest text-[#d0473e] font-bold px-3 py-1 mb-1 border-b border-stone-100">
-                    HAIRCARE COLLECTIONS
+                    HAIRCARE COLLECTION
                   </div>
                   <button
                     onClick={() => navigateTo('shop', 'hair-care')}
                     className="w-full text-left px-3 py-2 text-xs font-semibold text-stone-700 hover:text-[#d0473e] hover:bg-stone-50 rounded-xs flex items-center justify-between"
                   >
-                    <span>100% Herbal Hair Oil (120ml)</span>
-                    <span className="text-[10px] text-[#d0473e] bg-red-50 px-1.5 py-0.5 rounded font-bold">Top Seller</span>
-                  </button>
-                  <button
-                    onClick={() => navigateTo('shop', 'hair-care')}
-                    className="w-full text-left px-3 py-2 text-xs font-semibold text-stone-700 hover:text-[#d0473e] hover:bg-stone-50 rounded-xs"
-                  >
-                    Keratin & Biotin Repair Shampoo
-                  </button>
-                  <button
-                    onClick={() => navigateTo('shop', 'hair-care')}
-                    className="w-full text-left px-3 py-2 text-xs font-semibold text-stone-700 hover:text-[#d0473e] hover:bg-stone-50 rounded-xs"
-                  >
-                    Rosemary Scalp Hydro-Mist
+                    <span>Premium Herbal Hair Oil (120ml)</span>
+                    <span className="text-[10px] text-[#d0473e] font-bold">PKR 999</span>
                   </button>
                 </div>
               )}
@@ -371,19 +347,7 @@ export const Navbar: React.FC = () => {
                       onClick={() => navigateTo('shop', 'cream')}
                       className="w-full text-left py-2 px-3 hover:text-[#d0473e]"
                     >
-                      Hand & Foot Whitening Cream
-                    </button>
-                    <button
-                      onClick={() => navigateTo('shop', 'serum')}
-                      className="w-full text-left py-2 px-3 hover:text-[#d0473e]"
-                    >
-                      24K Saffron Glow Serum
-                    </button>
-                    <button
-                      onClick={() => navigateTo('shop', 'cleanser')}
-                      className="w-full text-left py-2 px-3 hover:text-[#d0473e]"
-                    >
-                      Vitamin C & Neem Face Wash
+                      Hand & Foot Whitening Cream (PKR 350)
                     </button>
                   </div>
                 )}
@@ -404,19 +368,7 @@ export const Navbar: React.FC = () => {
                       onClick={() => navigateTo('shop', 'hair-care')}
                       className="w-full text-left py-2 px-3 hover:text-[#d0473e]"
                     >
-                      100% Herbal Hair Oil (120ml)
-                    </button>
-                    <button
-                      onClick={() => navigateTo('shop', 'hair-care')}
-                      className="w-full text-left py-2 px-3 hover:text-[#d0473e]"
-                    >
-                      Keratin & Biotin Repair Shampoo
-                    </button>
-                    <button
-                      onClick={() => navigateTo('shop', 'hair-care')}
-                      className="w-full text-left py-2 px-3 hover:text-[#d0473e]"
-                    >
-                      Rosemary Scalp Hydro-Mist
+                      Premium Herbal Hair Oil 120ml (PKR 999)
                     </button>
                   </div>
                 )}

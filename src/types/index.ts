@@ -9,8 +9,12 @@ export interface CategoryItem {
 }
 
 export interface StoreSettings {
-  whatsappNumber: string; // e.g. "03346361218"
-  adminPassword?: string; // e.g. "dail@2026"
+  whatsappNumber: string; // "0313 6361218"
+  email: string; // "dailcosmeticscht@gmail.com"
+  facebookUrl?: string;
+  tiktokUrl?: string;
+  instagramUrl?: string;
+  adminPassword?: string; // "dail@2026"
   announcementText: string;
   freeShippingThreshold: number;
   flatShippingFee: number;

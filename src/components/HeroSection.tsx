@@ -38,14 +38,14 @@ export const HeroSection: React.FC = () => {
     },
     {
       id: 2,
-      badge: 'CRAZY VALUE OFFERS • SAVE RS. 1,001',
+      badge: 'CRAZY VALUE OFFERS • SAVE ON BUNDLES',
       title: 'COMPLETE 3-IN-1 REGIMEN BOX',
-      subtitle: 'Full size Hair Oil + 5-Day Beauty Cream + Hand & Foot Whitening Cream with FREE nationwide delivery.',
+      subtitle: 'Full size Herbal Hair Oil (120ml) + Dail Beauty Cream + Hand & Foot Whitening Cream at special package price PKR 1,499.',
       highlight: 'Free Delivery on Rs. 2,000+ Nationwide',
       buttonText: 'CLAIM BUNDLE DEAL',
       secondaryButtonText: 'VIEW ALL OFFERS',
       targetCategory: 'bundles',
-      productIndex: 3, // Complete Trio Set
+      productIndex: 4, // Complete Trio Set
       image: '/images/dail_packaging.jpg',
       bgGradient: 'from-red-950/85 via-stone-900/75 to-black/80',
       accentColor: '#d0473e'

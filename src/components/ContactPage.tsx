@@ -58,15 +58,17 @@ export const ContactPage: React.FC = () => {
               {/* Email & Hubs */}
               <div className="space-y-4 text-xs text-stone-600">
                 <div className="flex items-start gap-3">
-                  <Mail className="w-4 h-4 text-[#7b3e1d] shrink-0 mt-0.5" />
+                  <Mail className="w-4 h-4 text-[#d0473e] shrink-0 mt-0.5" />
                   <div>
                     <strong className="text-stone-900 block font-bold">Email Inquiries</strong>
-                    <span>support@dailcosmetics.pk</span>
+                    <a href="mailto:dailcosmeticscht@gmail.com" className="text-[#d0473e] underline font-semibold">
+                      dailcosmeticscht@gmail.com
+                    </a>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <MapPin className="w-4 h-4 text-[#7b3e1d] shrink-0 mt-0.5" />
+                  <MapPin className="w-4 h-4 text-[#d0473e] shrink-0 mt-0.5" />
                   <div>
                     <strong className="text-stone-900 block font-bold">Logistics & Dispatch Warehouses</strong>
                     <span>Karachi & Lahore Logistics Hubs, Pakistan</span>
@@ -74,11 +76,44 @@ export const ContactPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <Clock className="w-4 h-4 text-[#7b3e1d] shrink-0 mt-0.5" />
+                  <Clock className="w-4 h-4 text-[#d0473e] shrink-0 mt-0.5" />
                   <div>
                     <strong className="text-stone-900 block font-bold">Operating Hours</strong>
                     <span>Monday to Saturday: 9:00 AM - 9:00 PM</span>
                   </div>
+                </div>
+              </div>
+
+              {/* Official Social Media Channels */}
+              <div className="pt-4 border-t border-stone-100 space-y-2">
+                <strong className="text-xs font-heading font-extrabold text-stone-900 uppercase tracking-wider block">
+                  Official Social Channels:
+                </strong>
+                <div className="flex flex-col gap-2 text-xs">
+                  <a 
+                    href="https://www.facebook.com/profile.php?id=61563795102913&mibextid=ZbWKwL"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline font-bold flex items-center gap-2"
+                  >
+                    <span>📘 Facebook Official Page</span>
+                  </a>
+                  <a 
+                    href="https://www.instagram.com/dailcosmetics?igsh=ZzYyd29rZ3p3d3c="
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-pink-600 hover:underline font-bold flex items-center gap-2"
+                  >
+                    <span>📸 Instagram @dailcosmetics</span>
+                  </a>
+                  <a 
+                    href="https://www.tiktok.com/@dailcosmetics?_t=8olPFWJTJLT&_r=1"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-stone-900 hover:underline font-bold flex items-center gap-2"
+                  >
+                    <span>🎵 TikTok @dailcosmetics</span>
+                  </a>
                 </div>
               </div>
 

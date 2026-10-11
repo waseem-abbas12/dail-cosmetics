@@ -2,17 +2,60 @@ import type { Product, ProductReview } from '../types';
 
 export const PRODUCTS: Product[] = [
   {
-    id: 'dail-premium-herbal-hair-oil',
-    name: 'Dail Premium Herbal Hair Oil (100% Organic)',
-    urduName: 'ڈیل پریمیم ہربل ہیئر آئل (100٪ خالص آرگینک)',
-    tagline: 'Export Quality 120ml botanical infusion for acute hair fall control, root strengthening, and rapid regrowth.',
-    category: 'hair-oil',
-    concern: ['Hair Fall', 'Follicle Regrowth', 'Hair Thinning'],
-    price: 1850,
-    originalPrice: 2200,
-    rating: 4.95,
-    reviewCount: 540,
+    id: 'dail-beauty-cream',
+    name: 'Dail Beauty Cream (Without Steroid)',
+    urduName: 'ڈیل بیوٹی کریم (بغیر اسٹیرائیڈ - نائٹ کیئر)',
+    tagline: 'Revolutionary skincare solution for radiant, youthful complexion. Reduces wrinkles, dark circles & fine lines.',
+    category: 'cream',
+    concern: ['Radiant Glow', 'Uneven Skin Tone', 'Without Steroid', 'Dark Circles'],
+    price: 350,
+    originalPrice: 450,
+    rating: 4.94,
+    reviewCount: 620,
     badge: 'Best Seller',
+    volume: '50g Export Quality Tub',
+    image: '/images/dail_beauty_cream.jpg',
+    galleryImages: [
+      '/images/dail_beauty_cream.jpg',
+      '/images/dail_packaging.jpg',
+      'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=800&q=80'
+    ],
+    description: 'Dail Beauty Cream is a revolutionary skincare solution that targets multiple concerns for a radiant and youthful complexion. While providing long-lasting hydration that penetrates deep into the skin, Dail Beauty Cream reveals a natural glow, leaving your skin looking smoother, brighter, and more even-toned. Say goodbye to dullness and imperfections, and hello to a revitalized and healthy-looking skin with Dail Beauty Cream. Crafted with a unique blend of natural ingredients and cutting-edge technology, Dail Beauty Cream provides a holistic approach to skin health, ensuring you achieve a radiant and youthful complexion.',
+    benefits: [
+      'Glow / Bright the Skin: Enhances skin tone and clarity for a luminous glow',
+      'Reduces Wrinkles & Fine Lines: Promotes smoother and firmer skin texture',
+      'Reduces Dark Circles: Fades discoloration under eyes and fatigue spots',
+      'Deep Long-Lasting Hydration: Penetrates deep into skin layers to deliver lasting moisture',
+      'Non-Greasy Formula: Lightweight, easily absorbed, perfect for all skin types',
+      'Paraben-Free, Cruelty-Free & Strictly WITHOUT STEROIDS'
+    ],
+    keyIngredients: [
+      { name: 'Alpha Arbutin & Kojic Acid Diplamitate', description: 'Potent botanical brightening actives that safely inhibit excess melanin without thinning skin.' },
+      { name: 'Glutathione & Vitamin B3 (Niacinamide)', description: 'Master antioxidant duo that clarifies blemishes, evens tone, and fades dark circles.' },
+      { name: 'Pure Vitamin E & Glycerin', description: 'Essential moisture lock that smooths fine lines and protects against UV photo-damage.' },
+      { name: 'Zinc Oxide & Titanium Dioxide', description: 'Gentle mineral barrier that protects newly radiant skin from environmental stressors.' }
+    ],
+    howToUse: [
+      'For best results, apply Dail Beauty Cream daily at night.',
+      'Gently massage a small amount onto cleansed face and neck using upward circular motions until fully absorbed.',
+      'Follow with your favorite sunscreen during the day to protect your skin from UV damage.'
+    ],
+    fullIngredients: 'Distilled Water, PG, Glycerin, Vaseline, Croda Wax, B Wax, Stearic Acid, Cetyl Alcohol, Salicylic Acid, Alpha Arbutin, Alan Tien EDTA, Zinc Oxide Titanium Dioxide, Kojic Acid Diplamitate, Glutathione, Vitamin B3, Vitamin E, MP, PP.',
+    inStock: true,
+    modelType: 'jar'
+  },
+  {
+    id: 'dail-premium-herbal-hair-oil',
+    name: 'Dail Premium Herbal Hair Oil (100% Natural)',
+    urduName: 'ڈیل پریمیم ہربل ہیئر آئل (100٪ خالص قدرتی جڑی بوٹیاں)',
+    tagline: 'Unique blend of natural oils and mixed herbs designed to stop acute hair loss, strengthen weak strands, and promote hair growth.',
+    category: 'hair-care',
+    concern: ['Hair Fall', 'Follicle Regrowth', 'Hair Thinning'],
+    price: 999,
+    originalPrice: 1299,
+    rating: 4.98,
+    reviewCount: 780,
+    badge: '100% Organic',
     volume: '120 ml / 4.0 fl oz',
     image: '/images/dail_hair_oil.jpg',
     galleryImages: [
@@ -20,124 +63,121 @@ export const PRODUCTS: Product[] = [
       '/images/dail_packaging.jpg',
       'https://images.unsplash.com/photo-1608248597359-54817d3d0f04?auto=format&fit=crop&w=800&q=80'
     ],
-    description: 'Dail Premium Herbal Hair Oil is crafted with 100% pure organic herbal actives including mountain Rosemary, wild Amla, Bhringraj, Shikakai, and cold-pressed Kalonji (Black Seed) oil. Formulated to modern export quality standards, free from cheap mineral oil, silicones, and harmful parabens. Stops hair shedding and revitalizes dormant hair follicles within 14 days.',
+    description: 'Introducing our premium Herbal Hair Oil, a unique blend of natural oils and mixed herbs designed to nourish and revitalize your hair. Crafted with care, this powerful formula combines the goodness of nature to address common hair problems like hair loss, weak strands, and thinning hair. Experience the rejuvenating benefits of our Herbal Hair Oil and enjoy healthier, stronger, and more lustrous locks. Made with 100% natural ingredients, free from cheap mineral filler oils and harmful chemicals.',
     benefits: [
-      '100% Organic formula with Export Quality certification',
-      'Targets active hair shedding at root level and thickens thinning strands',
-      'Infused with cold-pressed rosemary bio-actives to stimulate micro-circulation',
-      'Non-sticky, rapid absorbing texture with natural soothing herbal aroma'
+      'Reduces Hair Fall: Helps reduce hair loss, giving you thicker and fuller hair',
+      'Promotes Hair Growth: Herbs improve blood flow to your scalp, helping new hair to grow',
+      'Strengthens Hair: Natural oils make hair roots stronger, preventing breakage',
+      'Nourishes Scalp: Keeps your scalp healthy and hydrated, vital for growth',
+      'Improves Hair Texture: Makes hair softer, shinier, and easier to manage',
+      '100% Natural Ingredients: Safe for all hair types and sensitive scalps'
     ],
     keyIngredients: [
-      { name: 'Mountain Rosemary & Mint', description: 'Clinically proven follicle stimulant that increases cellular metabolism in weak hair roots.' },
-      { name: 'Wild Amla & Shikakai', description: 'Natural vitamin C powerhouse to strengthen keratin and prevent premature greying.' },
-      { name: 'Cold-Pressed Kalonji (Black Seed)', description: 'Subcontinental prophetic herb rich in thymoquinone to deeply nourish scalp microbiome.' },
-      { name: 'Bhringraj & Fenugreek (Methi)', description: 'Traditional herbs that soothe scalp heat and accelerate healthy anagen growth cycle.' }
+      { name: 'Rosemary Oil & Lavender Oil', description: 'Potent essential oils that stimulate micro-circulation in roots and awaken dormant follicles.' },
+      { name: 'Amla Oil & Bhringraj Oil', description: 'Ancient botanical kings of hair growth that fortify keratin and prevent premature greying.' },
+      { name: 'Coconut Oil & Jojoba Oil', description: 'Deeply nourishing natural carrier oils that seal moisture into brittle strands.' },
+      { name: 'Methi, Fenugreek & Soapnut (Reetha)', description: 'Rich herbal protein blend that stops hair shedding and purifies scalp from buildup.' }
     ],
     howToUse: [
-      'Warm 6-10 drops of Dail Premium Herbal Hair Oil in clean palms.',
-      'Massage deeply into the scalp in circular motions for 5 to 7 minutes.',
-      'Leave on for at least 2 hours, or overnight for intensive restoration.',
-      'Wash off with mild sulfate-free shampoo. Repeat 3 times weekly.'
+      'Rub the oil into your scalp with circular motions. This helps improve blood flow and spreads the oil evenly.',
+      'Leave it on for 6 to 12 hours overnight for intensive nourishment.',
+      'In the morning, wash your hair with your regular shampoo.',
+      'For best results, use thrice a week.'
     ],
-    fullIngredients: 'Cold-Pressed Sweet Almond Oil, Virgin Coconut Oil, Wild Amla Extract, Bhringraj Leaf Extract, Rosemary Leaf Essential Oil, Kalonji (Nigella Sativa) Seed Oil, Shikakai Extract, Fenugreek Seed Infusion, Castor Oil, Vitamin E.',
+    fullIngredients: 'Coconut Oil, Amla Oil, Jojoba Oil, Lavender Oil, Neem Oil, Rosemary Oil, Methi, Bhringraj Oil, Fenugreek, Soapnut and other Essential Oils and many Herbs.',
     inStock: true,
     modelType: 'bottle'
   },
   {
-    id: 'dail-beauty-cream',
-    name: 'Dail Beauty Cream (Without Steroid)',
-    urduName: 'ڈیل بیوٹی کریم (بغیر اسٹیرائیڈ - 5 ڈے پلان)',
-    tagline: 'Export Quality 5-Day Beauty Plan. Anti-Aging + Anti-Acne. Make your skin bright, soft, fresh, healthy & glowing without harmful steroids.',
-    category: 'cream',
-    concern: ['Radiant Glow', 'Uneven Skin Tone', 'Dull Skin'],
-    price: 1450,
-    originalPrice: 1800,
-    rating: 4.9,
-    reviewCount: 420,
-    badge: '100% Organic',
-    volume: 'Export Quality Tin Tub',
-    image: '/images/dail_beauty_cream.jpg',
-    galleryImages: [
-      '/images/dail_beauty_cream.jpg',
-      '/images/dail_packaging.jpg',
-      'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=800&q=80'
-    ],
-    description: 'Unlike commercial whitening creams that damage skin with dangerous steroids and mercury, Dail Beauty Cream is strictly formulated WITHOUT STEROIDS. It combines natural botanical brightening bio-actives, nourishing plant waxes, and antioxidant vitamins to achieve a visibly radiant, soft, fresh, and healthy lit-from-within glow.',
-    benefits: [
-      'STRICTLY WITHOUT STEROID — Safe for everyday use without thinning the skin',
-      '5-Day Beauty Plan: Visible freshness, smoothness, and refined skin texture',
-      'Dual Action: Anti-Aging cell renewal + Anti-Acne oil balancing',
-      'Export Quality manufacturing with signature gold-sealed round tub lid'
-    ],
-    keyIngredients: [
-      { name: 'Botanical Skin Brighteners', description: 'Gentle plant-derived arbutin and saffron extracts that safely fade dark spots.' },
-      { name: 'Niacinamide (Vitamin B3)', description: 'Controls excess oil, minimizes pores, and clears blemishes.' },
-      { name: 'Pure Vitamin E & Almond Emulsion', description: 'Protects against UV photo-damage and replenishes moisture barrier.' },
-      { name: 'Aloe Vera & Chamomile Gel', description: 'Calms redness, irritation, and inflammation.' }
-    ],
-    howToUse: [
-      'Wash face gently with lukewarm water and pat dry.',
-      'Take a small pearl amount of Dail Beauty Cream.',
-      'Dab across face and neck; gently massage with fingertips in upward motion.',
-      'Use nightly before sleeping for optimal 5-day brightening results.'
-    ],
-    fullIngredients: 'Deionized Water, Botanical Squalane, Stearic Acid, Niacinamide, Pure Vitamin E, Alpha Arbutin, Licorice Root Extract, Aloe Barbadensis Leaf Juice, Kashmiri Saffron Stigma Extract, Zinc Oxide, Mild Natural Fragrance.',
-    inStock: true,
-    modelType: 'jar'
-  },
-  {
     id: 'dail-hand-and-foot-whitening-cream',
     name: 'Dail Hand & Foot Whitening Cream (Without Steroid)',
-    urduName: 'ڈیل ہینڈ اینڈ فٹ وائٹننگ کریم (بغیر اسٹیرائیڈ)',
+    urduName: 'ڈیل ہینڈ اینڈ فٹ وائٹننگ کریم (3-ایکشن ریپیئر)',
     tagline: 'Export Quality 3-Action Repair (Moisturizing, Multi-Effect, Repair) for dry, tanned, and rough hands and feet.',
     category: 'cream',
-    concern: ['Deep Moisture', 'Radiant Glow', 'Uneven Skin Tone'],
-    price: 1350,
-    originalPrice: 1650,
-    rating: 4.88,
-    reviewCount: 312,
-    badge: 'Top Rated',
+    concern: ['Deep Moisture', 'Radiant Glow', 'Uneven Skin Tone', 'Dark Knuckles & Heels'],
+    price: 350,
+    originalPrice: 450,
+    rating: 4.9,
+    reviewCount: 410,
+    badge: '3-Action Repair',
     volume: '3-Action Repair Jar',
     image: '/images/dail_hand_foot.jpg',
     galleryImages: [
       '/images/dail_hand_foot.jpg',
       '/images/dail_packaging.jpg'
     ],
-    description: 'Specifically crafted for the rougher skin of hands and feet that endure hard water, sun exposure, and chores. Dail Hand & Foot Whitening Cream works through a 3-Action system: deep cellular moisturizing, multi-effect brightening, and barrier repair—all without steroids.',
+    description: 'Specifically crafted for the rougher skin of hands and feet that endure hard water, sun exposure, and daily chores. Dail Hand & Foot Whitening Cream works through a 3-Action system: deep cellular moisturizing, multi-effect brightening, and barrier repair—all strictly without steroids. Softens dark knuckles, cracked heels, and sun-tanned feet within days.',
     benefits: [
-      'Formulated WITHOUT STEROIDS — safe, sustainable brightening',
+      'Strictly Formulated WITHOUT STEROIDS — Safe and sustainable brightening',
       '3-Action Formula: Deep Moisturization, Multi-Effect Brightening, Barrier Repair',
-      'Softens dark knuckles, cracked heels, and sun-tanned feet',
+      'Softens dark knuckles, cracked heels, and stubborn shoe-bite marks',
       'Fast absorbing and non-greasy finish'
     ],
     keyIngredients: [
-      { name: 'Shea & Cocoa Butter', description: 'Rich emollients that seal in hydration on thick cuticle and heel skin.' },
-      { name: 'Urea & Lactic Acid', description: 'Gently exfoliates dead hardened skin cells for smooth velvety touch.' },
-      { name: 'Rose Petal Infusion', description: 'Imparts a youthful pinkish radiance and soothing floral nourishment.' }
+      { name: 'Shea & Cocoa Butter', description: 'Rich natural plant emollients that seal in hydration on thick cuticle and heel skin.' },
+      { name: 'Urea & Lactic Acid', description: 'Gently dissolves dead hardened skin cells for a velvety soft touch.' },
+      { name: 'Pure Vitamin E & Niacinamide', description: 'Restores natural barrier and evens out tanned knuckles.' }
     ],
     howToUse: [
       'Cleanse hands and feet thoroughly.',
-      'Apply generously to knuckles, heels, and dark spots.',
-      'Massage until completely absorbed.',
-      'Best applied at bedtime for overnight intensive hydration.'
+      'Apply generously to knuckles, heels, and tanned areas.',
+      'Massage until completely absorbed. Best applied at bedtime for overnight intensive hydration.'
     ],
     fullIngredients: 'Purified Aqua, Butyrospermum Parkii (Shea Butter), Cocoa Seed Butter, Glycerin, Lactic Acid, Urea, Niacinamide, Rose Damascena Distillate, Allantoin, Glyceryl Stearate, Tocopherol.',
     inStock: true,
     modelType: 'jar'
   },
   {
+    id: 'dail-glowing-duo-bundle',
+    name: 'Dail Daily Beauty Cream + Herbal Hair Oil Duo',
+    urduName: 'ڈیل بیوٹی کریم + ہربل ہیئر آئل کومبو ڈیل',
+    tagline: 'Our 2 flagship organic essentials together: Dail Beauty Cream (PKR 350) + Premium Herbal Hair Oil 120ml (PKR 999).',
+    category: 'bundles',
+    concern: ['Hair Fall', 'Radiant Glow', 'Without Steroid'],
+    price: 1199,
+    originalPrice: 1449,
+    rating: 4.97,
+    reviewCount: 520,
+    badge: 'Value Pack',
+    volume: 'Beauty Cream 50g + Hair Oil 120ml',
+    image: '/images/dail_packaging.jpg',
+    galleryImages: [
+      '/images/dail_packaging.jpg',
+      '/images/dail_hair_oil.jpg',
+      '/images/dail_beauty_cream.jpg'
+    ],
+    description: 'The ultimate daily essential combination: Dail Beauty Cream for smooth, glowing skin without steroids + Dail Premium Herbal Hair Oil (120ml) to stop hair loss and boost healthy growth. Save Rs. 250 with this special duo deal.',
+    benefits: [
+      'Includes full size Dail Beauty Cream + 120ml Herbal Hair Oil',
+      'Complete face and hair revitalizing daily routine',
+      'Special discounted bundle price of PKR 1,199',
+      'Available with Cash On Delivery nationwide'
+    ],
+    keyIngredients: [
+      { name: 'Dail Beauty Cream (50g)', description: 'Glutathione, Alpha Arbutin, Kojic Acid, Vitamin B3 & E.' },
+      { name: 'Dail Herbal Hair Oil (120ml)', description: 'Rosemary, Coconut, Jojoba, Lavender, Neem, Amla, Methi, Bhringraj Oils.' }
+    ],
+    howToUse: [
+      'Apply Dail Beauty Cream nightly onto face and neck.',
+      'Massage Dail Herbal Hair Oil into scalp 3 nights a week and wash in the morning.'
+    ],
+    fullIngredients: 'See individual product listings for complete ingredient profiles.',
+    inStock: true,
+    modelType: 'bottle'
+  },
+  {
     id: 'dail-complete-trio-set',
-    name: 'Dail Complete 3-in-1 Beauty & Hair Regimen Box',
-    urduName: 'ڈیل مکمل 3-ان-1 ہیئر اینڈ بیوٹی سیٹ',
-    tagline: 'The full Export Quality trio: 100% Organic Herbal Hair Oil (120ml) + Dail Beauty Cream + Hand & Foot Cream.',
+    name: 'Dail Complete 3-in-1 Regimen Box (Oil + Face Cream + Hand & Foot)',
+    urduName: 'ڈیل مکمل 3-ان-1 ہیئر اینڈ سکن ریجیمن سیٹ',
+    tagline: 'The full Export Quality trio: 100% Herbal Hair Oil (120ml) + Dail Beauty Cream + Hand & Foot Whitening Cream.',
     category: 'bundles',
     concern: ['Hair Fall', 'Radiant Glow', 'Deep Moisture', 'Complete Care'],
-    price: 4199,
-    originalPrice: 5200,
+    price: 1499,
+    originalPrice: 1799,
     rating: 5.0,
-    reviewCount: 680,
+    reviewCount: 890,
     badge: 'Best Seller',
-    volume: 'Complete Trio (120ml Oil + Beauty Cream + Hand & Foot)',
+    volume: 'Complete Trio (120ml Oil + Beauty Cream + Hand & Foot Cream)',
     image: '/images/dail_packaging.jpg',
     galleryImages: [
       '/images/dail_packaging.jpg',
@@ -145,160 +185,61 @@ export const PRODUCTS: Product[] = [
       '/images/dail_beauty_cream.jpg',
       '/images/dail_hand_foot.jpg'
     ],
-    description: 'Our most in-demand value set. Get all 3 signature Dail Cosmetics formulations in one complete package: the 100% Organic Herbal Hair Oil (120ml), the steroid-free 5-Day Dail Beauty Cream, and the Hand & Foot 3-Action Whitening Cream. Save Rs. 1,001 with free courier delivery nationwide across Pakistan.',
+    description: 'Our most in-demand complete set! Get all 3 signature Dail Cosmetics formulations in one complete package: the 100% Natural Herbal Hair Oil (120ml), the steroid-free Dail Beauty Cream, and the Hand & Foot 3-Action Whitening Cream. Factory sealed with signature golden lid seals. Free nationwide delivery on orders above Rs. 2,000.',
     benefits: [
       'Includes all 3 full-size Dail Cosmetics export-quality formulations',
-      'Saves Rs. 1,001 over buying individual products',
-      'Free nationwide delivery with Cash On Delivery anywhere in Pakistan',
-      'Complete head-to-toe steroid-free organic beauty routine'
+      'Special bundle savings with Cash On Delivery anywhere in Pakistan',
+      'Complete head-to-toe steroid-free organic beauty routine',
+      'Tamper-proof export packaging'
     ],
     keyIngredients: [
-      { name: 'Dail Herbal Hair Oil (120ml)', description: 'Full size 100% organic hair growth and fall control elixir.' },
-      { name: 'Dail Beauty Cream (5-Day Plan)', description: 'Full size steroid-free anti-aging & anti-acne radiance cream.' },
-      { name: 'Dail Hand & Foot Cream', description: 'Full size 3-action moisturizing and brightening repair jar.' }
+      { name: 'Dail Herbal Hair Oil (120ml)', description: 'Rosemary, Amla, Jojoba, Lavender, Neem, Methi & Coconut oil blend.' },
+      { name: 'Dail Beauty Cream (50g)', description: 'Glutathione, Alpha Arbutin, Kojic Acid, Vitamin B3, Vitamin E.' },
+      { name: 'Dail Hand & Foot Cream', description: 'Shea butter, urea, lactic acid & niacinamide 3-action formula.' }
     ],
     howToUse: [
-      'Morning: Cleanse and apply light layer of Dail Beauty Cream.',
-      'Evening: Massage Dail Herbal Hair Oil into scalp 3 nights a week.',
-      'Bedtime: Apply Dail Hand & Foot Cream to knuckles and heels.'
+      'Night: Cleanse and apply light layer of Dail Beauty Cream to face.',
+      'Bedtime: Apply Dail Hand & Foot Cream to knuckles and heels.',
+      'Hair Care: Massage Dail Herbal Hair Oil into scalp 3 nights a week, leave for 6-12 hours.'
     ],
     fullIngredients: 'See individual product listings for complete ingredient profiles.',
     inStock: true,
     modelType: 'bottle'
   },
   {
-    id: 'dail-rosemary-scalp-mist',
-    name: 'Dail Pure Rosemary & Mint Scalp Hydro-Mist',
-    urduName: 'ڈیل روزمیری ہائیڈرو مسٹ',
-    tagline: '100% steam-distilled fresh rosemary water for daily zero-grease root energizing.',
-    category: 'hair-care',
-    concern: ['Follicle Regrowth', 'Daily Maintenance', 'Hair Thinning'],
-    price: 1650,
-    originalPrice: 1950,
-    rating: 4.88,
-    reviewCount: 290,
-    badge: 'New',
-    volume: '120 ml / 4.0 fl oz',
-    image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=800&q=80',
+    id: 'dail-family-pack',
+    name: 'Dail Family Double Glow & Hair Regrowth Pack',
+    urduName: 'ڈیل فیملی پیک (2x ہیئر آئل + 2x بیوٹی کریم)',
+    tagline: 'Double your supply with FREE Delivery nationwide: 2x Herbal Hair Oils (120ml) + 2x Dail Beauty Creams.',
+    category: 'bundles',
+    concern: ['Hair Fall', 'Radiant Glow', 'Complete Care'],
+    price: 2399,
+    originalPrice: 2899,
+    rating: 4.99,
+    reviewCount: 340,
+    badge: 'Free Shipping',
+    volume: '2x Hair Oils (240ml total) + 2x Beauty Creams (100g total)',
+    image: '/images/dail_packaging.jpg',
     galleryImages: [
-      'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=800&q=80'
+      '/images/dail_packaging.jpg',
+      '/images/dail_hair_oil.jpg',
+      '/images/dail_beauty_cream.jpg'
     ],
-    description: 'Steam-distilled pure rosemary water formulated for daily spray directly onto hair roots. Non-greasy, refreshing, and stimulates hair density without needing a wash.',
+    description: 'Specially created for families and multi-month supply. Receive 2 full-size 120ml bottles of Dail Premium Herbal Hair Oil plus 2 tubs of Dail Beauty Cream. Automatically qualifies for FREE EXPRESS DELIVERY across Pakistan.',
     benefits: [
-      'Spray daily without washing — completely non-sticky & lightweight',
-      'Invigorates scalp circulation with a refreshing cooling mint tingle',
-      'Controls mid-day scalp sebum and eliminates sweat odor'
+      'Double supply (2x Hair Oils + 2x Beauty Creams)',
+      'FREE nationwide delivery via TCS / Trax Express',
+      'Save Rs. 500 over individual purchases',
+      'Cash on Delivery available nationwide'
     ],
     keyIngredients: [
-      { name: 'Steam-Distilled Rosemary Hydrosol', description: 'Botanical waters rich in rosmarinic acid to stimulate scalp vitality.' },
-      { name: 'Field Peppermint Water', description: 'Provides instantaneous cooling relief and invigorates blood circulation.' }
+      { name: '2x Dail Herbal Hair Oils (120ml)', description: 'Full organic Rosemary, Kalonji & Amla infusion.' },
+      { name: '2x Dail Beauty Creams (50g)', description: 'Glutathione, Alpha Arbutin, Kojic Acid & Vitamin B3.' }
     ],
     howToUse: [
-      'Spray directly onto scalp 4-6 times daily. Tap in gently with fingertips.'
+      'Use daily for a comprehensive 2-month organic beauty & hair revitalizing routine.'
     ],
-    fullIngredients: '100% Pure Steam Distilled Rosmarinus Officinalis (Rosemary) Hydrosol, Peppermint Leaf Water, Biotin.',
-    inStock: true,
-    modelType: 'spray'
-  },
-  {
-    id: 'dail-vitamin-c-face-wash',
-    name: 'Dail Vitamin C & Neem Radiance Face Wash',
-    urduName: 'ڈیل وٹامن سی اینڈ نیم ریڈیئنس فیس واش',
-    tagline: 'Deep pore purification, instant brightening & oil control without stripping moisture.',
-    category: 'cleanser',
-    concern: ['Radiant Glow', 'Deep Cleansing', 'Oil Control'],
-    price: 890,
-    originalPrice: 1150,
-    rating: 4.92,
-    reviewCount: 380,
-    badge: 'Best Seller',
-    volume: '100 ml Tube',
-    image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=800&q=80',
-    galleryImages: [
-      'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=800&q=80'
-    ],
-    description: 'Soap-free foaming cleanser infused with organic orange peel Vitamin C and purifying mountain neem. Gently dissolves pollution, excess sebum, and makeup while leaving the complexion visibly glowing and hydrated.',
-    benefits: [
-      'Gentle sulfate-free lather that purifies without skin tightness',
-      'Vitamin C brightens dull, tired skin and reduces sun tan',
-      'Neem bio-actives prevent acne, blemishes, and unclog enlarged pores'
-    ],
-    keyIngredients: [
-      { name: 'Pure Vitamin C (Ethyl Ascorbic Acid)', description: 'Potent stable antioxidant that evens skin tone and boosts radiance.' },
-      { name: 'Wild Neem Leaf Extract', description: 'Natural antibacterial agent that cleanses impurities.' }
-    ],
-    howToUse: [
-      'Squeeze coin-sized amount onto wet palms, massage over face for 60 seconds, then rinse.'
-    ],
-    fullIngredients: 'Purified Water, Decyl Glucoside, Glycerin, 3-O-Ethyl Ascorbic Acid, Neem Leaf Extract, Aloe Vera Leaf Juice, Allantoin.',
-    inStock: true,
-    modelType: 'bottle'
-  },
-  {
-    id: 'dail-keratin-repair-shampoo',
-    name: 'Dail Keratin & Biotin Herbal Repair Shampoo',
-    urduName: 'ڈیل کیراٹین اینڈ بایوٹین ہربل شیمپو',
-    tagline: 'Sulfate-Free intensive restorative shampoo for damaged, frizzy, and falling hair.',
-    category: 'hair-care',
-    concern: ['Hair Fall', 'Follicle Regrowth', 'Damage Repair'],
-    price: 1390,
-    originalPrice: 1750,
-    rating: 4.89,
-    reviewCount: 310,
-    badge: 'Top Rated',
-    volume: '250 ml Pump Bottle',
-    image: 'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=800&q=80',
-    galleryImages: [
-      'https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=800&q=80'
-    ],
-    description: 'Formulated to complement Dail Premium Herbal Hair Oil. Free from harsh sulfates, parabens, and synthetic silicones. Infused with plant keratin and biotin to strengthen cuticle fibers and leave hair silky, thick, and voluminous.',
-    benefits: [
-      '100% Sulfate-Free & Paraben-Free formula safe for daily use',
-      'Reinforces keratin structure to stop breakage and split ends',
-      'Perfect companion wash after using Dail Herbal Hair Oil'
-    ],
-    keyIngredients: [
-      { name: 'Hydrolyzed Plant Keratin', description: 'Rebuilds microscopic cracks along the hair cortex.' },
-      { name: 'Biotin (Vitamin B7)', description: 'Thickens individual hair strand diameter.' }
-    ],
-    howToUse: [
-      'Apply to wet hair after oiling, lather thoroughly into scalp, and rinse with cold or lukewarm water.'
-    ],
-    fullIngredients: 'Deionized Aqua, Sodium Cocoyl Isethionate, Cocamidopropyl Betaine, Hydrolyzed Wheat Keratin, Biotin, D-Panthenol, Argania Spinosa Kernel Oil.',
-    inStock: true,
-    modelType: 'bottle'
-  },
-  {
-    id: 'dail-saffron-glow-serum',
-    name: 'Dail 24K Saffron & Arbutin Radiance Glow Serum',
-    urduName: 'ڈیل زعفران اینڈ اربوٹین گلو سیرم',
-    tagline: 'Concentrated antioxidant nectar for radiant glass skin and dark spot fading without steroids.',
-    category: 'serum',
-    concern: ['Radiant Glow', 'Uneven Skin Tone', 'Without Steroid'],
-    price: 1890,
-    originalPrice: 2400,
-    rating: 4.96,
-    reviewCount: 450,
-    badge: 'Best Seller',
-    volume: '30 ml Dropper Bottle',
-    image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=800&q=80',
-    galleryImages: [
-      'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=800&q=80'
-    ],
-    description: 'Ultra-concentrated botanical elixir formulated with organic Kashmiri saffron threads and Alpha Arbutin. Quickly penetrates to brighten dark patches, soothe hyperpigmentation, and impart a glass-like luminous glow.',
-    benefits: [
-      'Penetrates deep into epidermis to fade stubborn sun spots and acne marks',
-      'Strictly WITHOUT STEROIDS — safe for daily morning and night use',
-      'Featherlight water-gel texture that absorbs in seconds without stickiness'
-    ],
-    keyIngredients: [
-      { name: 'Kashmiri Saffron Stigma Extract', description: 'Ancient royal spice packed with crocin for incandescent radiance.' },
-      { name: 'Pure Alpha Arbutin 2%', description: 'Clinically proven safe natural melanin inhibitor.' }
-    ],
-    howToUse: [
-      'Dispense 3-4 drops onto clean face before moisturizer. Tap gently until absorbed.'
-    ],
-    fullIngredients: 'Purified Water, Crocus Sativus (Saffron) Stigma Extract, Alpha Arbutin, Hyaluronic Acid, Niacinamide, Ferulic Acid.',
+    fullIngredients: 'See individual product listings for complete ingredient profiles.',
     inStock: true,
     modelType: 'bottle'
   }
@@ -312,7 +253,7 @@ export const REVIEWS: ProductReview[] = [
     rating: 5,
     date: '2 days ago',
     verified: true,
-    comment: 'Dail Beauty Cream is the ONLY cream in Pakistan that made my skin glow WITHOUT steroids! Meri skin thin nahi hui, koi redness nahi aayi. Aur Dail Hair Oil se mera postpartum hair fall sirf 10 din mein ruk gaya. 10/10 recommendation!',
+    comment: 'Dail Beauty Cream sirf PKR 350 mein itni zabardast quality hai! Meri skin par koi redness nahi aayi, natural glow aa gaya. Aur Dail Herbal Hair Oil (PKR 999) se mera hair fall 10 din mein 90% ruk gaya. 10/10 recommendation!',
     helpfulCount: 58
   },
   {
@@ -332,7 +273,7 @@ export const REVIEWS: ProductReview[] = [
     rating: 5,
     date: '1 week ago',
     verified: true,
-    comment: 'As a dermatologist, I love that Dail Cosmetics explicitly writes "WITHOUT STEROID" on their boxes. Pakistani market mein steroids ka bohot issue hai. Dail Hand & Foot cream cleared my dark knuckles naturally!',
+    comment: 'As a doctor, I love that Dail Beauty Cream explicitly writes its full ingredients (Glutathione, Alpha Arbutin, Kojic Acid, Vitamin B3 & E) and is STRICTLY WITHOUT STEROID. Dail Hand & Foot cream cleared my dark knuckles naturally!',
     helpfulCount: 74
   },
   {

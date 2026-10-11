@@ -96,7 +96,9 @@ export const Footer: React.FC = () => {
               </p>
               <p className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-[#c59b27] shrink-0" />
-                <span>support@dailcosmetics.pk</span>
+                <a href="mailto:dailcosmeticscht@gmail.com" className="hover:text-white underline">
+                  dailcosmeticscht@gmail.com
+                </a>
               </p>
             </div>
           </div>
@@ -104,37 +106,43 @@ export const Footer: React.FC = () => {
           {/* Column 2: Shop Categories */}
           <div className="space-y-3">
             <h4 className="font-heading text-xs sm:text-sm font-extrabold uppercase tracking-widest text-white border-b border-stone-800 pb-2">
-              SHOP CATEGORIES
+              SHOP PRODUCTS
             </h4>
             <ul className="space-y-2 text-xs font-medium text-stone-400">
               <li>
-                <button onClick={() => navigateTo('shop', 'cream')} className="hover:text-white transition-colors cursor-pointer">
-                  Dail Beauty Cream (5-Day Plan)
+                <button onClick={() => navigateTo('shop', 'cream')} className="hover:text-white transition-colors cursor-pointer flex items-center justify-between w-full">
+                  <span>Dail Beauty Cream (50g)</span>
+                  <span className="text-[#d0473e] font-bold">PKR 350</span>
                 </button>
               </li>
               <li>
-                <button onClick={() => navigateTo('shop', 'hair-care')} className="hover:text-white transition-colors cursor-pointer">
-                  100% Herbal Hair Oil (120ml)
+                <button onClick={() => navigateTo('shop', 'hair-care')} className="hover:text-white transition-colors cursor-pointer flex items-center justify-between w-full">
+                  <span>Premium Herbal Hair Oil (120ml)</span>
+                  <span className="text-[#d0473e] font-bold">PKR 999</span>
                 </button>
               </li>
               <li>
-                <button onClick={() => navigateTo('shop', 'cream')} className="hover:text-white transition-colors cursor-pointer">
-                  Hand & Foot Whitening Cream
+                <button onClick={() => navigateTo('shop', 'cream')} className="hover:text-white transition-colors cursor-pointer flex items-center justify-between w-full">
+                  <span>Hand & Foot Whitening Cream</span>
+                  <span className="text-[#d0473e] font-bold">PKR 350</span>
                 </button>
               </li>
               <li>
-                <button onClick={() => navigateTo('shop', 'serum')} className="hover:text-white transition-colors cursor-pointer">
-                  24K Saffron Glow Serum
+                <button onClick={() => navigateTo('shop', 'bundles')} className="hover:text-white transition-colors cursor-pointer flex items-center justify-between w-full">
+                  <span>Daily Beauty & Hair Oil Duo</span>
+                  <span className="text-[#c59b27] font-bold">PKR 1,199</span>
                 </button>
               </li>
               <li>
-                <button onClick={() => navigateTo('shop', 'cleanser')} className="hover:text-white transition-colors cursor-pointer">
-                  Vitamin C & Neem Face Wash
+                <button onClick={() => navigateTo('shop', 'bundles')} className="hover:text-white transition-colors cursor-pointer flex items-center justify-between w-full">
+                  <span>Complete 3-in-1 Regimen Box</span>
+                  <span className="text-[#c59b27] font-bold">PKR 1,499</span>
                 </button>
               </li>
               <li>
-                <button onClick={() => navigateTo('shop', 'bundles')} className="hover:text-white transition-colors cursor-pointer text-[#c59b27]">
-                  Crazy Offers & Value Bundles
+                <button onClick={() => navigateTo('shop', 'bundles')} className="hover:text-white transition-colors cursor-pointer flex items-center justify-between w-full">
+                  <span>Family Double Glow Pack</span>
+                  <span className="text-emerald-400 font-bold">Free Delivery</span>
                 </button>
               </li>
             </ul>
@@ -157,6 +165,11 @@ export const Footer: React.FC = () => {
                 </button>
               </li>
               <li>
+                <button onClick={() => navigateTo('about')} className="hover:text-white transition-colors cursor-pointer">
+                  About Dail Cosmetics
+                </button>
+              </li>
+              <li>
                 <span className="text-stone-400">Shipping Policy (Free on Rs. 2,000+)</span>
               </li>
               <li>
@@ -165,20 +178,14 @@ export const Footer: React.FC = () => {
               <li>
                 <span className="text-stone-400">7-Day Return & Exchange</span>
               </li>
-              <li>
-                <span className="text-stone-400">Privacy & Terms of Service</span>
-              </li>
             </ul>
           </div>
 
-          {/* Column 4: Quick Order WhatsApp & Quality Promise */}
+          {/* Column 4: Quick Order WhatsApp & Official Socials */}
           <div className="space-y-3">
             <h4 className="font-heading text-xs sm:text-sm font-extrabold uppercase tracking-widest text-white border-b border-stone-800 pb-2">
-              QUICK ORDER
+              CONNECT & ORDER
             </h4>
-            <p className="text-xs text-stone-400">
-              Need help choosing products or want to order directly? Chat with our team now.
-            </p>
             <a
               href={getWhatsAppUrl()}
               target="_blank"
@@ -189,14 +196,47 @@ export const Footer: React.FC = () => {
               <span>WHATSAPP: {storeSettings.whatsappNumber}</span>
             </a>
 
+            {/* Official Social Links */}
+            <div className="pt-2 space-y-1.5 text-xs">
+              <span className="text-stone-400 text-[11px] uppercase tracking-wider font-bold block">
+                Official Channels:
+              </span>
+              <div className="flex flex-col gap-1.5">
+                <a
+                  href="https://www.facebook.com/profile.php?id=61563795102913&mibextid=ZbWKwL"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-blue-400 transition-colors flex items-center gap-2 text-stone-300"
+                >
+                  <span>📘 Facebook Page</span>
+                </a>
+                <a
+                  href="https://www.instagram.com/dailcosmetics?igsh=ZzYyd29rZ3p3d3c="
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-pink-400 transition-colors flex items-center gap-2 text-stone-300"
+                >
+                  <span>📸 Instagram @dailcosmetics</span>
+                </a>
+                <a
+                  href="https://www.tiktok.com/@dailcosmetics?_t=8olPFWJTJLT&_r=1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors flex items-center gap-2 text-stone-300"
+                >
+                  <span>🎵 TikTok @dailcosmetics</span>
+                </a>
+              </div>
+            </div>
+
             <div className="pt-2 text-[11px] text-stone-400 space-y-1">
               <p className="flex items-center gap-1.5 text-stone-300 font-semibold">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
-                Halal Certified & Lab Tested
+                100% Organic & Halal Certified
               </p>
               <p className="flex items-center gap-1.5 text-stone-300 font-semibold">
                 <Truck className="w-3.5 h-3.5 text-amber-400" />
-                Dispatched via Leopard & TCS
+                Cash On Delivery Nationwide
               </p>
             </div>
           </div>

@@ -14,11 +14,10 @@ import { PRODUCTS, REVIEWS } from '../data/products';
 
 export const INITIAL_CATEGORIES: CategoryItem[] = [
   { id: 'cat-all', name: 'All Products', slug: 'all', icon: '🛍️', description: 'Complete organic hair and skincare range' },
-  { id: 'cat-creams', name: 'Face Creams', slug: 'cream', icon: '🧴', description: 'Steroid-free 5-day brightening & daily glow creams' },
-  { id: 'cat-hair', name: 'Hair Care', slug: 'hair-care', icon: '🌿', description: '100% herbal hair oil, repair shampoo & scalp hydrosols' },
-  { id: 'cat-serums', name: 'Serums & Oils', slug: 'serum', icon: '✨', description: 'Pure saffron bio-actives and brightening elixirs' },
-  { id: 'cat-cleansers', name: 'Cleansers & Wash', slug: 'cleanser', icon: '🧼', description: 'Vitamin C & neem deep pore purifying face washes' },
-  { id: 'cat-bundles', name: 'Bundles & Deals', slug: 'bundles', icon: '🎁', description: 'Exclusive value kits with free nationwide delivery' },
+  { id: 'cat-creams', name: 'Dail Beauty Cream', slug: 'cream', icon: '🧴', description: 'Steroid-free anti-aging & daily radiance cream (PKR 350)' },
+  { id: 'cat-hair', name: 'Herbal Hair Oil', slug: 'hair-care', icon: '🌿', description: '100% natural essential oils & mixed herbs (PKR 999)' },
+  { id: 'cat-handfoot', name: 'Hand & Foot Care', slug: 'cream', icon: '🦶', description: '3-Action repair for knuckles and heels (PKR 350)' },
+  { id: 'cat-bundles', name: 'Value Bundles & Deals', slug: 'bundles', icon: '🎁', description: 'Exclusive value duo & trio kits with nationwide delivery' },
 ];
 
 export const INITIAL_CONCERNS: string[] = [
@@ -27,19 +26,23 @@ export const INITIAL_CONCERNS: string[] = [
   'Follicle Regrowth',
   'Radiant Glow',
   'Without Steroid',
+  'Dark Circles',
   'Dark Knuckles & Heels',
   'Deep Moisture',
-  'Uneven Skin Tone',
-  'Deep Cleansing'
+  'Uneven Skin Tone'
 ];
 
 export const INITIAL_SETTINGS: StoreSettings = {
-  whatsappNumber: '03346361218',
+  whatsappNumber: '0313 6361218',
+  email: 'dailcosmeticscht@gmail.com',
+  facebookUrl: 'https://www.facebook.com/profile.php?id=61563795102913&mibextid=ZbWKwL',
+  tiktokUrl: 'https://www.tiktok.com/@dailcosmetics?_t=8olPFWJTJLT&_r=1',
+  instagramUrl: 'https://www.instagram.com/dailcosmetics?igsh=ZzYyd29rZ3p3d3c=',
   adminPassword: 'dail@2026',
-  announcementText: 'FREE SHIPPING ON ALL ORDERS PKR 2000 AND ABOVE | CASH ON DELIVERY AVAILABLE NATIONWIDE | WHATSAPP: 03346361218',
+  announcementText: 'FREE SHIPPING ON ALL ORDERS PKR 2000 AND ABOVE | CASH ON DELIVERY AVAILABLE NATIONWIDE | WHATSAPP: 0313 6361218',
   freeShippingThreshold: 2000,
   flatShippingFee: 199,
-  brandTagline: 'Pakistan’s Premier Organic Beauty & Personal Care',
+  brandTagline: 'Purity, Sustainability & Integrity • 100% Organic & Herbal Care',
   businessAddress: 'Dail Cosmetics Pakistan • DHA Phase 5, Lahore, Pakistan',
 };
 
@@ -524,7 +527,7 @@ export const useStore = create<StoreState>()(
       }
     }),
     {
-      name: 'dail_cosmetics_store_v2',
+      name: 'dail_cosmetics_store_v4',
       partialize: (state) => ({
         products: state.products,
         categories: state.categories,

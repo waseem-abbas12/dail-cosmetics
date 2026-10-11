@@ -18,14 +18,17 @@ export const AboutPage: React.FC = () => {
               className="w-full h-full object-contain"
             />
           </div>
-          <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#c59b27]">
-            Export Quality • Made In Pakistan
+          <span className="text-xs font-heading font-extrabold uppercase tracking-[0.25em] text-[#d0473e]">
+            Purity • Sustainability • Integrity
           </span>
-          <h1 className="font-serif-luxury text-4xl sm:text-5xl font-bold text-stone-900 leading-tight">
-            The <span className="italic text-[#7b3e1d]">Dail Cosmetics</span> Standard
+          <h1 className="font-heading text-3xl sm:text-5xl font-extrabold uppercase tracking-tight text-stone-900 leading-tight">
+            About <span className="text-[#d0473e]">Dail Cosmetics</span>
           </h1>
-          <p className="text-stone-600 text-sm sm:text-base font-normal leading-relaxed">
-            At Dail Cosmetics, we made an uncompromising medical pledge: to protect Pakistani skin and hair from the dangerous steroids, mercury, and harsh bleaches that plague the commercial market. Every formulation is 100% organic, export quality, and crafted for lasting health.
+          <p className="text-stone-700 text-sm sm:text-base font-normal leading-relaxed max-w-2xl mx-auto">
+            At Dail Cosmetics, we are passionate advocates for the power of nature to nurture and revitalize. Founded on the principles of purity, sustainability, and integrity, we specialize in crafting exquisite organic and herbal products that elevate personal care routines to a higher standard.
+          </p>
+          <p className="text-stone-600 text-xs sm:text-sm font-normal leading-relaxed max-w-2xl mx-auto">
+            Our journey began with a simple belief: that beauty and wellness should never come at the expense of the environment or personal health. Guided by this ethos, we meticulously source the finest botanical ingredients, ensuring each product is not only effective but also gentle and nurturing. With a commitment to transparency and ethical practices, we invite you to join us on this journey towards a more radiant, harmonious, and sustainable future.
           </p>
         </div>
 
