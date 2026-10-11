@@ -15,7 +15,7 @@ export const ValueBundlesSection: React.FC = () => {
       price: 1499,
       originalPrice: 1699,
       saving: 200,
-      image: '/images/dail_packaging.jpg',
+      image: '/images/dail_hero_banner_golden.jpg',
       features: [
         'All 3 signature export-quality formulations in one box',
         'Stops hair fall + imparts radiant facial glow without steroids',
@@ -32,7 +32,7 @@ export const ValueBundlesSection: React.FC = () => {
       price: 1199,
       originalPrice: 1349,
       saving: 150,
-      image: '/images/dail_packaging.jpg',
+      image: '/images/dail_full_collection.jpg',
       features: [
         'Strictly 0% steroids — safe daily cell renewal and glow',
         'Cold-pressed rosemary bio-actives & amla for rapid regrowth',
@@ -49,7 +49,7 @@ export const ValueBundlesSection: React.FC = () => {
       price: 2399,
       originalPrice: 2698,
       saving: 299,
-      image: '/images/dail_packaging.jpg',
+      image: '/images/dail_hero_banner_golden.jpg',
       features: [
         'Double supply (2x Hair Oils 120ml + 2x Beauty Creams 50g)',
         'FREE express courier delivery nationwide included',

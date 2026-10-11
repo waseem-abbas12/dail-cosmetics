@@ -18,8 +18,8 @@ export const HeroSection: React.FC = () => {
       secondaryButtonText: 'EXPLORE BEAUTY CREAM',
       targetCategory: 'cream',
       productIndex: 1, // Dail Beauty Cream
-      image: '/images/dail_beauty_cream.jpg',
-      bgGradient: 'from-amber-900/85 via-stone-900/75 to-black/80',
+      image: '/images/dail_hero_banner_golden.jpg',
+      bgGradient: 'from-black/85 via-stone-950/70 to-transparent',
       accentColor: '#d0473e'
     },
     {
@@ -32,8 +32,8 @@ export const HeroSection: React.FC = () => {
       secondaryButtonText: 'VIEW HERBAL HAIR OIL',
       targetCategory: 'hair-care',
       productIndex: 0, // Dail Hair Oil
-      image: '/images/dail_hair_oil.jpg',
-      bgGradient: 'from-emerald-950/85 via-stone-900/75 to-black/80',
+      image: '/images/dail_full_collection.jpg',
+      bgGradient: 'from-black/85 via-stone-950/70 to-transparent',
       accentColor: '#c59b27'
     },
     {
@@ -46,8 +46,8 @@ export const HeroSection: React.FC = () => {
       secondaryButtonText: 'VIEW ALL OFFERS',
       targetCategory: 'bundles',
       productIndex: 4, // Complete Trio Set
-      image: '/images/dail_packaging.jpg',
-      bgGradient: 'from-red-950/85 via-stone-900/75 to-black/80',
+      image: '/images/dail_hero_banner_golden.jpg',
+      bgGradient: 'from-black/85 via-stone-950/70 to-transparent',
       accentColor: '#d0473e'
     }
   ];

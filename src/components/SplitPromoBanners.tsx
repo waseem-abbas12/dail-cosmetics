@@ -26,7 +26,7 @@ export const SplitPromoBanners: React.FC = () => {
         >
           {/* Background Image */}
           <img 
-            src="/images/dail_beauty_cream.jpg" 
+            src="/images/dail_beauty_cream_square.jpg" 
             alt="Dail Skincare Routine"
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
           />
@@ -43,7 +43,7 @@ export const SplitPromoBanners: React.FC = () => {
               Natural Glow Routine
             </h3>
             <p className="text-stone-300 text-xs sm:text-sm font-normal max-w-sm mb-4 line-clamp-2">
-              5-Day beauty plan formulated with saffron and botanicals to brighten and smooth skin without thinning.
+              5-Day beauty plan formulated with glutathione, arbutin and botanicals to brighten and smooth skin without thinning.
             </p>
             <div>
               <button 
@@ -67,7 +67,7 @@ export const SplitPromoBanners: React.FC = () => {
         >
           {/* Background Image */}
           <img 
-            src="/images/dail_hair_oil.jpg" 
+            src="/images/dail_hair_oil_square.jpg" 
             alt="Dail Hair Care Range"
             className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
           />

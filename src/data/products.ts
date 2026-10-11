@@ -14,11 +14,12 @@ export const PRODUCTS: Product[] = [
     reviewCount: 620,
     badge: 'Best Seller',
     volume: '50g Export Quality Tub',
-    image: '/images/dail_beauty_cream.jpg',
+    image: '/images/dail_beauty_cream_square.jpg',
     galleryImages: [
-      '/images/dail_beauty_cream.jpg',
-      '/images/dail_packaging.jpg',
-      'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=800&q=80'
+      '/images/dail_beauty_cream_square.jpg',
+      '/images/dail_beauty_cream_clear.jpg',
+      '/images/dail_hero_banner_golden.jpg',
+      '/images/dail_full_collection.jpg'
     ],
     description: 'Dail Beauty Cream is a revolutionary skincare solution that targets multiple concerns for a radiant and youthful complexion. While providing long-lasting hydration that penetrates deep into the skin, Dail Beauty Cream reveals a natural glow, leaving your skin looking smoother, brighter, and more even-toned. Say goodbye to dullness and imperfections, and hello to a revitalized and healthy-looking skin with Dail Beauty Cream. Crafted with a unique blend of natural ingredients and cutting-edge technology, Dail Beauty Cream provides a holistic approach to skin health, ensuring you achieve a radiant and youthful complexion.',
     benefits: [
@@ -57,11 +58,12 @@ export const PRODUCTS: Product[] = [
     reviewCount: 780,
     badge: '100% Organic',
     volume: '120 ml / 4.0 fl oz',
-    image: '/images/dail_hair_oil.jpg',
+    image: '/images/dail_hair_oil_square.jpg',
     galleryImages: [
-      '/images/dail_hair_oil.jpg',
-      '/images/dail_packaging.jpg',
-      'https://images.unsplash.com/photo-1608248597359-54817d3d0f04?auto=format&fit=crop&w=800&q=80'
+      '/images/dail_hair_oil_square.jpg',
+      '/images/dail_hair_oil_hero.jpg',
+      '/images/dail_full_collection.jpg',
+      '/images/dail_hero_banner_golden.jpg'
     ],
     description: 'Introducing our premium Herbal Hair Oil, a unique blend of natural oils and mixed herbs designed to nourish and revitalize your hair. Crafted with care, this powerful formula combines the goodness of nature to address common hair problems like hair loss, weak strands, and thinning hair. Experience the rejuvenating benefits of our Herbal Hair Oil and enjoy healthier, stronger, and more lustrous locks. Made with 100% natural ingredients, free from cheap mineral filler oils and harmful chemicals.',
     benefits: [
@@ -101,10 +103,11 @@ export const PRODUCTS: Product[] = [
     reviewCount: 410,
     badge: '3-Action Repair',
     volume: '3-Action Repair Jar',
-    image: '/images/dail_hand_foot.jpg',
+    image: '/images/dail_hand_foot_square.jpg',
     galleryImages: [
-      '/images/dail_hand_foot.jpg',
-      '/images/dail_packaging.jpg'
+      '/images/dail_hand_foot_square.jpg',
+      '/images/dail_hand_foot_clear.jpg',
+      '/images/dail_full_collection.jpg'
     ],
     description: 'Specifically crafted for the rougher skin of hands and feet that endure hard water, sun exposure, and daily chores. Dail Hand & Foot Whitening Cream works through a 3-Action system: deep cellular moisturizing, multi-effect brightening, and barrier repair—all strictly without steroids. Softens dark knuckles, cracked heels, and sun-tanned feet within days.',
     benefits: [
@@ -140,11 +143,12 @@ export const PRODUCTS: Product[] = [
     reviewCount: 520,
     badge: 'Value Pack',
     volume: 'Beauty Cream 50g + Hair Oil 120ml',
-    image: '/images/dail_packaging.jpg',
+    image: '/images/dail_full_collection.jpg',
     galleryImages: [
-      '/images/dail_packaging.jpg',
-      '/images/dail_hair_oil.jpg',
-      '/images/dail_beauty_cream.jpg'
+      '/images/dail_full_collection.jpg',
+      '/images/dail_hair_oil_square.jpg',
+      '/images/dail_beauty_cream_square.jpg',
+      '/images/dail_hero_banner_golden.jpg'
     ],
     description: 'The ultimate daily essential combination: Dail Beauty Cream for smooth, glowing skin without steroids + Dail Premium Herbal Hair Oil (120ml) to stop hair loss and boost healthy growth. Save Rs. 250 with this special duo deal.',
     benefits: [
@@ -178,12 +182,14 @@ export const PRODUCTS: Product[] = [
     reviewCount: 890,
     badge: 'Best Seller',
     volume: 'Complete Trio (120ml Oil + Beauty Cream + Hand & Foot Cream)',
-    image: '/images/dail_packaging.jpg',
+    image: '/images/dail_hero_banner_golden.jpg',
     galleryImages: [
-      '/images/dail_packaging.jpg',
-      '/images/dail_hair_oil.jpg',
-      '/images/dail_beauty_cream.jpg',
-      '/images/dail_hand_foot.jpg'
+      '/images/dail_hero_banner_golden.jpg',
+      '/images/dail_full_collection.jpg',
+      '/images/dail_trio_clear.jpg',
+      '/images/dail_hair_oil_square.jpg',
+      '/images/dail_beauty_cream_square.jpg',
+      '/images/dail_hand_foot_square.jpg'
     ],
     description: 'Our most in-demand complete set! Get all 3 signature Dail Cosmetics formulations in one complete package: the 100% Natural Herbal Hair Oil (120ml), the steroid-free Dail Beauty Cream, and the Hand & Foot 3-Action Whitening Cream. Factory sealed with signature golden lid seals. Free nationwide delivery on orders above Rs. 2,000.',
     benefits: [
@@ -219,11 +225,12 @@ export const PRODUCTS: Product[] = [
     reviewCount: 340,
     badge: 'Free Shipping',
     volume: '2x Hair Oils (240ml total) + 2x Beauty Creams (100g total)',
-    image: '/images/dail_packaging.jpg',
+    image: '/images/dail_hero_banner_golden.jpg',
     galleryImages: [
-      '/images/dail_packaging.jpg',
-      '/images/dail_hair_oil.jpg',
-      '/images/dail_beauty_cream.jpg'
+      '/images/dail_hero_banner_golden.jpg',
+      '/images/dail_full_collection.jpg',
+      '/images/dail_hair_oil_square.jpg',
+      '/images/dail_beauty_cream_square.jpg'
     ],
     description: 'Specially created for families and multi-month supply. Receive 2 full-size 120ml bottles of Dail Premium Herbal Hair Oil plus 2 tubs of Dail Beauty Cream. Automatically qualifies for FREE EXPRESS DELIVERY across Pakistan.',
     benefits: [
