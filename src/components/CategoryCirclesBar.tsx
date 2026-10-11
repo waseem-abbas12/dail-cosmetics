@@ -10,35 +10,35 @@ export const CategoryCirclesBar: React.FC = () => {
       id: 'cat-creams',
       name: 'Dail Beauty Cream',
       slug: 'cream',
-      image: '/images/dail_beauty_cream_square.jpg',
+      image: '/images/cat_tile_beauty_cream.jpg',
       tag: 'PKR 350',
     },
     {
       id: 'cat-hair',
       name: 'Herbal Hair Oil',
       slug: 'hair-care',
-      image: '/images/dail_hair_oil_square.jpg',
+      image: '/images/cat_tile_hair_oil.jpg',
       tag: 'PKR 999',
     },
     {
       id: 'cat-handfoot',
       name: 'Hand & Foot Care',
       slug: 'cream',
-      image: '/images/dail_hand_foot_square.jpg',
+      image: '/images/cat_tile_hand_foot.jpg',
       tag: 'PKR 350',
     },
     {
       id: 'cat-duo',
       name: 'Glow & Hair Duo',
       slug: 'bundles',
-      image: '/images/dail_full_collection.jpg',
+      image: '/images/cat_tile_duo.jpg',
       tag: 'PKR 1,199',
     },
     {
       id: 'cat-trio',
       name: '3-in-1 Regimen Box',
       slug: 'bundles',
-      image: '/images/dail_hero_banner_golden.jpg',
+      image: '/images/cat_tile_trio.jpg',
       tag: 'PKR 1,499',
     },
     {
@@ -56,46 +56,49 @@ export const CategoryCirclesBar: React.FC = () => {
   };
 
   return (
-    <section className="py-6 sm:py-10 bg-white border-b border-[#e8e8e1]">
+    <section className="py-8 sm:py-12 bg-[#faf9f6] border-b border-[#e8e8e1]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Mini Heading */}
-        <div className="text-center mb-6 sm:mb-8">
-          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.25em] text-[#d0473e]">
-            Shop By Collection
+        {/* Section Mini Heading (Golden Pearl Style) */}
+        <div className="text-center mb-6 sm:mb-9">
+          <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.25em] text-[#d0473e] block">
+            SHOP BY COLLECTION
           </span>
-          <h2 className="font-heading text-lg sm:text-2xl font-extrabold uppercase tracking-tight text-stone-900 mt-0.5">
-            Explore Categories
+          <h2 className="font-heading text-xl sm:text-3xl font-extrabold uppercase tracking-tight text-stone-900 mt-1">
+            EXPLORE CATEGORIES
           </h2>
+          <div className="w-12 h-0.5 bg-[#d0473e] mx-auto mt-2.5" />
         </div>
 
-        {/* Categories Horizontal Scroll / Grid */}
-        <div className="flex items-center justify-start sm:justify-center gap-4 sm:gap-8 overflow-x-auto pb-3 pt-1 no-scrollbar scroll-smooth">
+        {/* Categories Horizontal Scroll / Grid with large prominent circles */}
+        <div className="flex items-start justify-start sm:justify-center gap-4 sm:gap-7 overflow-x-auto pb-4 pt-1 no-scrollbar scroll-smooth">
           {categories.map((cat) => (
             <div
               key={cat.id}
               onClick={() => handleSelect(cat.slug)}
-              className="flex flex-col items-center gap-2 cursor-pointer group shrink-0"
+              className="flex flex-col items-center gap-2.5 cursor-pointer group shrink-0"
             >
-              {/* Circle Avatar with Ring */}
-              <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full p-1 border-2 border-stone-200 group-hover:border-[#d0473e] transition-all duration-300 shadow-2xs group-hover:scale-105 overflow-hidden bg-stone-50">
+              {/* Large Prominent Circle Avatar with Ring */}
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full p-1.5 bg-white border-2 border-stone-200 group-hover:border-[#d0473e] transition-all duration-300 shadow-sm group-hover:shadow-md group-hover:scale-106 overflow-hidden flex items-center justify-center">
                 <img 
                   src={cat.image} 
                   alt={cat.name} 
-                  className="w-full h-full object-cover rounded-full group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-contain p-1 group-hover:scale-110 transition-transform duration-500"
                 />
-                {/* Floating Tag */}
+                {/* Floating Price Tag */}
                 {cat.tag && (
-                  <span className="absolute bottom-0 inset-x-0 bg-[#d0473e] text-white text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-center py-0.5 opacity-90 group-hover:opacity-100">
+                  <span className="absolute bottom-1 inset-x-2 bg-[#d0473e] text-white text-[8px] sm:text-[9.5px] font-heading font-extrabold uppercase tracking-wider text-center py-0.5 rounded-full shadow-xs">
                     {cat.tag}
                   </span>
                 )}
               </div>
 
-              {/* Label */}
-              <span className="font-heading text-xs sm:text-xs font-bold uppercase tracking-wider text-stone-800 group-hover:text-[#d0473e] text-center max-w-[90px] sm:max-w-[110px] leading-tight transition-colors">
-                {cat.name}
-              </span>
+              {/* Category Label */}
+              <div className="text-center">
+                <span className="font-heading text-[11px] sm:text-xs font-bold uppercase tracking-wider text-stone-800 group-hover:text-[#d0473e] block max-w-[100px] sm:max-w-[120px] leading-tight transition-colors">
+                  {cat.name}
+                </span>
+              </div>
             </div>
           ))}
         </div>
